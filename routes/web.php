@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    return view('frondend.home');
-})->name('Home');
+    return view('frondend.Home');
+});
 
     Route::get('/cart', function () {
         return view('frondend.cart');
@@ -40,6 +40,7 @@ Route::post('/login', [AuthController::class, 'login'])
     ->name('login.post');
 
 
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 
 
