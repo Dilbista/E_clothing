@@ -58,7 +58,7 @@
             <div class="relative">
                 <button id="searchToggle"
                     class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
-                    <i class="ri-search-line text-xl"></i>
+                    <i class="ri-search-line text-xl" title="Search"></i>
                 </button>
                 <div id="searchDropdown" class="hidden absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4">
                     <div class="relative">
@@ -81,46 +81,74 @@
 
                 <div id="dropdown" class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded hidden">
                     @if(Auth::check())
-                    <!-- USER NAME -->
-                    <div class="px-4 py-2 text-sm font-semibold text-gray-800 border-b">
-                        {{ Auth::user()->name }}
-                    </div>
+                        <!-- USER NAME -->
+                        <div class="px-4 py-2 text-sm font-semibold text-gray-800 border-b">
+                            {{ Auth::user()->name }}
+                        </div>
 
-                    <a href="{{ route('frontend.userprofile') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                        My Account
-                    </a>
+                        <a href="{{ route('frontend.userprofile') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                            My Account
+                        </a>
 
-                    <a href="{{ route('frontend.orders') }}"
-                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                        Orders
-                    </a>
+                        <a href="{{ route('frontend.orders') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                            Orders
+                        </a>
 
-                    <!-- LOGOUT -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                            class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50">
-                            Logout
-                        </button>
-                    </form>
+                        <!-- LOGOUT -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50">
+                                Logout
+                            </button>
+                        </form>
                     @else
-                    <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                        Sign In
-                    </a>
+                        <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                            Sign In
+                        </a>
 
-                    <a href="{{ url('register') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                        Register
-                    </a>
+                        <a href="{{ url('register') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                            Register
+                        </a>
                     @endif
                 </div>
             </div>
 
+            <div class="relative inline-block">
+                <!-- Wishlist Link Container -->
+                <a href="{{ route('wishlist') }}"
+                    class="group relative flex items-center justify-center p-2.5 text-rose-500 bg-rose-50 rounded-full hover:bg-rose-100 hover:scale-105 active:scale-95 transition-all duration-200 shadow-sm hover:shadow"
+                    title="Wishlist">
+
+                    <!-- Smooth scaling Heart Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
+                        class="w-6 h-6 transform group-hover:scale-110 transition-transform duration-200">
+                        <path
+                            d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                    </svg>
+
+                    <!-- Animated Badge Container -->
+                    <span class="absolute -top-1 -right-1 flex h-5 w-5">
+                        <!-- Outer Ping/Pulse Animation -->
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                        <!-- Main Count Badge -->
+                        <span
+                            class="relative inline-flex items-center justify-center h-5 w-5 rounded-full bg-rose-600 text-[10px] font-bold text-white shadow-sm">
+                            5
+                        </span>
+                    </span>
+
+                </a>
+            </div>
+
             <!-- Cart -->
             <div class="relative">
-                <button id="cartToggle"
+                <button id="cartToggle" 
                     class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
-                    <i class="ri-shopping-bag-line text-xl"></i>
+                    <i class="ri-shopping-bag-line text-xl" title="Cart"></i>
                     <span
                         class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
                 </button>
@@ -221,37 +249,37 @@
 </header>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // User Profile Dropdown
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
+    document.addEventListener("DOMContentLoaded", function () {
+        // User Profile Dropdown
+        const btn = document.getElementById("userBtn");
+        const dropdown = document.getElementById("dropdown");
 
-    if (btn && dropdown) {
-        btn.addEventListener("click", () => {
-            dropdown.classList.toggle("hidden");
-        });
+        if (btn && dropdown) {
+            btn.addEventListener("click", () => {
+                dropdown.classList.toggle("hidden");
+            });
 
-        document.addEventListener("click", (e) => {
-            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add("hidden");
-            }
-        });
-    }
+            document.addEventListener("click", (e) => {
+                if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add("hidden");
+                }
+            });
+        }
 
-    // Shop Dropdown Toggle
-    const toggle = document.getElementById('shopToggle');
-    const menu = document.getElementById('shopMenu');
+        // Shop Dropdown Toggle
+        const toggle = document.getElementById('shopToggle');
+        const menu = document.getElementById('shopMenu');
 
-    if (toggle && menu) {
-        toggle.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
+        if (toggle && menu) {
+            toggle.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
 
-        document.addEventListener('click', (e) => {
-            if (!toggle.contains(e.target) && !menu.contains(e.target)) {
-                menu.classList.add('hidden');
-            }
-        });
-    }
-});
+            document.addEventListener('click', (e) => {
+                if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            });
+        }
+    });
 </script>

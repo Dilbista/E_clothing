@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('frondend.Home');
+    return view('frondend.home');
 });
 
 Route::get('/women', function () {
@@ -43,6 +43,9 @@ Route::get('/orders', function () {
     return view('frondend.orders');
 })->name('frontend.orders');
 
+Route::get('/wishlist', function () {
+    return view('frondend.wishlist');
+})->name('wishlist');
 Route::get('/cart', function () {
     return view('frondend.cart');
 })->name('cart');
