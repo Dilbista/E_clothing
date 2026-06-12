@@ -20,7 +20,7 @@
   Create Account
 </h2>
 
-<form method="POST" action="{{ url('/api/register') }}">
+<form method="POST" action="{{ route('register.post') }}">
   @csrf
 
   <!-- Name -->
