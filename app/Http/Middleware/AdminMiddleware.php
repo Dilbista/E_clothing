@@ -19,7 +19,7 @@ class AdminMiddleware
             UserType::ADMIN->value,
             UserType::SELLER->value,
         ])) {
-            return redirect()->route('Home')
+            return redirect()->route('login')
                 ->with('error', 'Access denied.');
         }
 
