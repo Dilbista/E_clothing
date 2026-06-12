@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-@include('frondend.layouts.navbar')
+{{-- @include('frondend.layouts.navbar') --}}
 
 <body class="bg-white">
 
-  @include('frondend.layouts.header')
+  {{-- @include('frondend.layouts.header') --}}
   <!-- Hero Section -->
 
   @include('frondend.layouts.HeroSection')
@@ -1015,7 +1015,7 @@
   </section>
 
   <!-- Footer -->
-  @include('frondend.layouts.footer')
+  {{-- @include('frondend.layouts.footer') --}}
 
   <!-- Scripts -->
   <script id="headerInteractions">

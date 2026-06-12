@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About Us - ShopEase</title>
+    <title>@yield('title','E_Cloting||About US')</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
     tailwind.config = {

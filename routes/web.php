@@ -3,8 +3,11 @@
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
+// Route::get('/', function () {
+//     return view('frondend.home');
+// });
 Route::get('/', function () {
-    return view('frondend.home');
+    return view('test');
 });
 
 Route::get('/women', function () {

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    <title>@yield('title','E_Cloting||Cart')</title>
 
 <head>
     <meta charset="UTF-8" />
