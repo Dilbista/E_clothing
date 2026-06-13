@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ÉLYSIAN · Inventory Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +25,7 @@
         --gold-light: #E2CDA0;
         --deep-bg: #0C0B0A;
         --card-bg: #1A1816;
+        --sidebar-bg: #100F0E;
         --text-primary: #F5F0E8;
         --text-secondary: #B7AFA4;
         --border-subtle: rgba(200, 169, 110, 0.2);
@@ -33,15 +35,32 @@
         --warning: #D4A853;
         --font-display: 'Playfair Display', serif;
         --font-body: 'Inter', sans-serif;
+        --navbar-height: 70px;
     }
 
     body {
         font-family: var(--font-body);
         background-color: var(--deep-bg);
         color: var(--text-primary);
-        line-height: 1.5;
-        padding: 2rem;
+        line-height: 1.6;
         min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ========== ADMIN LAYOUT ========== */
+    .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* MAIN CONTENT VIEWPORT */
+    .main-content {
+        margin-left: 270px;
+        margin-top: var(--navbar-height);
+        flex: 1;
+        padding: 35px;
+        transition: margin 0.4s;
     }
 
     /* container */
@@ -286,9 +305,60 @@
         transform: translateX(0);
     }
 
-    @media (max-width: 680px) {
-        body {
-            padding: 1rem;
+    /* MOBILE TOGGLE & OVERLAY */
+    .menu-toggle {
+        display: none;
+        background: var(--gold);
+        border: none;
+        color: black;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 35;
+        backdrop-filter: blur(4px);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .top-navbar {
+            left: 0;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 30px 20px;
+        }
+
+        .menu-toggle {
+            display: flex;
+        }
+
+        .nav-search {
+            display: none;
         }
 
         .header-bar {
@@ -314,41 +384,51 @@
 
 <body>
 
-    <div class="inventory-container">
-        <div class="header-bar">
-            <h1 class="page-title"><i class="fas fa-boxes" style="margin-right: 12px; color: var(--gold);"></i>
-                Inventory Management</h1>
-            <div class="filter-group">
-                <input type="text" id="searchInventory" class="search-input" placeholder="🔍 Search by name or SKU...">
-                <select id="stockStatusFilter" class="filter-select">
-                    <option value="all">All Stock Status</option>
-                    <option value="in_stock">In Stock (>10)</option>
-                    <option value="low_stock">Low Stock (1–10)</option>
-                    <option value="out_of_stock">Out of Stock (0)</option>
-                </select>
-            </div>
-        </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>SKU</th>
-                        <th>Category</th>
-                        <th>Current Stock</th>
-                        <th>Stock Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="inventoryTableBody">
-                    <tr>
-                        <td colspan="7" style="text-align:center;">Loading inventory...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="admin-layout" id="adminLayout">
+        @include('Backend.layouts.header')
+        @include('Backend.layouts.sidebar')
+
+        <main class="main-content" id="mainContent">
+            <div class="inventory-container">
+                <div class="header-bar">
+                    <h1 class="page-title"><i class="fas fa-boxes" style="margin-right: 12px; color: var(--gold);"></i>
+                        Inventory Management</h1>
+                    <div class="filter-group">
+                        <input type="text" id="searchInventory" class="search-input"
+                            placeholder="🔍 Search by name or SKU...">
+                        <select id="stockStatusFilter" class="filter-select">
+                            <option value="all">All Stock Status</option>
+                            <option value="in_stock">In Stock (>10)</option>
+                            <option value="low_stock">Low Stock (1–10)</option>
+                            <option value="out_of_stock">Out of Stock (0)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>SKU</th>
+                                <th>Category</th>
+                                <th>Current Stock</th>
+                                <th>Stock Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center;">Loading inventory...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Update Stock Modal -->
@@ -381,10 +461,42 @@
         </div>
     </div>
 
-    <div id="toastMsg" class="toast-notify"><i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
+    <div id="toastMsg" class="toast-notify">
+        <i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
     </div>
 
     <script>
+    // ========== SIDEBAR & NAVIGATION TOGGLE ==========
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+
     // ----------------------------- INVENTORY DATA MODEL (localStorage) -----------------------------
     let categories = [];
     let products = [];
@@ -482,9 +594,9 @@
     // Stock status badge
     function getStockStatusBadge(stock) {
         if (stock <= 0)
-        return '<span class="badge badge-danger"><i class="fas fa-times-circle"></i> Out of Stock</span>';
+            return '<span class="badge badge-danger"><i class="fas fa-times-circle"></i> Out of Stock</span>';
         if (stock <= 10)
-        return '<span class="badge badge-warning"><i class="fas fa-exclamation-triangle"></i> Low Stock</span>';
+            return '<span class="badge badge-warning"><i class="fas fa-exclamation-triangle"></i> Low Stock</span>';
         return '<span class="badge badge-success"><i class="fas fa-check-circle"></i> In Stock</span>';
     }
 

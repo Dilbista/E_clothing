@@ -59,6 +59,42 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', function () {
         return view('Backend.AdminDashboard');
     })->name('admin');
+    
+Route::get('/admin/productmanagement', function () {
+        return view('Backend.productmanagement');
+    })->name('admin.productmanagement');
+    
+    Route::get('/admin/ordersmanagements', function () {
+        return view('Backend.ordersmanagements');
+    })->name('admin.ordersmanagements');
+    
+    Route::get('/admin/usermanagement', function () {
+        return view('Backend.usermanagement');
+    })->name('admin.usermanagement');
+
+    Route::get('/admin/categoriesmanagements', function () {
+        return view('Backend.categoriesmanagements');
+    })->name('admin.categoriesmanagements');
+    
+    Route::get('/admin/cauponmanagement', function () {
+        return view('Backend.cauponmanagement');
+    })->name('admin.cauponmanagement');
+    
+    Route::get('/admin/inventorymanagement', function () {
+        return view('Backend.inventorymanagement');
+    })->name('admin.inventorymanagement');
+
+    Route::get('/admin/banneremanagement', function () {
+        return view('Backend.banneremanagement');
+    })->name('admin.banneremanagement');
+    
+    Route::get('/admin/notificationmanagement', function () {
+        return view('Backend.notificationmanagement');
+    })->name('admin.notificationmanagement');
+    
+   Route::get('/admin/adminprofilemanagement', function () {
+    return view('Backend.adminprofilemanagement');
+})->name('admin.adminprofilemanagement');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

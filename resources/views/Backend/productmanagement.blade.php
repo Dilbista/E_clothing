@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ÉLYSIAN · Product Management</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ÉLYSIAN · Product Management | Luxury Fashion</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -24,6 +25,7 @@
         --gold-light: #E2CDA0;
         --deep-bg: #0C0B0A;
         --card-bg: #1A1816;
+        --sidebar-bg: #100F0E;
         --text-primary: #F5F0E8;
         --text-secondary: #B7AFA4;
         --border-subtle: rgba(200, 169, 110, 0.2);
@@ -33,15 +35,32 @@
         --warning: #D4A853;
         --font-display: 'Playfair Display', serif;
         --font-body: 'Inter', sans-serif;
+        --navbar-height: 70px;
     }
 
     body {
         font-family: var(--font-body);
         background-color: var(--deep-bg);
         color: var(--text-primary);
-        line-height: 1.5;
-        padding: 2rem;
+        line-height: 1.6;
         min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ========== ADMIN LAYOUT ========== */
+    .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* MAIN CONTENT VIEWPORT */
+    .main-content {
+        margin-left: 270px;
+        margin-top: var(--navbar-height);
+        flex: 1;
+        padding: 35px;
+        transition: margin 0.4s;
     }
 
     .product-container {
@@ -49,7 +68,7 @@
         margin: 0 auto;
     }
 
-    /* header & filters */
+    /* Header & Filters */
     .header-bar {
         display: flex;
         justify-content: space-between;
@@ -88,6 +107,7 @@
         border-color: var(--gold);
     }
 
+    /* Buttons */
     .btn {
         padding: 8px 22px;
         border-radius: 40px;
@@ -137,7 +157,7 @@
         margin-left: 6px;
     }
 
-    /* table */
+    /* Table */
     .table-wrapper {
         background: var(--card-bg);
         border-radius: 24px;
@@ -181,7 +201,7 @@
         color: var(--gold);
     }
 
-    /* modal */
+    /* Modal Styling */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -269,7 +289,7 @@
         margin-top: 24px;
     }
 
-    /* toast */
+    /* Toast Notification */
     .toast-notify {
         position: fixed;
         bottom: 30px;
@@ -293,9 +313,60 @@
         transform: translateX(0);
     }
 
-    @media (max-width: 680px) {
-        body {
-            padding: 1rem;
+    /* MOBILE TOGGLE & OVERLAY */
+    .menu-toggle {
+        display: none;
+        background: var(--gold);
+        border: none;
+        color: black;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 35;
+        backdrop-filter: blur(4px);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .top-navbar {
+            left: 0;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 30px 20px;
+        }
+
+        .menu-toggle {
+            display: flex;
+        }
+
+        .nav-search {
+            display: none;
         }
 
         .header-bar {
@@ -317,35 +388,45 @@
 
 <body>
 
-    <div class="product-container">
-        <div class="header-bar">
-            <h1 class="page-title"><i class="fas fa-tshirt" style="margin-right: 12px; color: var(--gold);"></i> Product
-                Management</h1>
-            <div class="search-box">
-                <input type="text" id="searchProducts" class="search-input" placeholder="🔍 Search by name...">
-                <button class="btn btn-primary" id="openAddProductBtn"><i class="fas fa-plus"></i> Add Product</button>
-            </div>
-        </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <div class="table-wrapper">
-            <table id="productsTable">
-                <thead>
-                    <tr>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="productsTableBody">
-                    <tr>
-                        <td colspan="6" style="text-align:center;">Loading products...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="admin-layout" id="adminLayout">
+        @include('Backend.layouts.header')
+        @include('Backend.layouts.sidebar')
+
+        <main class="main-content" id="mainContent">
+            <div class="product-container">
+                <div class="header-bar">
+                    <h1 class="page-title"><i class="fas fa-tshirt" style="margin-right: 12px; color: var(--gold);"></i>
+                        Product Management</h1>
+                    <div class="search-box">
+                        <input type="text" id="searchProducts" class="search-input" placeholder="🔍 Search by name...">
+                        <button class="btn btn-primary" id="openAddProductBtn"><i class="fas fa-plus"></i> Add
+                            Product</button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="productsTable">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align:center;">Loading products...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Modal: Add / Edit Product -->
@@ -390,10 +471,42 @@
         </div>
     </div>
 
-    <div id="toastMsg" class="toast-notify"><i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
+    <div id="toastMsg" class="toast-notify">
+        <i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
     </div>
 
     <script>
+    // ========== SIDEBAR & NAVIGATION TOGGLE ==========
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+
     // ----------------------------- PRODUCT & CATEGORY DATA (localStorage) -----------------------------
     let products = [];
     let categories = [];
@@ -518,21 +631,22 @@
                 `<img src="${prod.image_url}" class="product-thumb" onerror="this.src='https://placehold.co/50x50?text=No+Image'">` :
                 `<div style="width:50px;height:50px;background:#2e2b26;border-radius:12px;"></div>`;
             const row = `
-        <tr>
-          <td>${imgHtml}</td>
-          <td><strong>${escapeHtml(prod.name)}</strong></td>
-          <td>${escapeHtml(cat.name)}</td>
-          <td>$${prod.price.toFixed(2)}</td>
-          <td>${prod.stock}</td>
-          <td style="white-space: nowrap;">
-            <button class="btn-outline btn-sm edit-product" data-id="${prod.id}"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn-danger-sm delete-product" data-id="${prod.id}"><i class="fas fa-trash"></i> Del</button>
-          </td>
-        </tr>
-      `;
+                <tr>
+                    <td>${imgHtml}</td>
+                    <td><strong>${escapeHtml(prod.name)}</strong></td>
+                    <td>${escapeHtml(cat.name)}</td>
+                    <td>$${prod.price.toFixed(2)}</td>
+                    <td>${prod.stock}</td>
+                    <td style="white-space: nowrap;">
+                        <button class="btn-outline btn-sm edit-product" data-id="${prod.id}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn-danger-sm delete-product" data-id="${prod.id}"><i class="fas fa-trash"></i> Del</button>
+                    </td>
+                </tr>
+            `;
             tbody.insertAdjacentHTML('beforeend', row);
         });
-        // attach event listeners to buttons
+
+        // Attach event listeners to action buttons
         document.querySelectorAll('.edit-product').forEach(btn => {
             btn.addEventListener('click', () => openEditProduct(parseInt(btn.dataset.id)));
         });
@@ -655,7 +769,7 @@
         });
     }
 
-    // Bootstrap
+    // Initialize application logic
     loadCategories();
     loadProducts();
     renderProducts();

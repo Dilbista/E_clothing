@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ÉLYSIAN · Category Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +25,7 @@
         --gold-light: #E2CDA0;
         --deep-bg: #0C0B0A;
         --card-bg: #1A1816;
+        --sidebar-bg: #100F0E;
         --text-primary: #F5F0E8;
         --text-secondary: #B7AFA4;
         --border-subtle: rgba(200, 169, 110, 0.2);
@@ -33,15 +35,32 @@
         --warning: #D4A853;
         --font-display: 'Playfair Display', serif;
         --font-body: 'Inter', sans-serif;
+        --navbar-height: 70px;
     }
 
     body {
         font-family: var(--font-body);
         background-color: var(--deep-bg);
         color: var(--text-primary);
-        line-height: 1.5;
-        padding: 2rem;
+        line-height: 1.6;
         min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ========== ADMIN LAYOUT ========== */
+    .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* MAIN CONTENT VIEWPORT */
+    .main-content {
+        margin-left: 270px;
+        margin-top: var(--navbar-height);
+        flex: 1;
+        padding: 35px;
+        transition: margin 0.4s;
     }
 
     .category-container {
@@ -251,9 +270,60 @@
         transform: translateX(0);
     }
 
-    @media (max-width: 640px) {
-        body {
-            padding: 1rem;
+    /* MOBILE TOGGLE & OVERLAY */
+    .menu-toggle {
+        display: none;
+        background: var(--gold);
+        border: none;
+        color: black;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 35;
+        backdrop-filter: blur(4px);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .top-navbar {
+            left: 0;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 30px 20px;
+        }
+
+        .menu-toggle {
+            display: flex;
+        }
+
+        .nav-search {
+            display: none;
         }
 
         .header-bar {
@@ -270,31 +340,42 @@
 
 <body>
 
-    <div class="category-container">
-        <div class="header-bar">
-            <h1 class="page-title"><i class="fas fa-tags" style="margin-right: 12px; color: var(--gold);"></i> Category
-                Management</h1>
-            <button class="btn btn-primary" id="openAddCategoryBtn"><i class="fas fa-plus"></i> Add Category</button>
-        </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <div class="table-wrapper">
-            <table id="categoriesTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Category Name</th>
-                        <th>Slug</th>
-                        <th>Products Count</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="categoriesTableBody">
-                    <tr>
-                        <td colspan="5" style="text-align:center;">Loading categories...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="admin-layout" id="adminLayout">
+        @include('Backend.layouts.header')
+        @include('Backend.layouts.sidebar')
+
+        <main class="main-content" id="mainContent">
+            <div class="category-container">
+                <div class="header-bar">
+                    <h1 class="page-title"><i class="fas fa-tags" style="margin-right: 12px; color: var(--gold);"></i>
+                        Category
+                        Management</h1>
+                    <button class="btn btn-primary" id="openAddCategoryBtn"><i class="fas fa-plus"></i> Add
+                        Category</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="categoriesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category Name</th>
+                                <th>Slug</th>
+                                <th>Products Count</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align:center;">Loading categories...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Modal: Add / Edit Category -->
@@ -319,10 +400,42 @@
         </div>
     </div>
 
-    <div id="toastMsg" class="toast-notify"><i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
+    <div id="toastMsg" class="toast-notify">
+        <i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
     </div>
 
     <script>
+    // ========== SIDEBAR & NAVIGATION TOGGLE ==========
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+
     // ----------------------------- CATEGORY DATA MODEL (localStorage) -----------------------------
     let categories = [];
 
@@ -400,21 +513,21 @@
         tbody.innerHTML = '';
         categories.forEach(cat => {
             const row = `
-        <tr>
-          <td>${cat.id}</td>
-          <td><strong>${escapeHtml(cat.name)}</strong><br><small style="color:var(--text-secondary);">${escapeHtml(cat.description || '')}</small></td>
-          <td>${escapeHtml(cat.slug)}</td>
-          <td><span class="badge">${cat.productCount || 0} products</span></td>
-          <td style="white-space: nowrap;">
-            <button class="btn-outline btn-sm edit-category" data-id="${cat.id}"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn-danger-sm delete-category" data-id="${cat.id}"><i class="fas fa-trash"></i> Del</button>
-          </td>
-        </tr>
-      `;
+                <tr>
+                  <td>${cat.id}</td>
+                  <td><strong>${escapeHtml(cat.name)}</strong><br><small style="color:var(--text-secondary);">${escapeHtml(cat.description || '')}</small></td>
+                  <td>${escapeHtml(cat.slug)}</td>
+                  <td><span class="badge">${cat.productCount || 0} products</span></td>
+                  <td style="white-space: nowrap;">
+                    <button class="btn-outline btn-sm edit-category" data-id="${cat.id}"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="btn-danger-sm delete-category" data-id="${cat.id}"><i class="fas fa-trash"></i> Del</button>
+                  </td>
+                </tr>
+            `;
             tbody.insertAdjacentHTML('beforeend', row);
         });
 
-        // attach event listeners
+        // Attach event listeners
         document.querySelectorAll('.edit-category').forEach(btn => {
             btn.addEventListener('click', () => openEditCategory(parseInt(btn.dataset.id)));
         });
@@ -436,11 +549,11 @@
     function deleteCategory(id) {
         const catToDelete = categories.find(c => c.id === id);
         if (!catToDelete) return;
-        // optional: check if productCount > 0 and warn
+
         if (catToDelete.productCount > 0) {
             if (!confirm(
                     `Category "${catToDelete.name}" has ${catToDelete.productCount} product(s). Deleting it will not delete products but they will become uncategorized. Continue?`
-                    )) {
+                )) {
                 return;
             }
         } else {
@@ -463,15 +576,14 @@
             showToast("Category name is required", true);
             return;
         }
-        // Capitalize first letter of each word (optional)
+        // Capitalize first letter of each word
         name = name.replace(/\b\w/g, c => c.toUpperCase());
         const slug = generateSlug(name);
 
         if (id) {
-            // update existing
+            // Update existing
             const idx = categories.findIndex(c => c.id == id);
             if (idx !== -1) {
-                // preserve productCount
                 const oldName = categories[idx].name;
                 categories[idx] = {
                     ...categories[idx],
@@ -484,7 +596,7 @@
                 showToast(`Category updated: "${oldName}" → "${name}"`);
             }
         } else {
-            // check duplicate name
+            // Check duplicate name
             if (categories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
                 showToast("A category with this name already exists", true);
                 return;

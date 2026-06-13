@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ÉLYSIAN · Admin Profile Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,18 +35,32 @@
         --warning: #D4A853;
         --font-display: 'Playfair Display', serif;
         --font-body: 'Inter', sans-serif;
+        --navbar-height: 70px;
     }
 
     body {
         font-family: var(--font-body);
         background-color: var(--deep-bg);
         color: var(--text-primary);
-        line-height: 1.5;
+        line-height: 1.6;
         min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ========== ADMIN LAYOUT ========== */
+    .admin-layout {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* MAIN CONTENT VIEWPORT */
+    .main-content {
+        margin-left: 270px;
+        margin-top: var(--navbar-height);
+        flex: 1;
+        padding: 35px;
+        transition: margin 0.4s;
     }
 
     /* Profile Card Container */
@@ -262,9 +277,60 @@
         transform: translateX(0);
     }
 
-    @media (max-width: 640px) {
-        body {
-            padding: 1rem;
+    /* MOBILE TOGGLE & OVERLAY */
+    .menu-toggle {
+        display: none;
+        background: var(--gold);
+        border: none;
+        color: black;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 35;
+        backdrop-filter: blur(4px);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .top-navbar {
+            left: 0;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 30px 20px;
+        }
+
+        .menu-toggle {
+            display: flex;
+        }
+
+        .nav-search {
+            display: none;
         }
 
         .profile-body {
@@ -290,78 +356,120 @@
 
 <body>
 
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <div class="avatar-section">
-                    <div class="profile-avatar" id="avatarPreview">
-                        <span id="avatarInitial">E</span>
-                        <img id="avatarImg" style="display: none;" alt="avatar">
-                    </div>
-                    <button class="avatar-upload-btn" id="uploadAvatarBtn" aria-label="Upload avatar">
-                        <i class="fas fa-camera"></i>
-                    </button>
-                    <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
-                </div>
-                <div class="profile-name" id="displayName">Elysian Admin</div>
-                <div class="profile-role">Administrator</div>
-            </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-            <div class="profile-body">
-                <!-- Profile Information Form -->
-                <div class="section-title">
-                    <i class="fas fa-user-circle"></i> Personal Information
-                </div>
-                <form id="profileInfoForm">
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="fullName" placeholder="John Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="email" placeholder="admin@elysian.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Role (read-only)</label>
-                        <input type="text" id="roleField" readonly disabled style="opacity:0.7; cursor:not-allowed;">
-                    </div>
-                </form>
+    <div class="admin-layout" id="adminLayout">
+        @include('Backend.layouts.header')
+        @include('Backend.layouts.sidebar')
 
-                <hr>
-
-                <!-- Change Password Section -->
-                <div class="section-title">
-                    <i class="fas fa-lock"></i> Change Password
-                </div>
-                <form id="passwordForm">
-                    <div class="form-group">
-                        <label>Current Password</label>
-                        <input type="password" id="currentPassword" placeholder="••••••••">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>New Password</label>
-                            <input type="password" id="newPassword" placeholder="Min. 6 characters">
+        <main class="main-content" id="mainContent">
+            <div class="profile-container">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="avatar-section">
+                            <div class="profile-avatar" id="avatarPreview">
+                                <span id="avatarInitial">E</span>
+                                <img id="avatarImg" style="display: none;" alt="avatar">
+                            </div>
+                            <button class="avatar-upload-btn" id="uploadAvatarBtn" aria-label="Upload avatar">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
                         </div>
-                        <div class="form-group">
-                            <label>Confirm New Password</label>
-                            <input type="password" id="confirmPassword" placeholder="Re-enter new password">
+                        <div class="profile-name" id="displayName">Elysian Admin</div>
+                        <div class="profile-role">Administrator</div>
+                    </div>
+
+                    <div class="profile-body">
+                        <!-- Profile Information Form -->
+                        <div class="section-title">
+                            <i class="fas fa-user-circle"></i> Personal Information
+                        </div>
+                        <form id="profileInfoForm">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="fullName" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="email" placeholder="admin@elysian.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Role (read-only)</label>
+                                <input type="text" id="roleField" readonly disabled
+                                    style="opacity:0.7; cursor:not-allowed;">
+                            </div>
+                        </form>
+
+                        <hr>
+
+                        <!-- Change Password Section -->
+                        <div class="section-title">
+                            <i class="fas fa-lock"></i> Change Password
+                        </div>
+                        <form id="passwordForm">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="••••••••">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>New Password</label>
+                                    <input type="password" id="newPassword" placeholder="Min. 6 characters">
+                                </div>
+                                <div class="form-group">
+                                    <label>Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" placeholder="Re-enter new password">
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-outline" id="cancelBtn">Reset</button>
+                            <button type="button" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
                         </div>
                     </div>
-                </form>
-
-                <div class="action-buttons">
-                    <button type="button" class="btn btn-outline" id="cancelBtn">Reset</button>
-                    <button type="button" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
-    <div id="toastMsg" class="toast-notify"><i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
+    <div id="toastMsg" class="toast-notify">
+        <i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
     </div>
 
     <script>
+    // ========== SIDEBAR & NAVIGATION TOGGLE ==========
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+
     // ----------------------------- ADMIN PROFILE MANAGEMENT (LOCAL STORAGE DEMO) -----------------------------
     // In a real app, replace with API calls using auth token.
     // For demo, we store profile data in localStorage.
@@ -484,8 +592,6 @@
         document.getElementById('currentPassword').value = "";
         document.getElementById('newPassword').value = "";
         document.getElementById('confirmPassword').value = "";
-
-        // Additional success message already inside saveProfileToStorage
     });
 
     // Reset / cancel button: revert form fields to current profile data (without saving)
@@ -528,8 +634,6 @@
     // Initial UI population
     updateProfileUI();
 
-    // Optional: In a real backend integration, you would also add a logout or token refresh.
-    // For completeness, we can add a simulated API call comment.
     console.log("Admin profile management ready — localStorage persistence active.");
     </script>
 </body>

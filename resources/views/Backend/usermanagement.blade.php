@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ÉLYSIAN · User Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +25,7 @@
         --gold-light: #E2CDA0;
         --deep-bg: #0C0B0A;
         --card-bg: #1A1816;
+        --sidebar-bg: #100F0E;
         --text-primary: #F5F0E8;
         --text-secondary: #B7AFA4;
         --border-subtle: rgba(200, 169, 110, 0.2);
@@ -33,15 +35,32 @@
         --warning: #D4A853;
         --font-display: 'Playfair Display', serif;
         --font-body: 'Inter', sans-serif;
+        --navbar-height: 70px;
     }
 
     body {
         font-family: var(--font-body);
         background-color: var(--deep-bg);
         color: var(--text-primary);
-        line-height: 1.5;
-        padding: 2rem;
+        line-height: 1.6;
         min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* ========== ADMIN LAYOUT ========== */
+    .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* MAIN CONTENT VIEWPORT */
+    .main-content {
+        margin-left: 270px;
+        margin-top: var(--navbar-height);
+        flex: 1;
+        padding: 35px;
+        transition: margin 0.4s;
     }
 
     .user-container {
@@ -312,9 +331,60 @@
         transform: translateX(0);
     }
 
-    @media (max-width: 680px) {
-        body {
-            padding: 1rem;
+    /* MOBILE TOGGLE & OVERLAY */
+    .menu-toggle {
+        display: none;
+        background: var(--gold);
+        border: none;
+        color: black;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 35;
+        backdrop-filter: blur(4px);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .top-navbar {
+            left: 0;
+            padding: 0 20px;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 30px 20px;
+        }
+
+        .menu-toggle {
+            display: flex;
+        }
+
+        .nav-search {
+            display: none;
         }
 
         .header-bar {
@@ -335,47 +405,57 @@
 
 <body>
 
-    <div class="user-container">
-        <div class="header-bar">
-            <h1 class="page-title"><i class="fas fa-users" style="margin-right: 12px; color: var(--gold);"></i> User
-                Management</h1>
-            <div class="filter-group">
-                <input type="text" id="searchUser" class="search-input" placeholder="🔍 Search by name or email...">
-                <select id="roleFilter" class="filter-select">
-                    <option value="all">All Roles</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Seller">Seller</option>
-                    <option value="Customer">Customer</option>
-                </select>
-                <select id="statusFilter" class="filter-select">
-                    <option value="all">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-                <button class="btn btn-primary" id="openAddUserBtn"><i class="fas fa-user-plus"></i> Add User</button>
-            </div>
-        </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <div class="table-wrapper">
-            <table id="usersTable">
-                <thead>
-                    <tr>
-                        <th>Avatar</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Joined</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="usersTableBody">
-                    <tr>
-                        <td colspan="7" style="text-align:center;">Loading users...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="admin-layout" id="adminLayout">
+
+        <main class="main-content" id="mainContent">
+            <div class="user-container">
+                <div class="header-bar">
+                    <h1 class="page-title"><i class="fas fa-users" style="margin-right: 12px; color: var(--gold);"></i>
+                        User
+                        Management</h1>
+                    <div class="filter-group">
+                        <input type="text" id="searchUser" class="search-input"
+                            placeholder="🔍 Search by name or email...">
+                        <select id="roleFilter" class="filter-select">
+                            <option value="all">All Roles</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Seller">Seller</option>
+                            <option value="Customer">Customer</option>
+                        </select>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <button class="btn btn-primary" id="openAddUserBtn"><i class="fas fa-user-plus"></i> Add
+                            User</button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Avatar</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align:center;">Loading users...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Modal: Add / Edit User -->
@@ -419,10 +499,42 @@
         </div>
     </div>
 
-    <div id="toastMsg" class="toast-notify"><i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
+    <div id="toastMsg" class="toast-notify">
+        <i class="fas fa-check-circle"></i> <span id="toastText">Success</span>
     </div>
 
     <script>
+    // ========== SIDEBAR & NAVIGATION TOGGLE ==========
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        if (sidebar) sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (sidebar && sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+
     // ----------------------------- USER DATA (localStorage) -----------------------------
     let users = [];
 
@@ -537,23 +649,23 @@
         filtered.forEach(user => {
             const avatarLetter = user.name.charAt(0).toUpperCase();
             const row = `
-        <tr>
-          <td><div class="user-avatar-small">${avatarLetter}</div></td>
-          <td><strong>${escapeHtml(user.name)}</strong></td>
-          <td>${escapeHtml(user.email)}</td>
-          <td>${getRoleBadge(user.role)}</td>
-          <td>${getStatusBadge(user.status)}</td>
-          <td>${user.joined || 'N/A'}</td>
-          <td style="white-space: nowrap;">
-            <button class="btn-outline btn-sm edit-user" data-id="${user.id}"><i class="fas fa-edit"></i> Edit</button>
-            <button class="btn-danger-sm delete-user" data-id="${user.id}"><i class="fas fa-trash"></i> Del</button>
-          </td>
-        </tr>
-      `;
+                <tr>
+                  <td><div class="user-avatar-small">${avatarLetter}</div></td>
+                  <td><strong>${escapeHtml(user.name)}</strong></td>
+                  <td>${escapeHtml(user.email)}</td>
+                  <td>${getRoleBadge(user.role)}</td>
+                  <td>${getStatusBadge(user.status)}</td>
+                  <td>${user.joined || 'N/A'}</td>
+                  <td style="white-space: nowrap;">
+                    <button class="btn-outline btn-sm edit-user" data-id="${user.id}"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="btn-danger-sm delete-user" data-id="${user.id}"><i class="fas fa-trash"></i> Del</button>
+                  </td>
+                </tr>
+            `;
             tbody.insertAdjacentHTML('beforeend', row);
         });
 
-        // attach edit/delete events
+        // Attach edit/delete events
         document.querySelectorAll('.edit-user').forEach(btn => {
             btn.addEventListener('click', () => openEditUser(parseInt(btn.dataset.id)));
         });
@@ -598,7 +710,7 @@
             showToast('Name and email are required', true);
             return;
         }
-        // email duplicate check (excluding current user if editing)
+        // Email duplicate check (excluding current user if editing)
         const emailExists = users.some(u => u.email.toLowerCase() === email.toLowerCase() && u.id != id);
         if (emailExists) {
             showToast('Email already exists', true);
@@ -614,7 +726,7 @@
         if (password && password.length >= 3) userData.password = password;
 
         if (id) {
-            // update existing
+            // Update existing
             const idx = users.findIndex(u => u.id == id);
             if (idx !== -1) {
                 users[idx] = {
@@ -625,7 +737,7 @@
                 showToast('User updated successfully');
             }
         } else {
-            // create new
+            // Create new
             const newId = Date.now();
             const newUser = {
                 id: newId,
