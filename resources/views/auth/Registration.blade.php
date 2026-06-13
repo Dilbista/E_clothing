@@ -21,6 +21,16 @@
         Create Account
       </h2>
 
+      <div class="flex items-center justify-end mt-4">
+
+        <br>
+        <a href="{{ route('redirect.google') }}">
+          <img src="https://miro.medium.com/v2/resize:fit:1400/1*u0bwdudgoyKjSLntsRcqiw.png" alt="" srcset=""
+            width="200px">
+        </a>
+
+      </div>
+
       <form method="POST" action="{{ route('register.post') }}">
         @csrf
 

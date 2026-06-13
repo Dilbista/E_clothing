@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -72,3 +73,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+
+route::get('auth/google',[GoogleController::class,"redirectToGoogle"])->name('redirect.google');
+
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
