@@ -2,6 +2,19 @@
 
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserProfileController;
+
+Route::middleware('auth')->group(function () {
+
+    Route::post('/profile/update-info',
+        [UserProfileController::class, 'updateInfo'])
+        ->name('profile.update.info');
+
+    Route::post('/profile/update-password',
+        [UserProfileController::class, 'updatePassword'])
+        ->name('profile.update.password');
+
+});
 
 Route::get('/', function () {
     return view('frondend.Home');

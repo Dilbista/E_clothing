@@ -408,6 +408,8 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="admin-layout" id="adminLayout">
+      @include('Backend.layouts.header')
+        @include('Backend.layouts.sidebar')
 
         <main class="main-content" id="mainContent">
             <div class="user-container">
