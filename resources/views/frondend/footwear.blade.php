@@ -195,7 +195,9 @@
 </head>
 
 <body class="bg-white">
+
     <!-- Header -->
+
     @include('frondend.layouts.header')
 
     <!-- Standardized Category Hero Height (350px) with Centered Alignment -->

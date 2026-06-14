@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <title>@yield('title','E_Cloting||Cart')</title>
+<title>@yield('title', 'E_Cloting||Cart')</title>
 
 <head>
     <meta charset="UTF-8" />
@@ -9,199 +9,199 @@
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <!-- Scripts (Toggles, dropdowns, and live calculations logic) -->
     <script id="headerInteractions">
-    document.addEventListener("DOMContentLoaded", function() {
-        // Search Toggle
-        const searchToggle = document.getElementById("searchToggle");
-        const searchDropdown = document.getElementById("searchDropdown");
+        document.addEventListener("DOMContentLoaded", function () {
+            // Search Toggle
+            const searchToggle = document.getElementById("searchToggle");
+            const searchDropdown = document.getElementById("searchDropdown");
 
-        if (searchToggle && searchDropdown) {
-            searchToggle.addEventListener("click", function() {
-                searchDropdown.classList.toggle("hidden");
+            if (searchToggle && searchDropdown) {
+                searchToggle.addEventListener("click", function () {
+                    searchDropdown.classList.toggle("hidden");
+                });
+
+                document.addEventListener("click", function (event) {
+                    if (
+                        !searchToggle.contains(event.target) &&
+                        !searchDropdown.contains(event.target)
+                    ) {
+                        searchDropdown.classList.add("hidden");
+                    }
+                });
+            }
+
+            // Cart Toggle (Small badge updates linked directly)
+            const cartToggle = document.getElementById("cartToggle");
+            if (cartToggle) {
+                cartToggle.addEventListener("click", function () {
+                    // Cart page redirects or simple feedback can go here if needed.
+                });
+            }
+
+            // Mobile Menu Toggle
+            const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+            const mobileMenu = document.getElementById("mobileMenu");
+
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener("click", function () {
+                    mobileMenu.classList.toggle("hidden");
+                });
+            }
+
+            // Mobile Shop Menu Toggle
+            const mobileShopToggle = document.getElementById("mobileShopToggle");
+            const mobileShopMenu = document.getElementById("mobileShopMenu");
+
+            if (mobileShopToggle && mobileShopMenu) {
+                mobileShopToggle.addEventListener("click", function () {
+                    mobileShopMenu.classList.toggle("hidden");
+                });
+            }
+        });
+
+        // User Account Profile Dropdown
+        const btn = document.getElementById("userBtn");
+        const dropdown = document.getElementById("dropdown");
+
+        if (btn && dropdown) {
+            btn.addEventListener("click", () => {
+                dropdown.classList.toggle("hidden");
             });
 
-            document.addEventListener("click", function(event) {
-                if (
-                    !searchToggle.contains(event.target) &&
-                    !searchDropdown.contains(event.target)
-                ) {
-                    searchDropdown.classList.add("hidden");
+            document.addEventListener("click", (e) => {
+                if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add("hidden");
                 }
             });
         }
 
-        // Cart Toggle (Small badge updates linked directly)
-        const cartToggle = document.getElementById("cartToggle");
-        if (cartToggle) {
-            cartToggle.addEventListener("click", function() {
-                // Cart page redirects or simple feedback can go here if needed.
+        // Dynamic Cart Operations & Pricing Calculations
+        function recalculateTotalSummary() {
+            const cartItems = document.querySelectorAll('.cart-item');
+            let subtotal = 0;
+
+            cartItems.forEach(item => {
+                const price = parseFloat(item.getAttribute('data-price'));
+                const qtyElement = item.querySelector('.item-qty');
+                const qty = parseInt(qtyElement.textContent);
+
+                // Calculate and display individual item subtotal
+                const itemSubtotal = price * qty;
+                const itemSubtotalDisplay = item.querySelector('.item-subtotal');
+                if (itemSubtotalDisplay) {
+                    itemSubtotalDisplay.textContent = 'Rs.' + itemSubtotal.toFixed(2);
+                }
+
+                subtotal += itemSubtotal;
             });
-        }
 
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
+            // Update overall values
+            const subtotalDisplay = document.getElementById('summary-subtotal');
+            const shippingDisplay = document.getElementById('summary-shipping');
+            const taxDisplay = document.getElementById('summary-tax');
+            const totalDisplay = document.getElementById('summary-total');
+            const cartBadge = document.getElementById('cart-badge-count');
 
-        if (mobileMenuToggle && mobileMenu) {
-            mobileMenuToggle.addEventListener("click", function() {
-                mobileMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Shop Menu Toggle
-        const mobileShopToggle = document.getElementById("mobileShopToggle");
-        const mobileShopMenu = document.getElementById("mobileShopMenu");
-
-        if (mobileShopToggle && mobileShopMenu) {
-            mobileShopToggle.addEventListener("click", function() {
-                mobileShopMenu.classList.toggle("hidden");
-            });
-        }
-    });
-
-    // User Account Profile Dropdown
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
-
-    if (btn && dropdown) {
-        btn.addEventListener("click", () => {
-            dropdown.classList.toggle("hidden");
-        });
-
-        document.addEventListener("click", (e) => {
-            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add("hidden");
-            }
-        });
-    }
-
-    // Dynamic Cart Operations & Pricing Calculations
-    function recalculateTotalSummary() {
-        const cartItems = document.querySelectorAll('.cart-item');
-        let subtotal = 0;
-
-        cartItems.forEach(item => {
-            const price = parseFloat(item.getAttribute('data-price'));
-            const qtyElement = item.querySelector('.item-qty');
-            const qty = parseInt(qtyElement.textContent);
-
-            // Calculate and display individual item subtotal
-            const itemSubtotal = price * qty;
-            const itemSubtotalDisplay = item.querySelector('.item-subtotal');
-            if (itemSubtotalDisplay) {
-                itemSubtotalDisplay.textContent = 'Rs.' + itemSubtotal.toFixed(2);
+            if (subtotalDisplay) {
+                subtotalDisplay.textContent = 'Rs.' + subtotal.toFixed(2);
             }
 
-            subtotal += itemSubtotal;
-        });
-
-        // Update overall values
-        const subtotalDisplay = document.getElementById('summary-subtotal');
-        const shippingDisplay = document.getElementById('summary-shipping');
-        const taxDisplay = document.getElementById('summary-tax');
-        const totalDisplay = document.getElementById('summary-total');
-        const cartBadge = document.getElementById('cart-badge-count');
-
-        if (subtotalDisplay) {
-            subtotalDisplay.textContent = 'Rs.' + subtotal.toFixed(2);
-        }
-
-        // Calculate delivery (Free above Rs.100.00, otherwise Rs.10.00)
-        let shippingCost = 0;
-        if (subtotal > 0 && subtotal < 100) {
-            shippingCost = 10.00;
-            if (shippingDisplay) {
-                shippingDisplay.textContent = 'Rs.10.00';
-                shippingDisplay.classList.remove('text-emerald-600');
-                shippingDisplay.classList.add('text-gray-900');
+            // Calculate delivery (Free above Rs.100.00, otherwise Rs.10.00)
+            let shippingCost = 0;
+            if (subtotal > 0 && subtotal < 100) {
+                shippingCost = 10.00;
+                if (shippingDisplay) {
+                    shippingDisplay.textContent = 'Rs.10.00';
+                    shippingDisplay.classList.remove('text-emerald-600');
+                    shippingDisplay.classList.add('text-gray-900');
+                }
+            } else {
+                shippingCost = 0;
+                if (shippingDisplay) {
+                    shippingDisplay.textContent = subtotal > 0 ? 'Free' : 'Rs.0.00';
+                    shippingDisplay.classList.add('text-emerald-600');
+                    shippingDisplay.classList.remove('text-gray-900');
+                }
             }
-        } else {
-            shippingCost = 0;
-            if (shippingDisplay) {
-                shippingDisplay.textContent = subtotal > 0 ? 'Free' : 'Rs.0.00';
-                shippingDisplay.classList.add('text-emerald-600');
-                shippingDisplay.classList.remove('text-gray-900');
+
+            // Calculate Tax (8%)
+            const taxVal = subtotal * 0.08;
+            if (taxDisplay) {
+                taxDisplay.textContent = 'Rs.' + taxVal.toFixed(2);
+            }
+
+            // Final total
+            const finalTotalVal = subtotal + shippingCost + taxVal;
+            if (totalDisplay) {
+                totalDisplay.textContent = 'Rs.' + finalTotalVal.toFixed(2);
+            }
+
+            // Update global cart counter badge
+            if (cartBadge) {
+                cartBadge.textContent = cartItems.length;
+            }
+
+            // If no items are left, toggle transition to Empty State Screen
+            if (cartItems.length === 0) {
+                const layout = document.getElementById('cart-main-layout');
+                const emptyState = document.getElementById('empty-cart');
+                if (layout && emptyState) {
+                    layout.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                }
             }
         }
 
-        // Calculate Tax (8%)
-        const taxVal = subtotal * 0.08;
-        if (taxDisplay) {
-            taxDisplay.textContent = 'Rs.' + taxVal.toFixed(2);
-        }
+        // Handle Quantity increments or decrements
+        function updateQty(btn, change) {
+            const qtyContainer = btn.parentNode;
+            const qtyDisplay = qtyContainer.querySelector('.item-qty');
+            if (qtyDisplay) {
+                let currentQty = parseInt(qtyDisplay.textContent);
+                currentQty += change;
+                if (currentQty < 1) currentQty = 1;
+                qtyDisplay.textContent = currentQty;
 
-        // Final total
-        const finalTotalVal = subtotal + shippingCost + taxVal;
-        if (totalDisplay) {
-            totalDisplay.textContent = 'Rs.' + finalTotalVal.toFixed(2);
-        }
-
-        // Update global cart counter badge
-        if (cartBadge) {
-            cartBadge.textContent = cartItems.length;
-        }
-
-        // If no items are left, toggle transition to Empty State Screen
-        if (cartItems.length === 0) {
-            const layout = document.getElementById('cart-main-layout');
-            const emptyState = document.getElementById('empty-cart');
-            if (layout && emptyState) {
-                layout.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-            }
-        }
-    }
-
-    // Handle Quantity increments or decrements
-    function updateQty(btn, change) {
-        const qtyContainer = btn.parentNode;
-        const qtyDisplay = qtyContainer.querySelector('.item-qty');
-        if (qtyDisplay) {
-            let currentQty = parseInt(qtyDisplay.textContent);
-            currentQty += change;
-            if (currentQty < 1) currentQty = 1;
-            qtyDisplay.textContent = currentQty;
-
-            recalculateTotalSummary();
-        }
-    }
-
-    // Remove Item from Cart smoothly
-    function removeCartItem(trashBtn) {
-        const itemCard = trashBtn.closest('.cart-item');
-        if (itemCard) {
-            // Apply scale-down fade-out animation
-            itemCard.classList.add('transition-all', 'duration-300', 'scale-90', 'opacity-0');
-
-            setTimeout(() => {
-                itemCard.remove();
                 recalculateTotalSummary();
-            }, 300);
+            }
         }
-    }
+
+        // Remove Item from Cart smoothly
+        function removeCartItem(trashBtn) {
+            const itemCard = trashBtn.closest('.cart-item');
+            if (itemCard) {
+                // Apply scale-down fade-out animation
+                itemCard.classList.add('transition-all', 'duration-300', 'scale-90', 'opacity-0');
+
+                setTimeout(() => {
+                    itemCard.remove();
+                    recalculateTotalSummary();
+                }, 300);
+            }
+        }
     </script>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: "#4f46e5",
-                    secondary: "#f97316"
-                },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#4f46e5",
+                        secondary: "#f97316"
+                    },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
                 },
             },
-        },
-    };
+        };
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -209,19 +209,19 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
 
-    body {
-        font-family: 'Inter', sans-serif;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -406,11 +406,14 @@
                 <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-sm text-center">
                     <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Secure Checkout
                         Guaranteed</p>
-                    <div class="flex justify-center items-center space-x-4">
-                        <i class="ri-visa-fill text-2xl text-gray-400 hover:text-gray-600 transition"></i>
-                        <i class="ri-mastercard-fill text-2xl text-gray-400 hover:text-gray-600 transition"></i>
-                        <i class="ri-paypal-fill text-2xl text-gray-400 hover:text-gray-600 transition"></i>
-                        <i class="ri-apple-fill text-2xl text-gray-400 hover:text-gray-600 transition"></i>
+                    <div class="flex justify-center items-center gap-4">
+                        <img src="{{ asset('build/images/payments/esewa.png') }}" alt="eSewa" class="h-8 object-contain">
+
+                        <img src="{{ asset('build/images/payments/khalti.png') }}" alt="Khalti" class="h-8 object-contain">
+
+                        <img src="{{ asset('build/images/payments/ime pay.png') }}" alt="IME Pay" class="h-8 object-contain">
+
+                       
                     </div>
                 </div>
             </div>
