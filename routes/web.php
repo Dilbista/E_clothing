@@ -3,19 +3,19 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 
-
+use App\Http\Controllers\UserProfileController;
 
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Brand\BrandController;
 use App\Http\Controllers\Category\CategoryController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('frondend.home');
-// });
 Route::get('/', function () {
-    return view('test');
+    return view('frondend.home');
 });
+// Route::get('/', function () {
+//     return view('test');
+// });
 
 Route::get('/women', function () {
     return view('frondend.women');
@@ -140,3 +140,11 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 route::get('auth/google', [GoogleController::class, "redirectToGoogle"])->name('redirect.google');
 
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+
+Route::post('/profile/update-info',
+        [UserProfileController::class, 'updateInfo'])
+        ->name('profile.update.info');
+
+    Route::post('/profile/update-password',
+        [UserProfileController::class, 'updatePassword'])
+        ->name('profile.update.password');

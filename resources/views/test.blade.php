@@ -1,5 +1,5 @@
-@extends('frondend.layouts.app')
-
+@extends('frondend.layouts.')
+app
 @section('content')
 
 @endsection

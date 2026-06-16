@@ -17,7 +17,7 @@ class UserController extends Controller
 
         $users= User::orderBy('created_at', 'desc')->paginate(5);
 
-        return view('backend.usermanagement', compact('users'));
+        return view('Backend.usermanagement', compact('users'));
     }
 
    public function store(Request $request)
@@ -62,7 +62,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         // Prevention: Don't let admin delete themselves
-        if (auth()->id() == $user->id) {
+        if (Auth()->id() == $user->id) {
             return redirect()->back()->with('error', 'You cannot delete your own account.');
         }
 

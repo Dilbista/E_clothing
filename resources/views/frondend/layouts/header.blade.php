@@ -91,7 +91,7 @@
                     </button>
                     <div id="dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white shadow-2xl rounded-xl py-2 border border-gray-100">
                         @if(Auth::check())
-                            <div class="px-4 py-2 mb-1 text-xs font-bold text-gray-400 uppercase tracking-wider">Welcome, {{ Auth::user()->name }}</div>
+                            <div class="px-4 py-2 mb-1 text-xs font-bold text-gray-400 uppercase tracking-wider">Welcome, {{ Auth::user()->first_name }}</div>
                             <a href="{{ route('frontend.userprofile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">My Account</a>
                             <a href="{{ route('frontend.orders') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">Orders</a>
                             <hr class="my-1 border-gray-100">

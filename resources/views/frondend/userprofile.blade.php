@@ -1,359 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Account - ShopEase</title>
-    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-    <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: "#4f46e5",
-                    secondary: "#f97316"
-                },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
-                },
-            },
-        },
-    };
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
-    <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
-
-    body {
-        font-family: 'Inter', sans-serif;
-    }
-
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .custom-checkbox {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .custom-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 18px;
-        width: 18px;
-        background-color: #fff;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-    }
-
-    .custom-checkbox:hover input~.checkmark {
-        background-color: #f3f4f6;
-    }
-
-    .custom-checkbox input:checked~.checkmark {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-    }
-
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-    }
-
-    .custom-checkbox input:checked~.checkmark:after {
-        display: block;
-    }
-
-    .custom-checkbox .checkmark:after {
-        left: 6px;
-        top: 2px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #e5e7eb;
-        transition: .4s;
-        border-radius: 34px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-    input:checked+.slider {
-        background-color: #4f46e5;
-    }
-
-    input:checked+.slider:before {
-        transform: translateX(20px);
-    }
-
-    .custom-range {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 5px;
-        background: #e5e7eb;
-        outline: none;
-    }
-
-    .custom-range::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-    }
-
-    .custom-range::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-        border: none;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 160px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        z-index: 50;
-        border-radius: 8px;
-    }
-    </style>
-</head>
+@include('frondend.layouts.navbar')
 
 <body class="bg-gray-50">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <!-- Logo -->
-            <a href="#" class="font-['Pacifico'] text-2xl text-primary">logo</a>
-
-            <!-- Main Navigation -->
-            <nav class="hidden md:flex space-x-8">
-                <a href="{{ url('/') }}" class="text-gray-900 font-medium hover:text-primary transition-colors">Home</a>
-                <div class="relative group">
-                    <button class="text-gray-900 font-medium hover:text-primary transition-colors flex items-center">
-                        Shop
-                        <div class="w-4 h-4 ml-1 flex items-center justify-center">
-                            <i class="ri-arrow-down-s-line"></i>
-                        </div>
-                    </button>
-                    <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded hidden group-hover:block">
-                        <a href="{{ route('frontend.women') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Women</a>
-                        <a href="{{ route('frontend.men') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Men</a>
-                        <a href="{{ route('frontend.accessories') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Accessories</a>
-                        <a href="{{ route('frontend.footwear') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Footwear</a>
-                    </div>
-                </div>
-                <a href="#" class="text-gray-900 font-medium hover:text-primary transition-colors">New Arrivals</a>
-                <a href="#" class="text-gray-900 font-medium hover:text-primary transition-colors">Sale</a>
-                <a href="#" class="text-gray-900 font-medium hover:text-primary transition-colors">About</a>
-            </nav>
-
-            <!-- Utility Icons -->
-            <div class="flex items-center space-x-6">
-                <!-- Search -->
-                <div class="relative">
-                    <button id="searchToggle"
-                        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
-                        <i class="ri-search-line text-xl"></i>
-                    </button>
-                    <div id="searchDropdown"
-                        class="hidden absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4">
-                        <div class="relative">
-                            <input type="text" placeholder="Search products..."
-                                class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
-                            <div
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 flex items-center justify-center text-gray-400">
-                                <i class="ri-search-line"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Account -->
-                <div class="relative">
-                    <button id="userBtn"
-                        class="w-10 h-10 flex items-center justify-center text-primary transition-colors">
-                        <i class="ri-user-line text-xl"></i>
-                    </button>
-
-                    <div id="dropdown" class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded hidden">
-                        <a href="{{ url('login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Sign
-                            In</a>
-                        <a href="{{ url('register') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Register</a>
-                        <a href="#"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 font-semibold text-primary">My
-                            Account</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Orders</a>
-                    </div>
-                </div>
-
-                <!-- Cart -->
-                <div class="relative">
-                    <button id="cartToggle"
-                        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
-                        <i class="ri-shopping-bag-line text-xl"></i>
-                        <span
-                            class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                    </button>
-                    <div id="cartDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white shadow-lg rounded-lg p-4">
-                        <h3 class="font-medium text-gray-900 mb-3">Your Cart (3)</h3>
-                        <div class="space-y-3 max-h-80 overflow-y-auto">
-                            <div class="flex items-center space-x-3">
-                                <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=200&auto=format&fit=crop"
-                                    alt="Product" class="w-16 h-16 object-cover rounded" />
-                                <div class="flex-1">
-                                    <h4 class="text-sm font-medium">Essential White T-Shirt</h4>
-                                    <p class="text-xs text-gray-500">Size: M | Qty: 1</p>
-                                    <p class="text-sm font-medium">Rs.24.99</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-gray-600">
-                                    <i class="ri-close-line"></i>
-                                </button>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=200&auto=format&fit=crop"
-                                    alt="Product" class="w-16 h-16 object-cover rounded" />
-                                <div class="flex-1">
-                                    <h4 class="text-sm font-medium">Slim Fit Black Jeans</h4>
-                                    <p class="text-xs text-gray-500">Size: 32 | Qty: 1</p>
-                                    <p class="text-sm font-medium">Rs.59.99</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-gray-600">
-                                    <i class="ri-close-line"></i>
-                                </button>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?q=80&w=200&auto=format&fit=crop"
-                                    alt="Product" class="w-16 h-16 object-cover rounded" />
-                                <div class="flex-1">
-                                    <h4 class="text-sm font-medium">Classic Leather Watch</h4>
-                                    <p class="text-xs text-gray-500">Color: Brown | Qty: 1</p>
-                                    <p class="text-sm font-medium">Rs.129.99</p>
-                                </div>
-                                <button class="text-gray-400 hover:text-gray-600">
-                                    <i class="ri-close-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-gray-100">
-                            <div class="flex justify-between mb-3">
-                                <span class="text-sm text-gray-600">Subtotal</span>
-                                <span class="text-sm font-medium">Rs.214.97</span>
-                            </div>
-                            <div class="space-y-2">
-                                <a href="#"
-                                    class="block w-full py-2 px-4 bg-primary text-white text-center font-medium rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">Checkout</a>
-                                <a href="{{ url('cart') }}"
-                                    class="block w-full py-2 px-4 bg-gray-100 text-gray-800 text-center font-medium rounded-button hover:bg-gray-200 transition-colors whitespace-nowrap">View
-                                    Cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mobile Menu Toggle -->
-                <button id="mobileMenuToggle"
-                    class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700">
-                    <i class="ri-menu-line text-2xl"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-gray-100">
-            <div class="container mx-auto px-4 py-3 space-y-3">
-                <a href="#" class="block py-2 text-gray-900 font-medium">Home</a>
-                <div>
-                    <button id="mobileShopToggle"
-                        class="flex items-center justify-between w-full py-2 text-gray-900 font-medium">
-                        Shop
-                        <i class="ri-arrow-down-s-line"></i>
-                    </button>
-                    <div id="mobileShopMenu" class="hidden pl-4 space-y-2 mt-1">
-                        <a href="#" class="block py-1 text-gray-700">Women</a>
-                        <a href="#" class="block py-1 text-gray-700">Men</a>
-                        <a href="#" class="block py-1 text-gray-700">Accessories</a>
-                        <a href="#" class="block py-1 text-gray-700">Footwear</a>
-                    </div>
-                </div>
-                <a href="#" class="block py-2 text-gray-900 font-medium">New Arrivals</a>
-                <a href="#" class="block py-2 text-gray-900 font-medium">Sale</a>
-                <a href="#" class="block py-2 text-gray-900 font-medium">About</a>
-            </div>
-        </div>
-    </header>
+    @include('frondend.layouts.header')
 
     <!-- Main Content Panel -->
     <main class="container mx-auto px-4 py-10 md:py-16">
@@ -364,10 +14,6 @@
                     <!-- Changeable User Account Avatar Card -->
                     <div class="flex items-center space-x-4 pb-6 border-b border-gray-100 mb-6">
                         <div class="relative group cursor-pointer w-14 h-14">
-                            <!-- Avatar Image -->
-                            <img id="avatarImage"
-                                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop"
-                                alt="User Avatar" class="w-14 h-14 rounded-full object-cover border border-gray-100" />
 
                             <!-- Hover Overlay -->
                             <div id="changeAvatarBtn"
@@ -376,11 +22,17 @@
                             </div>
 
                             <!-- Hidden Image File Input -->
-                            <input type="file" id="avatarInput" accept="image/*" class="hidden" />
+                            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white text-lg font-semibold">
+                                {{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}
+                            </div>
                         </div>
                         <div>
-                            <h3 class="font-bold text-gray-900">Emily Richardson</h3>
-                            <p class="text-xs text-gray-500">Member since 2024</p>
+                            <h3 class="font-bold text-gray-900">
+                                {{ trim(Auth::user()->first_name . ' ' . Auth::user()->last_name) }}
+                            </h3>
+                            <p class="text-xs text-gray-500">
+                                Member since {{ Auth::user()->created_at->format('Y') }}
+                            </p>
                         </div>
                     </div>
 
@@ -406,11 +58,14 @@
                             <i class="ri-user-settings-line text-lg"></i>
                             <span>Account Details</span>
                         </button>
-                        <a href="#"
-                            class="block flex items-center space-x-3 px-4 py-3 rounded-button font-medium text-rose-600 hover:bg-rose-50 transition-colors mt-6 pt-4 border-t border-gray-100">
-                            <i class="ri-logout-box-r-line text-lg"></i>
-                            <span>Sign Out</span>
-                        </a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="block w-full text-left flex items-center space-x-3 px-4 py-3 rounded-button font-medium text-rose-600 hover:bg-rose-50 transition-colors mt-6 pt-4 border-t border-gray-100">
+                                <i class="ri-logout-box-r-line text-lg"></i>
+                                <span>Sign Out</span>
+                            </button>
+                        </form>
                     </nav>
                 </div>
             </aside>
@@ -421,7 +76,7 @@
                 <!-- Tab: Dashboard -->
                 <div id="tab-dashboard" class="tab-content block space-y-8">
                     <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-sm">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Hello, Emily</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">Hello, {{ Auth::user()->first_name }}</h2>
                         <p class="text-gray-600 text-sm">From your account dashboard you can easily view your recent
                             orders, manage your shipping and billing addresses, and edit your password and profile
                             details.</p>
@@ -629,69 +284,107 @@
                 </div>
 
                 <!-- Tab: Profile Settings -->
+                @if(session('success'))
+                <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-800 rounded">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="mb-4 p-4 bg-red-100 border border-red-300 text-red-800 rounded">
+                    <ul class="list-disc pl-5">
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <div id="tab-profile" class="tab-content hidden space-y-6">
                     <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-sm">
                         <h3 class="font-bold text-gray-900 text-lg mb-6">Account Information</h3>
-                        <form class="space-y-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <form action="{{ route('profile.update.info') }}"
+                            method="POST"
+                            class="space-y-6">
+
+                            @csrf <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                                    <input type="text" value="Emily"
-                                        class="w-full px-4 py-2.5 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
+                                    <input type="text"
+                                        name="first_name"
+                                        value="{{ Auth::user()->first_name }}"
+                                        class="w-full px-4 py-2.5 border border-gray-200 rounded">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                                    <input type="text" value="Richardson"
-                                        class="w-full px-4 py-2.5 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
+                                    <input type="text"
+                                        name="last_name"
+                                        value="{{ Auth::user()->last_name }}"
+                                        class="w-full px-4 py-2.5 border border-gray-200 rounded">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                                    <input type="email" value="emily.richardson@example.com"
+                                    <input type="email"
+                                        name="email"
+                                        value="{{ Auth::user()->email }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                                    <input type="text" value="+1 (555) 123-4567"
+                                    <input type="text"
+                                        name="phone"
+                                        value="{{ Auth::user()->phone }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
                                 </div>
                             </div>
 
                             <div class="pt-4 border-t border-gray-50 flex justify-end">
                                 <button type="submit"
-                                    class="py-2.5 px-6 bg-primary text-white text-sm font-semibold rounded-button hover:bg-primary/90 transition-colors">Save
-                                    Personal Info</button>
+                                    class="py-2.5 px-6 bg-primary text-white text-sm font-semibold rounded-button">
+                                    Save Personal Info
+                                </button>
                             </div>
                         </form>
                     </div>
 
                     <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-sm">
                         <h3 class="font-bold text-gray-900 text-lg mb-6">Change Password</h3>
-                        <form class="space-y-6">
+                        <form action="{{ route('profile.update.password') }}"
+                            method="POST"
+                            class="space-y-6">
+
+                            @csrf
+                            @error('current_password')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-                                <input type="password" placeholder="••••••••••••"
-                                    class="w-full px-4 py-2.5 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
+                                <input type="password"
+                                    name="current_password"
+                                    class="w-full px-4 py-2.5 border border-gray-200 rounded">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                                     <input type="password"
-                                        class="w-full px-4 py-2.5 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
+                                        name="new_password"
+                                        class="w-full px-4 py-2.5 border border-gray-200 rounded">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New
                                         Password</label>
                                     <input type="password"
-                                        class="w-full px-4 py-2.5 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" />
+                                        name="new_password_confirmation"
+                                        class="w-full px-4 py-2.5 border border-gray-200 rounded">
                                 </div>
                             </div>
                             <div class="pt-4 border-t border-gray-50 flex justify-end">
                                 <button type="submit"
-                                    class="py-2.5 px-6 bg-primary text-white text-sm font-semibold rounded-button hover:bg-primary/90 transition-colors">Update
-                                    Password</button>
+                                    class="py-2.5 px-6 bg-primary text-white text-sm font-semibold rounded-button">
+                                    Update Password
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -824,135 +517,79 @@
         </div>
     </footer>
 
-    <!-- Scripts (Includes dropdown logic, account tab toggles, and image change handler) -->
-    <script id="headerInteractions">
-    document.addEventListener("DOMContentLoaded", function() {
-        // Search Toggle
-        const searchToggle = document.getElementById("searchToggle");
-        const searchDropdown = document.getElementById("searchDropdown");
+    <!-- Scripts (Keeps your custom handlers for profile tab navigation and optional avatar uploading) -->
+    <script id="profileInteractions">
+        document.addEventListener("DOMContentLoaded", function() {
+            // Profile Avatar Upload Handler
+            const avatarInput = document.getElementById('avatarInput');
+            const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+            const avatarImage = document.getElementById('avatarImage');
 
-        if (searchToggle && searchDropdown) {
-            searchToggle.addEventListener("click", function() {
-                searchDropdown.classList.toggle("hidden");
-            });
+            if (changeAvatarBtn && avatarInput && avatarImage) {
+                changeAvatarBtn.addEventListener('click', function() {
+                    avatarInput.click();
+                });
 
-            document.addEventListener("click", function(event) {
-                if (
-                    !searchToggle.contains(event.target) &&
-                    !searchDropdown.contains(event.target)
-                ) {
-                    searchDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Cart Toggle
-        const cartToggle = document.getElementById("cartToggle");
-        const cartDropdown = document.getElementById("cartDropdown");
-
-        if (cartToggle && cartDropdown) {
-            cartToggle.addEventListener("click", function() {
-                cartDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !cartToggle.contains(event.target) &&
-                    !cartDropdown.contains(event.target)
-                ) {
-                    cartDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
-
-        if (mobileMenuToggle && mobileMenu) {
-            mobileMenuToggle.addEventListener("click", function() {
-                mobileMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Shop Menu Toggle
-        const mobileShopToggle = document.getElementById("mobileShopToggle");
-        const mobileShopMenu = document.getElementById("mobileShopMenu");
-
-        if (mobileShopToggle && mobileShopMenu) {
-            mobileShopToggle.addEventListener("click", function() {
-                mobileShopMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Profile Avatar Upload Handler
-        const avatarInput = document.getElementById('avatarInput');
-        const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-        const avatarImage = document.getElementById('avatarImage');
-
-        if (changeAvatarBtn && avatarInput && avatarImage) {
-            changeAvatarBtn.addEventListener('click', function() {
-                avatarInput.click();
-            });
-
-            avatarInput.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        avatarImage.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-    });
-
-    // User Profile Dropdown
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
-
-    btn.addEventListener("click", () => {
-        dropdown.classList.toggle("hidden");
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add("hidden");
-        }
-    });
-
-    // Account Tab Switching System
-    function switchTab(tabId) {
-        // Hide all tabs
-        const contents = document.querySelectorAll('.tab-content');
-        contents.forEach(content => {
-            content.classList.add('hidden');
-            content.classList.remove('block');
+                avatarInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            avatarImage.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
         });
 
-        // Show selected tab
-        const activeContent = document.getElementById('tab-' + tabId);
-        if (activeContent) {
-            activeContent.classList.remove('hidden');
-            activeContent.classList.add('block');
-        }
+        // Account Tab Switching System
+        function switchTab(tabId) {
+            // Hide all tabs
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
 
-        // Remove active styles from navigation buttons
-        const navButtons = document.querySelectorAll('#account-sidebar-nav button');
-        navButtons.forEach(btn => {
-            btn.classList.remove('text-primary', 'bg-primary/10');
-            btn.classList.add('text-gray-600', 'hover:text-primary', 'hover:bg-gray-50');
-        });
+            // Show selected tab
+            const activeContent = document.getElementById('tab-' + tabId);
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+                activeContent.classList.add('block');
+            }
 
-        // Add active style to selected navigation button
-        const activeButton = document.getElementById('nav-' + tabId);
-        if (activeButton) {
-            activeButton.classList.add('text-primary', 'bg-primary/10');
-            activeButton.classList.remove('text-gray-600', 'hover:text-primary', 'hover:bg-gray-50');
+            // Remove active styles from navigation buttons
+            const navButtons = document.querySelectorAll('#account-sidebar-nav button');
+            navButtons.forEach(btn => {
+                btn.classList.remove('text-primary', 'bg-primary/10');
+                btn.classList.add('text-gray-600', 'hover:text-primary', 'hover:bg-gray-50');
+            });
+
+            // Add active style to selected navigation button
+            const activeButton = document.getElementById('nav-' + tabId);
+            if (activeButton) {
+                activeButton.classList.add('text-primary', 'bg-primary/10');
+                activeButton.classList.remove('text-gray-600', 'hover:text-primary', 'hover:bg-gray-50');
+            }
         }
-    }
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let activeTab = "{{ session('active_tab') }}";
+
+            if (activeTab) {
+                // hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+
+                // show selected tab
+                document.getElementById(activeTab).classList.remove('hidden');
+            }
+        });
+    </script>
+    
 </body>
 
 </html>
