@@ -23,12 +23,12 @@
 
                             <!-- Hidden Image File Input -->
                             <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white text-lg font-semibold">
-                                {{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                             </div>
                         </div>
                         <div>
                             <h3 class="font-bold text-gray-900">
-                                {{ trim(Auth::user()->first_name . ' ' . Auth::user()->last_name) }}
+                                {{ trim(Auth::user()->name . ' ' . Auth::user()->last_name) }}
                             </h3>
                             <p class="text-xs text-gray-500">
                                 Member since {{ Auth::user()->created_at->format('Y') }}
@@ -311,16 +311,16 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                                     <input type="text"
                                         name="first_name"
-                                        value="{{ Auth::user()->first_name }}"
+                                        value="{{ Auth::user()->name }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded">
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                                     <input type="text"
                                         name="last_name"
                                         value="{{ Auth::user()->last_name }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded">
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
