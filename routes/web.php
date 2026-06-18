@@ -10,12 +10,12 @@ use App\Http\Controllers\Brand\BrandController;
 use App\Http\Controllers\Category\CategoryController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('frondend.home');
-// });
 Route::get('/', function () {
-    return view('test');
+    return view('frondend.home');
 });
+// Route::get('/', function () {
+//     return view('test');
+// });
 
 Route::get('/women', function () {
     return view('frondend.women');
