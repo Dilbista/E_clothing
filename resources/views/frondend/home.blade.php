@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+    @include('frondend.layouts.navbar')
 
 <body class="bg-white">
+    @include('frondend.layouts.header')
 
   <!-- Hero Section -->
 
@@ -140,6 +142,7 @@
                     </div>
                 </div>
                 <script>
+                (function() {
                 const tabs = document.querySelectorAll(".tab");
 
                 tabs.forEach(tab => {
@@ -155,9 +158,9 @@
                         // add active to clicked
                         tab.classList.add("bg-white", "text-gray-800", "shadow-sm", "active");
                         tab.classList.remove("text-gray-600");
-
                     });
                 });
+                })();
                 </script>
                 <!-- Product 2 -->
                 <div class="group">
@@ -322,26 +325,6 @@
                         <p class="text-gray-900 font-medium">$49.99</p>
                     </div>
                 </div>
-                <script>
-                const tabs = document.querySelectorAll(".tab");
-
-                tabs.forEach(tab => {
-                    tab.addEventListener("click", () => {
-
-                        // remove active from all
-                        tabs.forEach(t => {
-                            t.classList.remove("bg-white", "text-gray-800", "shadow-sm",
-                                "active");
-                            t.classList.add("text-gray-600");
-                        });
-
-                        // add active to clicked
-                        tab.classList.add("bg-white", "text-gray-800", "shadow-sm", "active");
-                        tab.classList.remove("text-gray-600");
-
-                    });
-                });
-                </script>
                 <!-- Product 2 -->
                 <div class="group">
                     <div class="relative overflow-hidden rounded-lg mb-4">
@@ -505,26 +488,6 @@
                         <p class="text-gray-900 font-medium">$49.99</p>
                     </div>
                 </div>
-                <script>
-                const tabs = document.querySelectorAll(".tab");
-
-                tabs.forEach(tab => {
-                    tab.addEventListener("click", () => {
-
-                        // remove active from all
-                        tabs.forEach(t => {
-                            t.classList.remove("bg-white", "text-gray-800", "shadow-sm",
-                                "active");
-                            t.classList.add("text-gray-600");
-                        });
-
-                        // add active to clicked
-                        tab.classList.add("bg-white", "text-gray-800", "shadow-sm", "active");
-                        tab.classList.remove("text-gray-600");
-
-                    });
-                });
-                </script>
                 <!-- Product 2 -->
                 <div class="group">
                     <div class="relative overflow-hidden rounded-lg mb-4">

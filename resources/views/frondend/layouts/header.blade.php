@@ -85,26 +85,58 @@
                 @endauth
 
                 <!-- User Account -->
-                <div class="relative">
-                    <button id="userBtn" class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary transition-colors">
-                        <i class="ri-user-line text-xl"></i>
-                    </button>
-                    <div id="dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white shadow-2xl rounded-xl py-2 border border-gray-100">
-                        @if(Auth::check())
-                            <div class="px-4 py-2 mb-1 text-xs font-bold text-gray-400 uppercase tracking-wider">Welcome, {{ Auth::user()->name }}</div>
-                            <a href="{{ route('frontend.userprofile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">My Account</a>
-                            <a href="{{ route('frontend.orders') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">Orders</a>
-                            <hr class="my-1 border-gray-100">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">Sign In</a>
-                            <a href="{{ route('register') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">Create Account</a>
-                        @endif
-                    </div>
-                </div>
+ <div class="relative">
+    <!-- User Icon -->
+    <button id="userBtn"
+        class="w-10 h-10 flex items-center justify-center text-gray-700 hover:text-primary">
+        <i class="ri-user-line text-xl"></i>
+    </button>
+
+    <!-- Dropdown -->
+    <div id="dropdown"
+        class="hidden absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 z-50">
+
+        @if(Auth::check())
+            <div class="px-4 py-2 text-xs font-bold text-gray-400 uppercase">
+                Welcome, {{ Auth::user()->first_name }}
+            </div>
+
+            <a href="{{ route('frontend.userprofile') }}"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                My Account
+            </a>
+
+            <a href="{{ route('frontend.orders') }}"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                Orders
+            </a>
+
+            <hr class="my-1">
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                    class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                    Logout
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                Sign In
+            </a>
+
+            <a href="{{ route('register') }}"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                Create Account
+            </a>
+        @endif
+    </div>
+</div>
+
+
+
+
 
                 <!-- Mobile Menu Toggle Button -->
                 <button id="mobileMenuToggle" class="lg:hidden w-10 h-10 flex items-center justify-center text-gray-700 hover:bg-gray-100 rounded-full transition-colors">
