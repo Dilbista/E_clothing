@@ -23,12 +23,12 @@
 
                             <!-- Hidden Image File Input -->
                             <div class="w-12 h-12 flex items-center justify-center rounded-full bg-primary text-white text-lg font-semibold">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                {{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}
                             </div>
                         </div>
                         <div>
                             <h3 class="font-bold text-gray-900">
-                                {{ trim(Auth::user()->name . ' ' . Auth::user()->last_name) }}
+                                {{ trim(Auth::user()->first_name . ' ' . Auth::user()->last_name) }}
                             </h3>
                             <p class="text-xs text-gray-500">
                                 Member since {{ Auth::user()->created_at->format('Y') }}
@@ -113,7 +113,7 @@
                             <div>
                                 <span class="block text-gray-500 text-xs font-semibold uppercase tracking-wider">Saved
                                     Addresses</span>
-                                <span class="block text-3xl font-bold text-gray-900 mt-1">2</span>
+                                <span class="block text-3xl font-bold text-gray-900 mt-1">{{ Auth::user()->addresses->count() }}</span>
                             </div>
                             <div
                                 class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center">
@@ -220,66 +220,71 @@
                     </div>
                 </div>
 
-                <!-- Tab: Addresses -->
+                <!-- Tab: Addresses (Interactive Modals Integrated) -->
                 <div id="tab-addresses" class="tab-content hidden space-y-6">
                     <div
                         class="flex justify-between items-center bg-white rounded-lg border border-gray-100 p-6 shadow-sm">
                         <h3 class="font-bold text-gray-900 text-lg">My Saved Addresses</h3>
-                        <button
-                            class="py-2 px-4 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition-colors">Add
-                            Address</button>
+                        <!-- Add Address Trigger Button -->
+                        <button type="button" onclick="openAddAddressModal()"
+                            class="py-2 px-4 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition-colors focus:outline-none">
+                            Add Address
+                        </button>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Address Card 1 -->
-                        <div class="bg-white p-6 rounded-lg border border-primary relative shadow-sm">
+                        @forelse(Auth::user()->addresses as $address)
+                        <!-- Address Card -->
+                        <div class="bg-white p-6 rounded-lg border {{ $address->is_default ? 'border-primary' : 'border-gray-100' }} relative shadow-sm">
+                            @if($address->is_default)
                             <span
                                 class="absolute top-4 right-4 text-xs text-primary font-bold bg-indigo-50 px-2 py-0.5 rounded-full uppercase">Default</span>
-                            <h4 class="font-bold text-gray-900 mb-3 text-base">Billing Address</h4>
+                            @endif
+                            <h4 class="font-bold text-gray-900 mb-3 text-base">{{ ucfirst($address->type) }} Address</h4>
                             <div class="space-y-1 text-sm text-gray-600">
-                                <p class="font-semibold text-gray-800">Emily Richardson</p>
-                                <p>124 Parkview Terrace</p>
-                                <p>Apartment 4B</p>
-                                <p>New York, NY 10011</p>
-                                <p class="pt-2"><span class="font-medium text-gray-800">Phone: </span> +1 (555) 123-4567
+                                <p class="font-semibold text-gray-800">{{ $address->name }}</p>
+                                <p>{{ $address->address_line1 }}</p>
+                                @if($address->address_line2)
+                                <p>{{ $address->address_line2 }}</p>
+                                @endif
+                                <p>{{ $address->city }}, {{ $address->state }} {{ $address->postal_code }}</p>
+                                <p class="pt-2"><span class="font-medium text-gray-800">Phone: </span> {{ $address->phone }}
                                 </p>
                             </div>
                             <div class="mt-6 flex gap-3 border-t border-gray-50 pt-4">
-                                <button
-                                    class="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
+                                <!-- Edit Button with data attributes for fast populating -->
+                                <button type="button"
+                                    onclick="openEditAddressModal(this)"
+                                    data-id="{{ $address->id }}"
+                                    data-type="{{ $address->type }}"
+                                    data-name="{{ $address->name }}"
+                                    data-line1="{{ $address->address_line1 }}"
+                                    data-line2="{{ $address->address_line2 }}"
+                                    data-city="{{ $address->city }}"
+                                    data-state="{{ $address->state }}"
+                                    data-zip="{{ $address->postal_code }}"
+                                    data-phone="{{ $address->phone }}"
+                                    data-default="{{ $address->is_default ? '1' : '0' }}"
+                                    class="text-sm font-semibold text-primary hover:underline flex items-center gap-1 focus:outline-none">
                                     <i class="ri-edit-line"></i> Edit
                                 </button>
                                 <span class="text-gray-200">|</span>
-                                <button
-                                    class="text-sm font-semibold text-gray-400 hover:text-rose-600 transition flex items-center gap-1">
-                                    <i class="ri-delete-bin-line"></i> Remove
-                                </button>
+                                <form action="{{ route('addresses.destroy', $address->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        onclick="return confirm('Are you sure you want to remove this address?')"
+                                        class="text-sm font-semibold text-gray-400 hover:text-rose-600 transition flex items-center gap-1 focus:outline-none">
+                                        <i class="ri-delete-bin-line"></i> Remove
+                                    </button>
+                                </form>
                             </div>
                         </div>
-
-                        <!-- Address Card 2 -->
-                        <div class="bg-white p-6 rounded-lg border border-gray-100 relative shadow-sm">
-                            <h4 class="font-bold text-gray-900 mb-3 text-base">Shipping Address</h4>
-                            <div class="space-y-1 text-sm text-gray-600">
-                                <p class="font-semibold text-gray-800">Emily Richardson</p>
-                                <p>124 Parkview Terrace</p>
-                                <p>Apartment 4B</p>
-                                <p>New York, NY 10011</p>
-                                <p class="pt-2"><span class="font-medium text-gray-800">Phone: </span> +1 (555) 123-4567
-                                </p>
-                            </div>
-                            <div class="mt-6 flex gap-3 border-t border-gray-50 pt-4">
-                                <button
-                                    class="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
-                                    <i class="ri-edit-line"></i> Edit
-                                </button>
-                                <span class="text-gray-200">|</span>
-                                <button
-                                    class="text-sm font-semibold text-gray-400 hover:text-rose-600 transition flex items-center gap-1">
-                                    <i class="ri-delete-bin-line"></i> Remove
-                                </button>
-                            </div>
+                        @empty
+                        <div class="col-span-2 text-center py-8 text-gray-500">
+                            <p>You haven't saved any addresses yet.</p>
                         </div>
+                        @endforelse
                     </div>
                 </div>
 
@@ -311,16 +316,16 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                                     <input type="text"
                                         name="first_name"
-                                        value="{{ Auth::user()->name }}"
+                                        value="{{ Auth::user()->first_name }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded">
                                 </div>
-                                {{-- <div>
+                                <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                                     <input type="text"
                                         name="last_name"
                                         value="{{ Auth::user()->last_name }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded">
-                                </div> --}}
+                                </div> 
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -393,6 +398,86 @@
             </section>
         </div>
     </main>
+
+    <!-- Address Add/Edit Modal (Overlay backdrop styled via Tailwind) -->
+    <div id="addressModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all duration-300">
+        <div class="bg-white w-full max-w-lg rounded-lg border border-gray-100 shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="addressModalCard">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+                <h3 id="addressModalTitle" class="text-lg font-bold text-gray-900">Add New Address</h3>
+                <button type="button" onclick="closeAddressModal()" class="text-gray-400 hover:text-gray-600 text-2xl transition focus:outline-none">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Form -->
+            <form id="addressForm" action="" method="POST" class="p-6 space-y-4">
+                @csrf
+                <input type="hidden" name="_method" id="addressFormMethod" value="POST">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Address Type / Label</label>
+                        <select name="type" id="addr_type" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" required>
+                            <option value="shipping">Shipping Address</option>
+                            <option value="billing">Billing Address</option>
+                            <option value="home">Home</option>
+                            <option value="office">Office</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                        <input type="text" name="name" id="addr_name" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" required placeholder="Emily Richardson">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Address Line 1</label>
+                        <input type="text" name="address_line1" id="addr_line1" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" required placeholder="124 Parkview Terrace">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Address Line 2 (Optional)</label>
+                        <input type="text" name="address_line2" id="addr_line2" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" placeholder="Apartment 4B">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">City</label>
+                        <input type="text" name="city" id="addr_city" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" required placeholder="New York">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">State</label>
+                        <input type="text" name="state" id="addr_state" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" required placeholder="NY">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Postal Code</label>
+                        <input type="text" name="postal_code" id="addr_zip" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" required placeholder="10011">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Phone Number</label>
+                    <input type="text" name="phone" id="addr_phone" class="w-full px-4 py-2.5 border border-gray-200 rounded text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition" required placeholder="+1 (555) 123-4567">
+                </div>
+
+                <div class="flex items-center pt-2">
+                    <label class="custom-checkbox flex items-center pl-7 text-sm text-gray-700 select-none">
+                        <input type="checkbox" name="is_default" id="addr_default" value="1" />
+                        <span class="checkmark"></span>
+                        Set as default address
+                    </label>
+                </div>
+
+                <!-- Footer buttons inside Form -->
+                <div class="pt-4 border-t border-gray-100 flex justify-end gap-3">
+                    <button type="button" onclick="closeAddressModal()" class="py-2.5 px-6 border border-gray-200 text-gray-700 text-sm font-semibold rounded-button hover:bg-gray-50 transition focus:outline-none">Cancel</button>
+                    <button type="submit" class="py-2.5 px-6 bg-primary text-white text-sm font-semibold rounded-button hover:bg-primary/90 transition focus:outline-none">Save Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer (Identical Pattern to Home and About Pages) -->
     <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
@@ -572,6 +657,89 @@
                 activeButton.classList.add('text-primary', 'bg-primary/10');
                 activeButton.classList.remove('text-gray-600', 'hover:text-primary', 'hover:bg-gray-50');
             }
+        }
+
+        // --- NEW: Address Add/Edit Modal Handlers ---
+        function openAddAddressModal() {
+            const modal = document.getElementById('addressModal');
+            const card = document.getElementById('addressModalCard');
+            const form = document.getElementById('addressForm');
+            const method = document.getElementById('addressFormMethod');
+            const title = document.getElementById('addressModalTitle');
+
+            // Reset form fields
+            form.reset();
+            
+            // Set dynamic endpoint actions for Laravel store
+            form.action = "{{ route('addresses.store') }}"; // Replace with your named Laravel Route
+            method.value = "POST";
+            title.textContent = "Add New Address";
+
+            // Open Modal Transitions
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function openEditAddressModal(btn) {
+            const modal = document.getElementById('addressModal');
+            const card = document.getElementById('addressModalCard');
+            const form = document.getElementById('addressForm');
+            const method = document.getElementById('addressFormMethod');
+            const title = document.getElementById('addressModalTitle');
+
+            // Retrieve data attributes from card triggers
+            const id = btn.getAttribute('data-id');
+            const type = btn.getAttribute('data-type');
+            const name = btn.getAttribute('data-name');
+            const line1 = btn.getAttribute('data-line1');
+            const line2 = btn.getAttribute('data-line2');
+            const city = btn.getAttribute('data-city');
+            const state = btn.getAttribute('data-state');
+            const zip = btn.getAttribute('data-zip');
+            const phone = btn.getAttribute('data-phone');
+            const isDefault = btn.getAttribute('data-default');
+
+            // Populate form inputs
+            document.getElementById('addr_type').value = type;
+            document.getElementById('addr_name').value = name;
+            document.getElementById('addr_line1').value = line1;
+            document.getElementById('addr_line2').value = line2 || '';
+            document.getElementById('addr_city').value = city;
+            document.getElementById('addr_state').value = state;
+            document.getElementById('addr_zip').value = zip;
+            document.getElementById('addr_phone').value = phone;
+            document.getElementById('addr_default').checked = isDefault === "1";
+
+            // Set dynamic action endpoints and method spoofing for Laravel update
+            form.action = `/addresses/${id}`;
+            method.value = "PUT";
+            title.textContent = "Edit Address Details";
+
+            // Open Modal Transitions
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeAddressModal() {
+            const modal = document.getElementById('addressModal');
+            const card = document.getElementById('addressModalCard');
+
+            // Close card transitions
+            card.classList.remove('scale-100', 'opacity-100');
+            card.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
         }
     </script>
     <script>

@@ -361,19 +361,57 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Image</th>
                                 <th>Category Name</th>
-                                <th>Slug</th>
-                                <th>Products Count</th>
+                                <th>Created At</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="categoriesTableBody">
+                            @forelse($categories as $category)
                             <tr>
-                                <td colspan="5" style="text-align:center;">Loading categories...</td>
+                                <td>{{ $category->category_id }}</td>
+                                <td>
+                                    @if($category->category_image)
+                                        <img src="{{ asset($category->category_image) }}" alt="Category Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                                    @else
+                                        <span style="color:var(--text-secondary); font-size: 0.8rem;">No Image</span>
+                                    @endif
+                                </td>
+                                <td><strong>{{ $category->category_name }}</strong></td>
+                                <td>{{ \Carbon\Carbon::parse($category->created_at)->format('M d, Y') }}</td>
+                                <td style="white-space: nowrap;">
+                                    <button class="btn-outline btn-sm edit-category" data-id="{{ $category->category_id }}" data-name="{{ $category->category_name }}"><i class="fas fa-edit"></i> Edit</button>
+                                    <form action="{{ route('categories.destroy', $category->category_id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-danger-sm" onclick="return confirm('Delete category {{ $category->category_name }} permanently?')"><i class="fas fa-trash"></i> Del</button>
+                                    </form>
+                                </td>
                             </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" style="text-align:center;">✨ No categories yet. Click "Add Category" to create one.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
+                
+                @if(session('success'))
+                <div style="background: var(--success); color: white; padding: 10px 15px; border-radius: 8px; margin-top: 20px;">
+                    {{ session('success') }}
+                </div>
+                @endif
+                @if($errors->any())
+                <div style="background: var(--error); color: white; padding: 10px 15px; border-radius: 8px; margin-top: 20px;">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
             </div>
         </main>
     </div>
@@ -382,15 +420,16 @@
     <div class="modal-overlay" id="categoryModal">
         <div class="form-modal">
             <h3 id="modalTitle">Add Category</h3>
-            <form id="categoryForm">
-                <input type="hidden" id="categoryId">
+            <form id="categoryForm" action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" id="categoryId" name="category_id">
                 <div class="form-group">
                     <label>Category Name *</label>
-                    <input type="text" id="catName" placeholder="e.g., Evening Dresses" required>
+                    <input type="text" id="catName" name="category_name" placeholder="e.g., Evening Dresses" required>
                 </div>
                 <div class="form-group">
-                    <label>Description (optional)</label>
-                    <textarea id="catDesc" rows="3" placeholder="Brief description of the category"></textarea>
+                    <label>Category Image</label>
+                    <input type="file" id="catImage" name="category_image" accept="image/*">
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-outline btn-sm" id="closeModalBtn">Cancel</button>
@@ -435,187 +474,12 @@
         sidebarOverlay.addEventListener('click', closeSidebar);
     }
 
-
-    // ----------------------------- CATEGORY DATA MODEL (localStorage) -----------------------------
-    let categories = [];
-
-    // Demo categories with product counts (simulated)
-    const DEMO_CATEGORIES = [{
-            id: 1,
-            name: "Dresses",
-            slug: "dresses",
-            description: "Elegant evening & casual dresses",
-            productCount: 12
-        },
-        {
-            id: 2,
-            name: "Coats",
-            slug: "coats",
-            description: "Luxury outerwear",
-            productCount: 8
-        },
-        {
-            id: 3,
-            name: "Bags",
-            slug: "bags",
-            description: "Designer handbags & clutches",
-            productCount: 15
-        },
-        {
-            id: 4,
-            name: "Accessories",
-            slug: "accessories",
-            description: "Scarves, belts, jewelry",
-            productCount: 24
-        }
-    ];
-
-    function loadCategories() {
-        const stored = localStorage.getItem("elysian_categories_module");
-        if (stored) {
-            categories = JSON.parse(stored);
-            if (categories.length === 0) {
-                categories = [...DEMO_CATEGORIES];
-                saveCategories();
-            }
-        } else {
-            categories = [...DEMO_CATEGORIES];
-            saveCategories();
-        }
-    }
-
-    function saveCategories() {
-        localStorage.setItem("elysian_categories_module", JSON.stringify(categories));
-    }
-
-    function showToast(message, isError = false) {
-        const toast = document.getElementById('toastMsg');
-        const toastText = document.getElementById('toastText');
-        toastText.innerText = message;
-        toast.style.borderLeftColor = isError ? '#D4735E' : '#C8A96E';
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    // Helper: generate slug from name
-    function generateSlug(name) {
-        return name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
-    }
-
-    // Render categories table
-    function renderCategories() {
-        const tbody = document.getElementById('categoriesTableBody');
-        if (categories.length === 0) {
-            tbody.innerHTML =
-                '<tr><td colspan="5" style="text-align:center;">✨ No categories yet. Click "Add Category" to create one.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = '';
-        categories.forEach(cat => {
-            const row = `
-                <tr>
-                  <td>${cat.id}</td>
-                  <td><strong>${escapeHtml(cat.name)}</strong><br><small style="color:var(--text-secondary);">${escapeHtml(cat.description || '')}</small></td>
-                  <td>${escapeHtml(cat.slug)}</td>
-                  <td><span class="badge">${cat.productCount || 0} products</span></td>
-                  <td style="white-space: nowrap;">
-                    <button class="btn-outline btn-sm edit-category" data-id="${cat.id}"><i class="fas fa-edit"></i> Edit</button>
-                    <button class="btn-danger-sm delete-category" data-id="${cat.id}"><i class="fas fa-trash"></i> Del</button>
-                  </td>
-                </tr>
-            `;
-            tbody.insertAdjacentHTML('beforeend', row);
-        });
-
-        // Attach event listeners
-        document.querySelectorAll('.edit-category').forEach(btn => {
-            btn.addEventListener('click', () => openEditCategory(parseInt(btn.dataset.id)));
-        });
-        document.querySelectorAll('.delete-category').forEach(btn => {
-            btn.addEventListener('click', () => deleteCategory(parseInt(btn.dataset.id)));
-        });
-    }
-
-    function openEditCategory(id) {
-        const cat = categories.find(c => c.id === id);
-        if (!cat) return;
-        document.getElementById('categoryId').value = cat.id;
-        document.getElementById('catName').value = cat.name;
-        document.getElementById('catDesc').value = cat.description || '';
+    function openEditCategory(id, name) {
+        document.getElementById('categoryId').value = id;
+        document.getElementById('catName').value = name;
         document.getElementById('modalTitle').innerText = "Edit Category";
         document.getElementById('categoryModal').classList.add('active');
     }
-
-    function deleteCategory(id) {
-        const catToDelete = categories.find(c => c.id === id);
-        if (!catToDelete) return;
-
-        if (catToDelete.productCount > 0) {
-            if (!confirm(
-                    `Category "${catToDelete.name}" has ${catToDelete.productCount} product(s). Deleting it will not delete products but they will become uncategorized. Continue?`
-                )) {
-                return;
-            }
-        } else {
-            if (!confirm(`Delete category "${catToDelete.name}" permanently?`)) return;
-        }
-        categories = categories.filter(c => c.id !== id);
-        saveCategories();
-        renderCategories();
-        showToast(`Category "${catToDelete.name}" deleted`);
-    }
-
-    // Handle form submit (add or edit)
-    document.getElementById('categoryForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const id = document.getElementById('categoryId').value;
-        let name = document.getElementById('catName').value.trim();
-        const description = document.getElementById('catDesc').value.trim();
-
-        if (!name) {
-            showToast("Category name is required", true);
-            return;
-        }
-        // Capitalize first letter of each word
-        name = name.replace(/\b\w/g, c => c.toUpperCase());
-        const slug = generateSlug(name);
-
-        if (id) {
-            // Update existing
-            const idx = categories.findIndex(c => c.id == id);
-            if (idx !== -1) {
-                const oldName = categories[idx].name;
-                categories[idx] = {
-                    ...categories[idx],
-                    name: name,
-                    slug: slug,
-                    description: description
-                };
-                saveCategories();
-                renderCategories();
-                showToast(`Category updated: "${oldName}" → "${name}"`);
-            }
-        } else {
-            // Check duplicate name
-            if (categories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
-                showToast("A category with this name already exists", true);
-                return;
-            }
-            const newId = Date.now();
-            const newCategory = {
-                id: newId,
-                name: name,
-                slug: slug,
-                description: description,
-                productCount: 0
-            };
-            categories.push(newCategory);
-            saveCategories();
-            renderCategories();
-            showToast(`Category "${name}" created successfully`);
-        }
-        closeModal();
-    });
 
     function openAddModal() {
         document.getElementById('categoryForm').reset();
@@ -635,19 +499,10 @@
         if (e.target === document.getElementById('categoryModal')) closeModal();
     });
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, (m) => {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
+    document.querySelectorAll('.edit-category').forEach(btn => {
+        btn.addEventListener('click', () => openEditCategory(btn.dataset.id, btn.dataset.name));
+    });
 
-    // Bootstrap
-    loadCategories();
-    renderCategories();
     </script>
 </body>
 

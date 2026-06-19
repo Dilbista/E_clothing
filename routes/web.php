@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\UserProfileController;
-
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Brand\BrandController;
 use App\Http\Controllers\Category\CategoryController;
@@ -85,9 +85,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         return view('Backend.usermanagement');
     })->name('admin.usermanagement');
 
-    Route::get('/admin/categoriesmanagements', function () {
-        return view('Backend.categoriesmanagements');
-    })->name('admin.categoriesmanagements');
+    Route::get('/admin/categoriesmanagements', [CategoryController::class, 'index'])->name('admin.categoriesmanagements');
 
     Route::get('/admin/productsbrand', function () {
         return view('Backend.productbrand');
@@ -118,7 +116,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 
-        // Category Routes
+    // Category Routes
     Route::get('/categories', [CategoryController::class, 'index'])->name('categoriesmanagements');
     Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
@@ -127,7 +125,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/brands', [BrandController::class, 'index'])->name('productsbrand');
     Route::post('/brands/store', [BrandController::class, 'store'])->name('brands.store');
     Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
-
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -141,10 +138,25 @@ route::get('auth/google', [GoogleController::class, "redirectToGoogle"])->name('
 
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
-Route::post('/profile/update-info',
-        [UserProfileController::class, 'updateInfo'])
-        ->name('profile.update.info');
+Route::post(
+    '/profile/update-info',
+    [UserProfileController::class, 'updateInfo']
+)
+    ->name('profile.update.info');
 
-    Route::post('/profile/update-password',
-        [UserProfileController::class, 'updatePassword'])
-        ->name('profile.update.password');
+Route::post(
+    '/profile/update-password',
+    [UserProfileController::class, 'updatePassword']
+)
+    ->name('profile.update.password');
+Route::post('/addresses', [AddressController::class, 'store'])
+    ->name('addresses.store');
+
+Route::put(
+    '/addresses/{address}',
+    [AddressController::class, 'update']
+)
+    ->name('addresses.update');
+
+Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])
+    ->name('addresses.destroy');

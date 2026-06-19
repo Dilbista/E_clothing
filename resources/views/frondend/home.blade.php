@@ -7,7 +7,7 @@
 
   <!-- Hero Section -->
 
-    @include('frondend.layouts.HeroSection')
+    @include('frondend.layouts.heroSection')
     <!-- Categories Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
