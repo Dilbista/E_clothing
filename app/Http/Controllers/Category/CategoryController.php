@@ -3,42 +3,89 @@
 namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\Controller;
+use App\Models\Categories;
 use Illuminate\Http\Request;
+use Str;
 
 class CategoryController extends Controller
 {
-        public function index()
+
+    public function index()
     {
-        // 10 categories per page
-        $categories = Category::orderBy('created_at', 'desc')->paginate(10);
-        return view('Backend.categories.index', compact('categories'));
+        $categories = Categories::all();
+        return view('Backend.categoriesmanagements', compact('categories'));
     }
+
 
     public function store(Request $request)
     {
+
         $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $request->category_id,
+            'categories_name' => 'required',
+            'image' => 'nullable|image'
         ]);
 
-        Category::updateOrCreate(
-            ['id' => $request->category_id],
-            [
-                'name' => $request->name,
-                'slug' => Str::slug($request->name),
-                'description' => $request->description,
-                'status' => $request->status ?? 'active',
-            ]
-        );
 
-        return redirect()->back()->with('success', 'Category saved successfully');
+        $image = null;
+
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image')
+                ->store('categories', 'public');
+        }
+
+
+
+        Categories::create([
+
+            'categories_name' => $request->categories_name,
+
+            'image' => $image
+
+        ]);
+
+
+        return back()->with('success', 'Category Added');
     }
+
+
+
+    public function update(Request $request, $id)
+    {
+
+        $category = Categories::findOrFail($id);
+
+
+
+        if ($request->hasFile('image')) {
+
+            $category->image =
+                $request->file('image')
+                ->store('categories', 'public');
+        }
+
+
+
+        $category->update([
+
+            'categories_name' => $request->categories_name
+
+        ]);
+
+
+
+        return back()->with('success', 'Updated');
+    }
+
+
 
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
-        // Optional: Check if category has products before deleting
-        $category->delete();
-        return redirect()->back()->with('success', 'Category removed');
-    }
 
+        Categories::findOrFail($id)->delete();
+
+
+        return back()->with('success', 'Deleted');
+    }
 }

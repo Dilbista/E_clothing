@@ -8,6 +8,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Brand\BrandController;
 use App\Http\Controllers\Category\CategoryController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -118,16 +119,24 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 
-        // Category Routes
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categoriesmanagements');
-    Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    // Category Routes
+
+    Route::get('/categoriesmanagements',[CategoryController::class, 'index'])->name('categoriesmanagements');
+    // Route::post('/categories/store', [CategoryController::class, 'store'])->name('categories.store');
+    // Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    // admin
+    // Route::resource(
+    // 'admin/categories',
+    // CategoryController::class
+    // );
 
     // Brand Routes
-    Route::get('/brands', [BrandController::class, 'index'])->name('productsbrand');
-    Route::post('/brands/store', [BrandController::class, 'store'])->name('brands.store');
-    Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
+    Route::get('/productbrand', [BrandController::class, 'index'])->name('productbrand');
 
+    // Route::get('/brands', [BrandController::class, 'index'])->name('productsbrand');
+    // Route::post('/brands/store', [BrandController::class, 'store'])->name('brands.store');
+    // Route::delete('/brands/{id}', [BrandController::class, 'destroy'])->name('brands.destroy');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -141,10 +150,14 @@ route::get('auth/google', [GoogleController::class, "redirectToGoogle"])->name('
 
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
-Route::post('/profile/update-info',
-        [UserProfileController::class, 'updateInfo'])
-        ->name('profile.update.info');
+Route::post(
+    '/profile/update-info',
+    [UserProfileController::class, 'updateInfo']
+)
+    ->name('profile.update.info');
 
-    Route::post('/profile/update-password',
-        [UserProfileController::class, 'updatePassword'])
-        ->name('profile.update.password');
+Route::post(
+    '/profile/update-password',
+    [UserProfileController::class, 'updatePassword']
+)
+    ->name('profile.update.password');

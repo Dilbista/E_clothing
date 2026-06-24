@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Brand;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
-        public function index()
-    {
-        $brands = Brand::orderBy('created_at', 'desc')->paginate(10);
-        return view('Backend.brands.index', compact('brands'));
-    }
+   public function index()
+{
+    $brands = \App\Models\Brand::all();
+    
+    // Ensure the view name matches your file path: resources/views/Backend/productbrand.blade.php
+    return view('Backend.productbrand', compact('brands'));
+}
 
     public function store(Request $request)
     {
