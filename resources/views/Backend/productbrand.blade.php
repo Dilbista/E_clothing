@@ -319,9 +319,41 @@
                             </tr>
                         </thead>
                         <tbody id="brandsTableBody">
+                            @forelse($brands as $brand)
                             <tr>
-                                <td colspan="5" style="text-align:center;">Loading luxury brands...</td>
+                                <td>
+                                    @if($brand->logo)
+                                        <img src="{{ asset($brand->logo) }}" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-subtle);">
+                                    @else
+                                        <div class="brand-logo-preview">{{ substr($brand->name, 0, 1) }}</div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <strong>{{ $brand->name }}</strong><br>
+                                    <small style="color:var(--text-secondary); display: block; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ $brand->description ?: 'No description provided' }}
+                                    </small>
+                                </td>
+                                <td><i class="fas fa-map-marker-alt" style="font-size:0.7rem; color:var(--gold); margin-right:5px;"></i> {{ $brand->origin ?: 'International' }}</td>
+                                <td><span class="badge">{{ $brand->product_count }} Products</span></td>
+                                <td style="white-space: nowrap;">
+                                    <button class="btn-outline btn-sm edit-brand" 
+                                        data-id="{{ $brand->id }}"
+                                        data-name="{{ $brand->name }}"
+                                        data-origin="{{ $brand->origin }}"
+                                        data-description="{{ $brand->description }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-danger-sm delete-brand" onclick="return confirm('Are you sure you want to remove this brand?');"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                </td>
                             </tr>
+                            @empty
+                            <tr><td colspan="5" style="text-align:center;">No brands registered yet.</td></tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -333,19 +365,24 @@
     <div class="modal-overlay" id="brandModal">
         <div class="form-modal">
             <h3 id="modalTitle">Register Brand</h3>
-            <form id="brandForm">
-                <input type="hidden" id="brandId">
+            <form id="brandForm" action="{{ route('brands.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="brand_id" id="brandId">
                 <div class="form-group">
                     <label>Brand Name *</label>
-                    <input type="text" id="brandName" placeholder="e.g., Gucci" required>
+                    <input type="text" name="name" id="brandName" placeholder="e.g., Gucci" required>
+                </div>
+                <div class="form-group">
+                    <label>Brand Logo</label>
+                    <input type="file" name="logo" id="brandLogo" accept="image/*" style="padding: 8px;">
                 </div>
                 <div class="form-group">
                     <label>Country of Origin</label>
-                    <input type="text" id="brandOrigin" placeholder="e.g., Italy">
+                    <input type="text" name="origin" id="brandOrigin" placeholder="e.g., Italy">
                 </div>
                 <div class="form-group">
                     <label>Brand Story / Description</label>
-                    <textarea id="brandDesc" rows="3" placeholder="Tell the brand's heritage story..."></textarea>
+                    <textarea name="description" id="brandDesc" rows="3" placeholder="Tell the brand's heritage story..."></textarea>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-outline btn-sm" id="closeModalBtn">Cancel</button>
@@ -360,30 +397,6 @@
     </div>
 
     <script>
-    // ----------------------------- BRAND DATA MODEL -----------------------------
-    let brands = [];
-
-    const DEMO_BRANDS = [
-        { id: 1, name: "Chanel", origin: "France", description: "High fashion house specialized in luxury goods.", productCount: 42 },
-        { id: 2, name: "Prada", origin: "Italy", description: "Specialized in leather handbags, travel accessories, and shoes.", productCount: 28 },
-        { id: 3, name: "Hermès", origin: "France", description: "Manufacturer of luxury goods established in 1837.", productCount: 15 },
-        { id: 4, name: "Rolex", origin: "Switzerland", description: "World-renowned luxury watch manufacturer.", productCount: 12 }
-    ];
-
-    function loadBrands() {
-        const stored = localStorage.getItem("elysian_brands_module");
-        if (stored) {
-            brands = JSON.parse(stored);
-        } else {
-            brands = [...DEMO_BRANDS];
-            saveBrands();
-        }
-    }
-
-    function saveBrands() {
-        localStorage.setItem("elysian_brands_module", JSON.stringify(brands));
-    }
-
     function showToast(message, isError = false) {
         const toast = document.getElementById('toastMsg');
         const toastText = document.getElementById('toastText');
@@ -393,94 +406,26 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Render brands table
-    function renderBrands() {
-        const tbody = document.getElementById('brandsTableBody');
-        if (brands.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No brands registered yet.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = '';
-        brands.forEach(brand => {
-            const initials = brand.name.substring(0, 1).toUpperCase();
-            const row = `
-                <tr>
-                  <td><div class="brand-logo-preview">${initials}</div></td>
-                  <td>
-                    <strong>${escapeHtml(brand.name)}</strong><br>
-                    <small style="color:var(--text-secondary); display: block; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        ${escapeHtml(brand.description || 'No description provided')}
-                    </small>
-                  </td>
-                  <td><i class="fas fa-map-marker-alt" style="font-size:0.7rem; color:var(--gold); margin-right:5px;"></i> ${escapeHtml(brand.origin || 'International')}</td>
-                  <td><span class="badge">${brand.productCount || 0} Products</span></td>
-                  <td style="white-space: nowrap;">
-                    <button class="btn-outline btn-sm edit-brand" data-id="${brand.id}"><i class="fas fa-edit"></i></button>
-                    <button class="btn-danger-sm delete-brand" data-id="${brand.id}"><i class="fas fa-trash"></i></button>
-                  </td>
-                </tr>
-            `;
-            tbody.insertAdjacentHTML('beforeend', row);
+    @if(session('success'))
+        showToast("{{ session('success') }}");z
+    @endif
+    @if(session('error'))
+        showToast("{{ session('error') }}", true);
+    @endif
+    @if($errors->any())
+        showToast("{{ $errors->first() }}", true);
+    @endif
+
+    // Attach event listeners for editing
+    document.querySelectorAll('.edit-brand').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('brandId').value = this.dataset.id;
+            document.getElementById('brandName').value = this.dataset.name;
+            document.getElementById('brandOrigin').value = this.dataset.origin;
+            document.getElementById('brandDesc').value = this.dataset.description;
+            document.getElementById('modalTitle').innerText = "Edit Brand Details";
+            document.getElementById('brandModal').classList.add('active');
         });
-
-        // Attach event listeners
-        document.querySelectorAll('.edit-brand').forEach(btn => {
-            btn.addEventListener('click', () => openEditBrand(parseInt(btn.dataset.id)));
-        });
-        document.querySelectorAll('.delete-brand').forEach(btn => {
-            btn.addEventListener('click', () => deleteBrand(parseInt(btn.dataset.id)));
-        });
-    }
-
-    function openEditBrand(id) {
-        const brand = brands.find(b => b.id === id);
-        if (!brand) return;
-        document.getElementById('brandId').value = brand.id;
-        document.getElementById('brandName').value = brand.name;
-        document.getElementById('brandOrigin').value = brand.origin || '';
-        document.getElementById('brandDesc').value = brand.description || '';
-        document.getElementById('modalTitle').innerText = "Edit Brand Details";
-        document.getElementById('brandModal').classList.add('active');
-    }
-
-    function deleteBrand(id) {
-        const brand = brands.find(b => b.id === id);
-        if (!brand) return;
-        if (!confirm(`Are you sure you want to remove "${brand.name}" from the portfolio?`)) return;
-        
-        brands = brands.filter(b => b.id !== id);
-        saveBrands();
-        renderBrands();
-        showToast(`Brand "${brand.name}" removed`);
-    }
-
-    document.getElementById('brandForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const id = document.getElementById('brandId').value;
-        const name = document.getElementById('brandName').value.trim();
-        const origin = document.getElementById('brandOrigin').value.trim();
-        const description = document.getElementById('brandDesc').value.trim();
-
-        if (id) {
-            const idx = brands.findIndex(b => b.id == id);
-            if (idx !== -1) {
-                brands[idx] = { ...brands[idx], name, origin, description };
-                showToast(`Brand "${name}" updated`);
-            }
-        } else {
-            const newBrand = {
-                id: Date.now(),
-                name,
-                origin,
-                description,
-                productCount: 0
-            };
-            brands.push(newBrand);
-            showToast(`New brand "${name}" registered`);
-        }
-        saveBrands();
-        renderBrands();
-        closeModal();
     });
 
     function openAddModal() {
@@ -496,14 +441,6 @@
 
     document.getElementById('openAddBrandBtn').addEventListener('click', openAddModal);
     document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
-    }
-
-    loadBrands();
-    renderBrands();
     </script>
 </body>
 </html>
