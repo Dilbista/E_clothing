@@ -10,7 +10,8 @@ class BrandController extends Controller
 {
    public function index()
 {
-    $brands = \App\Models\Brand::all();
+    // dd('sss');
+    $brands = Brand::all();
     
     // Ensure the view name matches your file path: resources/views/Backend/productbrand.blade.php
     return view('Backend.productbrand', compact('brands'));

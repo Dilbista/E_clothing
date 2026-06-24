@@ -3,89 +3,57 @@
 namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\Controller;
-use App\Models\Categories;
 use Illuminate\Http\Request;
-use Str;
+use App\Models\Category;
+// use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-
     public function index()
     {
-        $categories = Categories::all();
+        // dd('ddd');
+        $categories = Category::orderBy('created_at', 'desc')->get();
         return view('Backend.categoriesmanagements', compact('categories'));
     }
 
-
     public function store(Request $request)
     {
-
         $request->validate([
-            'categories_name' => 'required',
-            'image' => 'nullable|image'
+            'category_name' => 'required|string|max:100',
+            'category_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-
-        $image = null;
-
-
-        if ($request->hasFile('image')) {
-
-            $image = $request->file('image')
-                ->store('categories', 'public');
+        $category = null;
+        if ($request->filled('category_id')) {
+            $category = Category::findOrFail($request->category_id);
+        } else {
+            $category = new Category();
         }
 
+        $category->category_name = $request->category_name;
 
-
-        Categories::create([
-
-            'categories_name' => $request->categories_name,
-
-            'image' => $image
-
-        ]);
-
-
-        return back()->with('success', 'Category Added');
-    }
-
-
-
-    public function update(Request $request, $id)
-    {
-
-        $category = Categories::findOrFail($id);
-
-
-
-        if ($request->hasFile('image')) {
-
-            $category->image =
-                $request->file('image')
-                ->store('categories', 'public');
+        if ($request->hasFile('category_image')) {
+            // Delete old image if it exists
+            if ($category->category_image && file_exists(public_path($category->category_image))) {
+                @unlink(public_path($category->category_image));
+            }
+            $imageName = time() . '.' . $request->category_image->extension();
+            $request->category_image->move(public_path('uploads/categories'), $imageName);
+            $category->category_image = 'uploads/categories/' . $imageName;
         }
 
+        $category->save();
 
-
-        $category->update([
-
-            'categories_name' => $request->categories_name
-
-        ]);
-
-
-
-        return back()->with('success', 'Updated');
+        return redirect()->back()->with('success', 'Category saved successfully');
     }
-
-
 
     public function destroy($id)
     {
-
-        Categories::findOrFail($id)->delete();
-
-
-        return back()->with('success', 'Deleted');
+        $category = Category::findOrFail($id);
+        if ($category->category_image && file_exists(public_path($category->category_image))) {
+            @unlink(public_path($category->category_image));
+        }
+        $category->delete();
+        return redirect()->back()->with('success', 'Category removed');
     }
 }
