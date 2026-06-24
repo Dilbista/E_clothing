@@ -319,7 +319,7 @@
                                         value="{{ Auth::user()->first_name }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded">
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                                     <input type="text"
                                         name="last_name"
