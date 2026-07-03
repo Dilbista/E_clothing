@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
-
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -10,37 +11,33 @@ use App\Http\Controllers\Brand\BrandController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Product\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CartController;
 
-Route::get('/', function () {
-    return view('frondend.home');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
 // Route::get('/', function () {
 //     return view('test');
 // });
 
-Route::get('/women', function () {
-    return view('frondend.women');
-})->name('frontend.women');
+Route::get('/women', [HomeController::class, 'women'])
+    ->name('frontend.women');
 
-Route::get('/men', function () {
-    return view('frondend.men');
-})->name('frontend.men');
+Route::get('/men', [HomeController::class, 'men'])
+    ->name('frontend.men');
 
-Route::get('/accessories', function () {
-    return view('frondend.accessories');
-})->name('frontend.accessories');
+Route::get('/accessories', [HomeController::class, 'accessories'])
+    ->name('frontend.accessories');
 
-Route::get('/footwear', function () {
-    return view('frondend.footwear');
-})->name('frontend.footwear');
+Route::get('/footwear', [HomeController::class, 'footwear'])
+    ->name('frontend.footwear');
 
-Route::get('/new-arrivals', function () {
-    return view('frondend.new-arrivals');
-})->name('frontend.new-arrivals');
+Route::get('/new-arrivals', [HomeController::class, 'newArrival'])
+    ->name('frontend.new-arrivals');
 
-Route::get('/sale', function () {
-    return view('frondend.sale');
-})->name('frontend.sale');
+Route::get('/sale', [HomeController::class, 'sale'])
+    ->name('frontend.sale');
 
 Route::get('/about', function () {
     return view('frondend.about');
@@ -57,9 +54,11 @@ Route::get('/orders', function () {
 Route::get('/wishlist', function () {
     return view('frondend.wishlist');
 })->name('wishlist');
-Route::get('/cart', function () {
-    return view('frondend.cart');
-})->name('cart');
+
+// Cart page is handled via Auth middleware below
+
+Route::get('/product/{id}', [HomeController::class, 'viewDetails'])
+    ->name('frontend.viewDetails');
 
 Route::get('/login', function () {
     return view('auth.Login');
@@ -158,3 +157,58 @@ Route::put(
 
 Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])
     ->name('addresses.destroy');
+
+use App\Http\Controllers\CouponController;
+
+Route::prefix('admin/coupons')->group(function () {
+    Route::get('/', [CouponController::class, 'index'])->name('coupons.index');
+    Route::get('/data', [CouponController::class, 'data'])->name('coupons.data');
+    Route::post('/', [CouponController::class, 'store'])->name('coupons.store');
+    Route::put('/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
+    Route::delete('/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
+});
+
+use App\Http\Controllers\BannerController;
+
+Route::prefix('admin/banners')->group(function () {
+    Route::get('/', [BannerController::class, 'index'])->name('banners.index');
+    Route::get('/data', [BannerController::class, 'data'])->name('banners.data');
+    Route::post('/', [BannerController::class, 'store'])->name('banners.store');
+    Route::put('/{banner}', [BannerController::class, 'update'])->name('banners.update');
+    Route::post('/{banner}/reorder', [BannerController::class, 'reorder'])->name('banners.reorder');
+    Route::delete('/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/add', [WishlistController::class, 'store'])->name('wishlist.add');
+    Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+
+    // Cart Routes
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [CartController::class, 'store'])->name('cart.add');
+    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+});
+
+// this for used for backend crud operation for about page
+
+// Route::get('/about', [AboutController::class, 'index'])->name('about.index');
+// Route::post('/about', [AboutController::class, 'store'])->name('about.store');
+// Route::put('/about/{about}', [AboutController::class, 'update'])->name('about.update');
+// Route::delete('/about/{about}', [AboutController::class, 'destroy'])->name('about.destroy');
+
+// end backend abouts
+
+Route::middleware(['auth'])->group(function () {
+    // Cart AJAX actions
+    Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
+    Route::post('/cart/remove', [CartController::class, 'removeItem'])->name('cart.remove');
+    
+    // Checkout redirection
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+});
+Route::middleware(['auth'])->group(function () {
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
+    Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+});

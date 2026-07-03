@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <!-- CSRF Token for Secure Laravel Requests -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ÉLYSIAN · Coupon Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -416,7 +418,7 @@
                         <select id="couponTypeFilter" class="filter-select">
                             <option value="all">All Types</option>
                             <option value="percentage">Percentage (%)</option>
-                            <option value="fixed">Fixed Amount ($)</option>
+                            <option value="fixed">Fixed Amount </option>
                         </select>
                         <button class="btn btn-primary" id="openAddCouponBtn"><i class="fas fa-plus"></i> Create
                             Coupon</button>
@@ -462,7 +464,7 @@
                         <label>Discount Type</label>
                         <select id="couponType">
                             <option value="percentage">Percentage (%)</option>
-                            <option value="fixed">Fixed Amount ($)</option>
+                            <option value="fixed">Fixed Amount </option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -471,7 +473,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Minimum Order Amount ($)</label>
+                    <label>Minimum Order Amount </label>
                     <input type="number" step="0.01" id="couponMinOrder" placeholder="0.00" value="0">
                 </div>
                 <div class="form-row">
@@ -501,6 +503,9 @@
     </div>
 
     <script>
+    // ========== CSRF Config ==========
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     // ========== SIDEBAR & NAVIGATION TOGGLE ==========
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
@@ -531,73 +536,19 @@
         sidebarOverlay.addEventListener('click', closeSidebar);
     }
 
-
-    // ----------------------------- COUPON DATA (LocalStorage) -----------------------------
+    // ----------------------------- DATA & SYNC OPERATIONS -----------------------------
     let coupons = [];
 
-    // Demo coupons
-    const DEMO_COUPONS = [{
-            id: 1,
-            code: "LUXE20",
-            type: "percentage",
-            value: 20,
-            minOrder: 100,
-            expiry: "2026-12-31",
-            usageLimit: 500,
-            usedCount: 145,
-            createdAt: "2025-01-01"
-        },
-        {
-            id: 2,
-            code: "WELCOME10",
-            type: "percentage",
-            value: 10,
-            minOrder: 0,
-            expiry: "2025-12-31",
-            usageLimit: 1000,
-            usedCount: 890,
-            createdAt: "2025-01-15"
-        },
-        {
-            id: 3,
-            code: "FREESHIP",
-            type: "fixed",
-            value: 15,
-            minOrder: 50,
-            expiry: "2025-06-30",
-            usageLimit: 200,
-            usedCount: 67,
-            createdAt: "2025-02-10"
-        },
-        {
-            id: 4,
-            code: "ELYSIAN100",
-            type: "fixed",
-            value: 100,
-            minOrder: 500,
-            expiry: "2025-05-01",
-            usageLimit: 50,
-            usedCount: 50,
-            createdAt: "2025-03-01"
-        } // expired
-    ];
-
-    function loadCoupons() {
-        const stored = localStorage.getItem("elysian_coupons_module");
-        if (stored) {
-            coupons = JSON.parse(stored);
-            if (coupons.length === 0) {
-                coupons = [...DEMO_COUPONS];
-                saveCoupons();
-            }
-        } else {
-            coupons = [...DEMO_COUPONS];
-            saveCoupons();
+    async function loadCoupons() {
+        try {
+            const response = await fetch("{{ route('coupons.data') }}");
+            if (!response.ok) throw new Error("Could not retrieve coupons.");
+            coupons = await response.json();
+            renderCoupons();
+        } catch (error) {
+            console.error(error);
+            showToast("Failed to load coupons from database.", true);
         }
-    }
-
-    function saveCoupons() {
-        localStorage.setItem("elysian_coupons_module", JSON.stringify(coupons));
     }
 
     function showToast(message, isError = false) {
@@ -609,13 +560,11 @@
         setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
-    // Helper: check if coupon is expired
     function isExpired(expiryDate) {
         const today = new Date().toISOString().slice(0, 10);
         return expiryDate < today;
     }
 
-    // Render table with filters
     function renderCoupons() {
         const statusFilter = document.getElementById('couponStatusFilter').value;
         const typeFilter = document.getElementById('couponTypeFilter').value;
@@ -635,8 +584,9 @@
 
         tbody.innerHTML = '';
         filtered.forEach(c => {
-            const discountDisplay = c.type === 'percentage' ? `${c.value}%` : `$${c.value.toFixed(2)}`;
-            const usageDisplay = c.usageLimit ? `${c.usedCount} / ${c.usageLimit}` : `${c.usedCount} / ∞`;
+            const discountDisplay = c.type === 'percentage' ? `${c.value}%` : `${parseFloat(c.value).toFixed(2)}`;
+            const minOrderVal = parseFloat(c.min_order || 0).toFixed(2);
+            const usageDisplay = c.usage_limit ? `${c.used_count} / ${c.usage_limit}` : `${c.used_count} / ∞`;
             const expired = isExpired(c.expiry);
             const statusBadge = expired ? '<span class="badge badge-danger">Expired</span>' :
                 '<span class="badge badge-success">Active</span>';
@@ -644,7 +594,7 @@
                 <tr>
                   <td><strong>${escapeHtml(c.code)}</strong></td>
                   <td>${discountDisplay}</td>
-                  <td>$${c.minOrder.toFixed(2)}</td>
+                  <td>${minOrderVal}</td>
                   <td>${c.expiry}</td>
                   <td>${usageDisplay}</td>
                   <td>${statusBadge}</td>
@@ -657,7 +607,6 @@
             tbody.insertAdjacentHTML('beforeend', row);
         });
 
-        // Attach edit/delete events
         document.querySelectorAll('.edit-coupon').forEach(btn => {
             btn.addEventListener('click', () => openEditCoupon(parseInt(btn.dataset.id)));
         });
@@ -673,101 +622,91 @@
         document.getElementById('couponCode').value = coupon.code;
         document.getElementById('couponType').value = coupon.type;
         document.getElementById('couponValue').value = coupon.value;
-        document.getElementById('couponMinOrder').value = coupon.minOrder;
+        document.getElementById('couponMinOrder').value = coupon.min_order;
         document.getElementById('couponExpiry').value = coupon.expiry;
-        document.getElementById('couponUsageLimit').value = coupon.usageLimit || '';
-        document.getElementById('couponUsedCount').value = coupon.usedCount;
+        document.getElementById('couponUsageLimit').value = coupon.usage_limit || '';
+        document.getElementById('couponUsedCount').value = coupon.used_count;
         document.getElementById('modalTitle').innerText = "Edit Coupon";
         document.getElementById('couponModal').classList.add('active');
     }
 
-    function deleteCoupon(id) {
-        if (confirm("Delete this coupon permanently? This action cannot be undone.")) {
-            coupons = coupons.filter(c => c.id !== id);
-            saveCoupons();
-            renderCoupons();
-            showToast("Coupon deleted successfully");
+    async function deleteCoupon(id) {
+        if (!confirm("Delete this coupon permanently? This action cannot be undone.")) return;
+
+        try {
+            const response = await fetch(`/admin/coupons/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showToast(result.message || "Coupon deleted successfully.");
+                loadCoupons();
+            } else {
+                showToast(result.message || "Could not delete coupon.", true);
+            }
+        } catch (error) {
+            console.error(error);
+            showToast("An error occurred while deleting.", true);
         }
     }
 
     // Handle form submit (add or edit)
-    document.getElementById('couponForm').addEventListener('submit', (e) => {
+    document.getElementById('couponForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('couponId').value;
-        let code = document.getElementById('couponCode').value.trim().toUpperCase();
+        const code = document.getElementById('couponCode').value.trim().toUpperCase();
         const type = document.getElementById('couponType').value;
         const value = parseFloat(document.getElementById('couponValue').value);
-        const minOrder = parseFloat(document.getElementById('couponMinOrder').value) || 0;
+        const min_order = parseFloat(document.getElementById('couponMinOrder').value) || 0;
         const expiry = document.getElementById('couponExpiry').value;
-        let usageLimit = document.getElementById('couponUsageLimit').value;
-        usageLimit = usageLimit ? parseInt(usageLimit) : null;
-        const usedCount = id ? parseInt(document.getElementById('couponUsedCount').value) : 0;
+        let usage_limit = document.getElementById('couponUsageLimit').value;
+        usage_limit = usage_limit ? parseInt(usage_limit) : null;
 
-        // Validation
-        if (!code) {
-            showToast("Coupon code is required", true);
-            return;
-        }
-        if (isNaN(value) || value <= 0) {
-            showToast("Valid discount value required", true);
-            return;
-        }
-        if (!expiry) {
-            showToast("Expiry date required", true);
-            return;
-        }
-        if (type === 'percentage' && value > 100) {
-            showToast("Percentage discount cannot exceed 100%", true);
-            return;
-        }
+        // Front-End Validation Check
+        if (!code) return showToast("Coupon code is required", true);
+        if (isNaN(value) || value <= 0) return showToast("Valid discount value required", true);
+        if (!expiry) return showToast("Expiry date required", true);
+        if (type === 'percentage' && value > 100) return showToast("Percentage discount cannot exceed 100%", true);
 
-        // Check duplicate code
-        if (!id && coupons.some(c => c.code === code)) {
-            showToast("Coupon code already exists", true);
-            return;
-        }
-        if (id) {
-            const existing = coupons.find(c => c.id != id && c.code === code);
-            if (existing) {
-                showToast("Another coupon with this code already exists", true);
-                return;
-            }
-        }
+        const url = id ? `/admin/coupons/${id}` : '/admin/coupons';
+        const method = id ? 'PUT' : 'POST';
 
-        const couponData = {
-            code,
-            type,
-            value,
-            minOrder,
-            expiry,
-            usageLimit,
-            usedCount: usedCount,
-            createdAt: id ? (coupons.find(c => c.id == id)?.createdAt || new Date().toISOString().slice(0,
-                10)) : new Date().toISOString().slice(0, 10)
-        };
-
-        if (id) {
-            // Update existing
-            const idx = coupons.findIndex(c => c.id == id);
-            if (idx !== -1) {
-                coupons[idx] = {
-                    ...coupons[idx],
-                    ...couponData
-                };
-                showToast("Coupon updated successfully");
-            }
-        } else {
-            // Create new
-            const newId = Date.now();
-            coupons.push({
-                id: newId,
-                ...couponData
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    code, type, value, min_order, expiry, usage_limit
+                })
             });
-            showToast("Coupon created successfully");
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showToast(result.message || "Coupon saved successfully.");
+                closeModal();
+                loadCoupons();
+            } else {
+                let errorMsg = result.message || "Validation failed.";
+                if (result.errors) {
+                    errorMsg = Object.values(result.errors).flat().join(" ");
+                }
+                showToast(errorMsg, true);
+            }
+        } catch (error) {
+            console.error(error);
+            showToast("Server error during submission.", true);
         }
-        saveCoupons();
-        renderCoupons();
-        closeModal();
     });
 
     function openAddModal() {
@@ -803,9 +742,8 @@
         });
     }
 
-    // Bootstrap
+    // Initialize application data
     loadCoupons();
-    renderCoupons();
     </script>
 </body>
 

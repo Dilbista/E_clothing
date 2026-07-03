@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
 @include('frondend.layouts.navbar')
+@include('frondend.layouts.header')
 
 <body class="bg-gray-50">
-    @include('frondend.layouts.header')
 
     <!-- Main Content Panel -->
     <main class="container mx-auto px-4 py-10 md:py-16">
@@ -220,12 +221,11 @@
                     </div>
                 </div>
 
-                <!-- Tab: Addresses (Interactive Modals Integrated) -->
+                <!-- Tab: Addresses -->
                 <div id="tab-addresses" class="tab-content hidden space-y-6">
                     <div
                         class="flex justify-between items-center bg-white rounded-lg border border-gray-100 p-6 shadow-sm">
                         <h3 class="font-bold text-gray-900 text-lg">My Saved Addresses</h3>
-                        <!-- Add Address Trigger Button -->
                         <button type="button" onclick="openAddAddressModal()"
                             class="py-2 px-4 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition-colors focus:outline-none">
                             Add Address
@@ -252,7 +252,6 @@
                                 </p>
                             </div>
                             <div class="mt-6 flex gap-3 border-t border-gray-50 pt-4">
-                                <!-- Edit Button with data attributes for fast populating -->
                                 <button type="button"
                                     onclick="openEditAddressModal(this)"
                                     data-id="{{ $address->id }}"
@@ -325,7 +324,7 @@
                                         name="last_name"
                                         value="{{ Auth::user()->last_name }}"
                                         class="w-full px-4 py-2.5 border border-gray-200 rounded">
-                                </div> 
+                                </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -356,50 +355,137 @@
 
                     <div class="bg-white rounded-lg border border-gray-100 p-6 shadow-sm">
                         <h3 class="font-bold text-gray-900 text-lg mb-6">Change Password</h3>
-                        <form action="{{ route('profile.update.password') }}"
-                            method="POST"
-                            class="space-y-6">
 
+                        <form action="{{ route('profile.update.password') }}" method="POST" class="space-y-6">
                             @csrf
+
                             @error('current_password')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                <p class="text-red-500 text-sm">{{ $message }}</p>
                             @enderror
+
+                            @error('new_password')
+                                <p class="text-red-500 text-sm">{{ $message }}</p>
+                            @enderror
+
+                            <!-- Current Password -->
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-                                <input type="password"
-                                    name="current_password"
-                                    class="w-full px-4 py-2.5 border border-gray-200 rounded">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Current Password
+                                </label>
+
+                                <div class="relative">
+                                    <input
+                                        type="password"
+                                        id="current_password"
+                                        name="current_password"
+                                        placeholder="********"
+                                        class="w-full px-4 py-2.5 pr-12 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+
+                                    <button
+                                        type="button"
+                                        onclick="togglePassword('current_password', this)"
+                                        class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 hover:text-gray-700">
+                                        <i class="ri-eye-line text-xl"></i>
+                                    </button>
+                                </div>
                             </div>
+
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                <!-- New Password -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-                                    <input type="password"
-                                        name="new_password"
-                                        class="w-full px-4 py-2.5 border border-gray-200 rounded">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        New Password
+                                    </label>
+
+                                    <div class="relative">
+                                        <input
+                                            type="password"
+                                            id="new_password"
+                                            name="new_password"
+                                            placeholder="********"
+                                            class="w-full px-4 py-2.5 pr-12 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+
+                                        <button
+                                            type="button"
+                                            onclick="togglePassword('new_password', this)"
+                                            class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 hover:text-gray-700">
+                                            <i class="ri-eye-line text-xl"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- PASSWORD STRENGTH LEVEL METER -->
+                                    <div id="password-strength-container" class="mt-3 hidden transition-all duration-300">
+                                        <div class="flex justify-between items-center text-xs mb-1.5">
+                                            <span class="text-gray-500 font-medium">Password Strength:</span>
+                                            <span id="password-strength-text" class="font-bold text-red-500">Very Weak</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                            <div id="password-strength-bar" class="bg-red-500 h-1.5 rounded-full transition-all duration-300" style="width: 20%"></div>
+                                        </div>
+                                        <p id="password-strength-suggestion" class="text-[11px] text-gray-400 mt-1"></p>
+                                    </div>
                                 </div>
+
+                                <!-- Confirm Password -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New
-                                        Password</label>
-                                    <input type="password"
-                                        name="new_password_confirmation"
-                                        class="w-full px-4 py-2.5 border border-gray-200 rounded">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Confirm New Password
+                                    </label>
+
+                                    <div class="relative">
+                                        <input
+                                            type="password"
+                                            id="new_password_confirmation"
+                                            name="new_password_confirmation"
+                                            placeholder="********"
+                                            class="w-full px-4 py-2.5 pr-12 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+
+                                        <button
+                                            type="button"
+                                            onclick="togglePassword('new_password_confirmation', this)"
+                                            class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 hover:text-gray-700">
+                                            <i class="ri-eye-line text-xl"></i>
+                                        </button>
+                                    </div>
                                 </div>
+
                             </div>
+
                             <div class="pt-4 border-t border-gray-50 flex justify-end">
-                                <button type="submit"
-                                    class="py-2.5 px-6 bg-primary text-white text-sm font-semibold rounded-button">
+                                <button
+                                    type="submit"
+                                    class="py-2.5 px-6 bg-primary text-white text-sm font-semibold rounded-button hover:opacity-90">
                                     Update Password
                                 </button>
                             </div>
                         </form>
                     </div>
+
+                    <!-- Toggle Password Script -->
+                    <script>
+                        function togglePassword(inputId, button) {
+                            const input = document.getElementById(inputId);
+                            const icon = button.querySelector("i");
+
+                            if (input.type === "password") {
+                                input.type = "text";
+                                icon.classList.remove("ri-eye-line");
+                                icon.classList.add("ri-eye-off-line");
+                            } else {
+                                input.type = "password";
+                                icon.classList.remove("ri-eye-off-line");
+                                icon.classList.add("ri-eye-line");
+                            }
+                        }
+                    </script>
                 </div>
 
             </section>
         </div>
     </main>
 
-    <!-- Address Add/Edit Modal (Overlay backdrop styled via Tailwind) -->
+    <!-- Address Add/Edit Modal -->
     <div id="addressModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all duration-300">
         <div class="bg-white w-full max-w-lg rounded-lg border border-gray-100 shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="addressModalCard">
             <!-- Modal Header -->
@@ -409,12 +495,12 @@
                     <i class="ri-close-line"></i>
                 </button>
             </div>
-            
+
             <!-- Modal Form -->
             <form id="addressForm" action="" method="POST" class="p-6 space-y-4">
                 @csrf
                 <input type="hidden" name="_method" id="addressFormMethod" value="POST">
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Address Type / Label</label>
@@ -479,130 +565,11 @@
         </div>
     </div>
 
-    <!-- Footer (Identical Pattern to Home and About Pages) -->
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Column 1: About -->
-                <div class="lg:col-span-2">
-                    <a href="#" class="font-['Pacifico'] text-2xl text-primary inline-block mb-4">logo</a>
-                    <p class="text-gray-600 mb-6 max-w-md">
-                        We offer premium quality clothing and accessories for men and
-                        women. Our mission is to provide sustainable fashion that lasts.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
-                </div>
+    <!-- Footer -->
+    @include('frondend.layouts.footer')
 
-                <!-- Column 2: Shop -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Shop</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Women</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Men</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Accessories</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Footwear</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sale</a>
-                        </li>
-                    </ul>
-                </div>
 
-                <!-- Column 3: Help -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Help</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Customer Service</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">My Account</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Find a Store</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping &
-                                Returns</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">FAQs</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 4: About -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">About</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                        &copy; 2025 ShopEase. All rights reserved.
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Terms of Service</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Cookies Settings</a>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-4 md:mt-0">
-                        <i class="ri-visa-fill text-2xl text-gray-600"></i>
-                        <i class="ri-mastercard-fill text-2xl text-gray-600"></i>
-                        <i class="ri-paypal-fill text-2xl text-gray-600"></i>
-                        <i class="ri-apple-fill text-2xl text-gray-600"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts (Keeps your custom handlers for profile tab navigation and optional avatar uploading) -->
+    <!-- Scripts -->
     <script id="profileInteractions">
         document.addEventListener("DOMContentLoaded", function() {
             // Profile Avatar Upload Handler
@@ -659,7 +626,7 @@
             }
         }
 
-        // --- NEW: Address Add/Edit Modal Handlers ---
+        // --- Address Add/Edit Modal Handlers ---
         function openAddAddressModal() {
             const modal = document.getElementById('addressModal');
             const card = document.getElementById('addressModalCard');
@@ -667,15 +634,12 @@
             const method = document.getElementById('addressFormMethod');
             const title = document.getElementById('addressModalTitle');
 
-            // Reset form fields
             form.reset();
-            
-            // Set dynamic endpoint actions for Laravel store
-            form.action = "{{ route('addresses.store') }}"; // Replace with your named Laravel Route
+
+            form.action = "{{ route('addresses.store') }}"; 
             method.value = "POST";
             title.textContent = "Add New Address";
 
-            // Open Modal Transitions
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             setTimeout(() => {
@@ -691,7 +655,6 @@
             const method = document.getElementById('addressFormMethod');
             const title = document.getElementById('addressModalTitle');
 
-            // Retrieve data attributes from card triggers
             const id = btn.getAttribute('data-id');
             const type = btn.getAttribute('data-type');
             const name = btn.getAttribute('data-name');
@@ -703,7 +666,6 @@
             const phone = btn.getAttribute('data-phone');
             const isDefault = btn.getAttribute('data-default');
 
-            // Populate form inputs
             document.getElementById('addr_type').value = type;
             document.getElementById('addr_name').value = name;
             document.getElementById('addr_line1').value = line1;
@@ -714,12 +676,10 @@
             document.getElementById('addr_phone').value = phone;
             document.getElementById('addr_default').checked = isDefault === "1";
 
-            // Set dynamic action endpoints and method spoofing for Laravel update
             form.action = `/addresses/${id}`;
             method.value = "PUT";
             title.textContent = "Edit Address Details";
 
-            // Open Modal Transitions
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             setTimeout(() => {
@@ -732,7 +692,6 @@
             const modal = document.getElementById('addressModal');
             const card = document.getElementById('addressModalCard');
 
-            // Close card transitions
             card.classList.remove('scale-100', 'opacity-100');
             card.classList.add('scale-95', 'opacity-0');
 
@@ -747,17 +706,130 @@
             let activeTab = "{{ session('active_tab') }}";
 
             if (activeTab) {
-                // hide all tabs
                 document.querySelectorAll('.tab-content').forEach(tab => {
                     tab.classList.add('hidden');
                 });
-
-                // show selected tab
                 document.getElementById(activeTab).classList.remove('hidden');
             }
         });
     </script>
-    
+
+    <!-- Real-time Password Strength Meter Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const passwordInput = document.getElementById('new_password');
+            const strengthContainer = document.getElementById('password-strength-container');
+            const strengthText = document.getElementById('password-strength-text');
+            const strengthBar = document.getElementById('password-strength-bar');
+            const strengthSuggestion = document.getElementById('password-strength-suggestion');
+
+            if (passwordInput && strengthContainer && strengthText && strengthBar && strengthSuggestion) {
+                passwordInput.addEventListener('input', function() {
+                    const value = passwordInput.value;
+
+                    // If empty, hide strength element completely
+                    if (value.length === 0) {
+                        strengthContainer.classList.add('hidden');
+                        return;
+                    }
+
+                    // Show container
+                    strengthContainer.classList.remove('hidden');
+
+                    let score = 0;
+                    let suggestions = [];
+
+                    // 1. Length assessment
+                    if (value.length >= 8) {
+                        score++;
+                    } else {
+                        suggestions.push("At least 8 characters");
+                    }
+
+                    // 2. Contains lowercase
+                    if (/[a-z]/.test(value)) {
+                        score++;
+                    } else {
+                        suggestions.push("lowercase letters");
+                    }
+
+                    // 3. Contains uppercase
+                    if (/[A-Z]/.test(value)) {
+                        score++;
+                    } else {
+                        suggestions.push("uppercase letters");
+                    }
+
+                    // 4. Contains numbers
+                    if (/[0-9]/.test(value)) {
+                        score++;
+                    } else {
+                        suggestions.push("numbers");
+                    }
+
+                    // 5. Contains special characters
+                    if (/[^A-Za-z0-9]/.test(value)) {
+                        score++;
+                    } else {
+                        suggestions.push("special characters");
+                    }
+
+                    // Styling maps based on scored criteria (0-5)
+                    let text = "Very Weak";
+                    let width = "20%";
+                    let barColor = "bg-red-500";
+                    let textColor = "text-red-500";
+
+                    switch (score) {
+                        case 2:
+                            text = "Weak";
+                            width = "40%";
+                            barColor = "bg-orange-500";
+                            textColor = "text-orange-500";
+                            break;
+                        case 3:
+                            text = "Medium";
+                            width = "60%";
+                            barColor = "bg-amber-500";
+                            textColor = "text-amber-500";
+                            break;
+                        case 4:
+                            text = "Strong";
+                            width = "80%";
+                            barColor = "bg-emerald-500";
+                            textColor = "text-emerald-500";
+                            break;
+                        case 5:
+                            text = "Very Strong";
+                            width = "100%";
+                            barColor = "bg-green-600";
+                            textColor = "text-green-600";
+                            break;
+                        default:
+                            text = "Very Weak";
+                            width = "20%";
+                            barColor = "bg-red-500";
+                            textColor = "text-red-500";
+                    }
+
+                    // Apply visual updates to UI elements
+                    strengthText.textContent = text;
+                    strengthText.className = "font-bold " + textColor;
+                    
+                    strengthBar.className = "h-1.5 rounded-full transition-all duration-300 " + barColor;
+                    strengthBar.style.width = width;
+
+                    // Suggest missing items to the user
+                    if (suggestions.length > 0 && score < 5) {
+                        strengthSuggestion.textContent = "To make it stronger, add: " + suggestions.join(', ') + ".";
+                    } else {
+                        strengthSuggestion.textContent = "Perfect! Your password is secure.";
+                    }
+                });
+            }
+        });
+    </script>
+
 </body>
 
 </html>

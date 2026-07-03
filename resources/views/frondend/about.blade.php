@@ -7,28 +7,28 @@
     <title>@yield('title','E_Cloting||About US')</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: "#4f46e5",
-                    secondary: "#f97316"
-                },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#4f46e5",
+                        secondary: "#f97316"
+                    },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
                 },
             },
-        },
-    };
+        };
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,161 +36,165 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
 
-    body {
-        font-family: 'Inter', sans-serif;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
-    /* Hero section with stable Unsplash image and soft warm-toned overlay */
-    .about-hero-section {
-        background-image: linear-gradient(to right, rgba(24, 24, 27, 0.85) 30%, rgba(24, 24, 27, 0.4) 100%),
-            url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1920&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-    }
+        /* Hero section with stable Unsplash image and soft warm-toned overlay */
+        .about-hero-section {
+            background-image: linear-gradient(to right, rgba(24, 24, 27, 0.85) 30%, rgba(24, 24, 27, 0.4) 100%),
+                url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
 
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-    .custom-checkbox {
-        position: relative;
-        cursor: pointer;
-    }
+        .custom-checkbox {
+            position: relative;
+            cursor: pointer;
+        }
 
-    .custom-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
 
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 18px;
-        width: 18px;
-        background-color: #fff;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-    }
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 18px;
+            width: 18px;
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
 
-    .custom-checkbox:hover input~.checkmark {
-        background-color: #f3f4f6;
-    }
+        .custom-checkbox:hover input~.checkmark {
+            background-color: #f3f4f6;
+        }
 
-    .custom-checkbox input:checked~.checkmark {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-    }
+        .custom-checkbox input:checked~.checkmark {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
 
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-    }
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
 
-    .custom-checkbox input:checked~.checkmark:after {
-        display: block;
-    }
+        .custom-checkbox input:checked~.checkmark:after {
+            display: block;
+        }
 
-    .custom-checkbox .checkmark:after {
-        left: 6px;
-        top: 2px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
+        .custom-checkbox .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-    }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #e5e7eb;
-        transition: .4s;
-        border-radius: 34px;
-    }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: .4s;
+            border-radius: 34px;
+        }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
 
-    input:checked+.slider {
-        background-color: #4f46e5;
-    }
+        input:checked+.slider {
+            background-color: #4f46e5;
+        }
 
-    input:checked+.slider:before {
-        transform: translateX(20px);
-    }
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
 
-    .custom-range {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 5px;
-        background: #e5e7eb;
-        outline: none;
-    }
+        .custom-range {
+            -webkit-appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
 
-    .custom-range::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-    }
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #e5e7eb;
+            outline: none;
+        }
 
-    .custom-range::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-        border: none;
-    }
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+        }
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 160px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        z-index: 50;
-        border-radius: 8px;
-    }
+        .custom-range::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            border: none;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            border-radius: 8px;
+        }
     </style>
 </head>
 
@@ -425,203 +429,24 @@
     </section>
 
     <!-- Footer (Identical Pattern to Home Page) -->
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Column 1: About -->
-                <div class="lg:col-span-2">
-                    <a href="#" class="font-['Pacifico'] text-2xl text-primary inline-block mb-4">logo</a>
-                    <p class="text-gray-600 mb-6 max-w-md">
-                        We offer premium quality clothing and accessories for men and
-                        women. Our mission is to provide sustainable fashion that lasts.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
-                </div>
+    @include('frondend.layouts.footer')
 
-                <!-- Column 2: Shop -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Shop</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Women</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Men</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Accessories</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Footwear</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sale</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 3: Help -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Help</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Customer Service</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">My Account</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Find a Store</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping &
-                                Returns</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">FAQs</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 4: About -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">About</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                        &copy; 2025 ShopEase. All rights reserved.
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Terms of Service</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Cookies Settings</a>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-4 md:mt-0">
-                        <i class="ri-visa-fill text-2xl text-gray-600"></i>
-                        <i class="ri-mastercard-fill text-2xl text-gray-600"></i>
-                        <i class="ri-paypal-fill text-2xl text-gray-600"></i>
-                        <i class="ri-apple-fill text-2xl text-gray-600"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <!-- Scripts (Matches Home page toggle systems) -->
-    <script id="headerInteractions">
-    document.addEventListener("DOMContentLoaded", function() {
-        // Search Toggle
-        const searchToggle = document.getElementById("searchToggle");
-        const searchDropdown = document.getElementById("searchDropdown");
-
-        if (searchToggle && searchDropdown) {
-            searchToggle.addEventListener("click", function() {
-                searchDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !searchToggle.contains(event.target) &&
-                    !searchDropdown.contains(event.target)
-                ) {
-                    searchDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Cart Toggle
-        const cartToggle = document.getElementById("cartToggle");
-        const cartDropdown = document.getElementById("cartDropdown");
-
-        if (cartToggle && cartDropdown) {
-            cartToggle.addEventListener("click", function() {
-                cartDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !cartToggle.contains(event.target) &&
-                    !cartDropdown.contains(event.target)
-                ) {
-                    cartDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
-
-        if (mobileMenuToggle && mobileMenu) {
-            mobileMenuToggle.addEventListener("click", function() {
-                mobileMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Shop Menu Toggle
-        const mobileShopToggle = document.getElementById("mobileShopToggle");
-        const mobileShopMenu = document.getElementById("mobileShopMenu");
-
-        if (mobileShopToggle && mobileShopMenu) {
-            mobileShopToggle.addEventListener("click", function() {
-                mobileShopMenu.classList.toggle("hidden");
-            });
-        }
-    });
-    </script>
+    
     <script>
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
+        const btn = document.getElementById("userBtn");
+        const dropdown = document.getElementById("dropdown");
 
-    btn.addEventListener("click", () => {
-        dropdown.classList.toggle("hidden");
-    });
+        btn.addEventListener("click", () => {
+            dropdown.classList.toggle("hidden");
+        });
 
-    document.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add("hidden");
-        }
-    });
+        document.addEventListener("click", (e) => {
+            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add("hidden");
+            }
+        });
     </script>
 </body>
 

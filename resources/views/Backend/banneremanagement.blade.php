@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <!-- Laravel CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ÉLYSIAN · Banner Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -340,6 +342,21 @@
         transform: translateX(0);
     }
 
+    /* Preview styles */
+    .image-preview-box {
+        margin-top: 10px;
+        display: none;
+    }
+
+    .image-preview-box img {
+        width: 100%;
+        max-height: 140px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+        background: #100F0E;
+    }
+
     /* MOBILE TOGGLE & OVERLAY */
     .menu-toggle {
         display: none;
@@ -489,8 +506,12 @@
                     <input type="text" id="bannerTitle" placeholder="Summer Sale" required>
                 </div>
                 <div class="form-group">
-                    <label>Image URL *</label>
-                    <input type="url" id="bannerImage" placeholder="https://example.com/banner.jpg" required>
+                    <label>Banner Image *</label>
+                    <!-- File input for local image upload -->
+                    <input type="file" id="bannerImage" accept="image/*">
+                    <div class="image-preview-box" id="bannerImagePreviewContainer">
+                        <img id="bannerImagePreview" src="" alt="Preview">
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -508,7 +529,7 @@
                 </div>
                 <div class="form-group">
                     <label>Link URL (optional)</label>
-                    <input type="url" id="bannerLink" placeholder="/collections/sale">
+                    <input type="url" id="bannerLink" placeholder="https://example.com/collections/sale">
                 </div>
                 <div class="form-group">
                     <label>Description</label>
@@ -534,6 +555,9 @@
     </div>
 
     <script>
+    // ========== CSRF Config ==========
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     // ========== SIDEBAR & NAVIGATION TOGGLE ==========
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
@@ -565,59 +589,21 @@
     }
 
 
-    // ----------------------------- BANNERS DATA (LOCALSTORAGE) -----------------------------
+    // ----------------------------- BANNERS SYNC OPERATIONS -----------------------------
     let banners = [];
 
-    // Demo banners
-    const DEMO_BANNERS = [{
-            id: 1,
-            title: "Summer Sale",
-            image: "https://images.unsplash.com/photo-1607083206968-13611e3e76db?w=120&h=60&fit=crop",
-            position: "Homepage",
-            link: "/summer-sale",
-            description: "Up to 40% off",
-            status: "active",
-            order: 1
-        },
-        {
-            id: 2,
-            title: "New Arrivals",
-            image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=120&h=60&fit=crop",
-            position: "Homepage",
-            link: "/new-arrivals",
-            description: "Discover latest collection",
-            status: "active",
-            order: 2
-        },
-        {
-            id: 3,
-            title: "Luxury Coats",
-            image: "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=120&h=60&fit=crop",
-            position: "Collection",
-            link: "/coats",
-            description: "Cashmere & wool",
-            status: "inactive",
-            order: 1
-        }
-    ];
-
-    function loadBanners() {
-        const stored = localStorage.getItem("elysian_banners_module");
-        if (stored) {
-            banners = JSON.parse(stored);
-            if (banners.length === 0) {
-                banners = [...DEMO_BANNERS];
-                saveBanners();
-            }
-        } else {
-            banners = [...DEMO_BANNERS];
-            saveBanners();
-        }
+   async function loadBanners() {
+    try {
+        // Changed to use the direct endpoint path
+        const response = await fetch("/admin/banners/data");
+        if (!response.ok) throw new Error("Could not load banners.");
+        banners = await response.json();
+        renderBanners();
+    } catch (error) {
+        console.error(error);
+        showToast("Failed to load banners from server.", true);
     }
-
-    function saveBanners() {
-        localStorage.setItem("elysian_banners_module", JSON.stringify(banners));
-    }
+}
 
     function showToast(message, isError = false) {
         const toast = document.getElementById('toastMsg');
@@ -628,7 +614,6 @@
         setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
-    // Render banner table with filters and sorting by order
     function renderBanners() {
         const statusFilter = document.getElementById('statusFilter').value;
         const positionFilter = document.getElementById('positionFilter').value;
@@ -657,7 +642,7 @@
                 '<span class="badge badge-danger">Inactive</span>';
             const row = `
         <tr>
-          <td><img src="${escapeHtml(b.image)}" class="banner-thumb" onerror="this.src='https://placehold.co/80x50?text=No+Image'"></td>
+          <td><img src="${escapeHtml(b.image_url)}" class="banner-thumb" onerror="this.src='https://placehold.co/80x50?text=No+Image'"></td>
           <td><strong>${escapeHtml(b.title)}</strong><br><small style="color:var(--text-secondary);">${escapeHtml(b.description || '')}</small></td>
           <td>${escapeHtml(b.position)}</td>
           <td>${b.link ? `<a href="${escapeHtml(b.link)}" target="_blank" style="color:var(--gold);">Link</a>` : '—'}</td>
@@ -691,25 +676,30 @@
         });
     }
 
-    // Reorder: swap order values
-    function reorderBanner(id, direction) {
-        const index = banners.findIndex(b => b.id === id);
-        if (index === -1) return;
-        if (direction === 'up' && index > 0) {
-            const tempOrder = banners[index - 1].order;
-            banners[index - 1].order = banners[index].order;
-            banners[index].order = tempOrder;
-        } else if (direction === 'down' && index < banners.length - 1) {
-            const tempOrder = banners[index + 1].order;
-            banners[index + 1].order = banners[index].order;
-            banners[index].order = tempOrder;
-        } else {
-            return;
+    async function reorderBanner(id, direction) {
+        try {
+            const response = await fetch(`/admin/banners/${id}/reorder`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ direction })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showToast(result.message || "Ordering updated.");
+                loadBanners();
+            } else {
+                showToast(result.message || "Order change not allowed.", true);
+            }
+        } catch (error) {
+            console.error(error);
+            showToast("Ordering synchronization failed.", true);
         }
-        banners.sort((a, b) => a.order - b.order);
-        saveBanners();
-        renderBanners();
-        showToast(`Banner order updated`);
     }
 
     function openEditBanner(id) {
@@ -717,7 +707,21 @@
         if (!banner) return;
         document.getElementById('bannerId').value = banner.id;
         document.getElementById('bannerTitle').value = banner.title;
-        document.getElementById('bannerImage').value = banner.image;
+        
+        // Clear old file selections. File input cannot have programmatic default paths.
+        document.getElementById('bannerImage').value = '';
+        document.getElementById('bannerImage').removeAttribute('required');
+
+        // Show thumbnail preview of the existing banner image
+        const previewImg = document.getElementById('bannerImagePreview');
+        const previewContainer = document.getElementById('bannerImagePreviewContainer');
+        if (banner.image_url) {
+            previewImg.src = banner.image_url;
+            previewContainer.style.display = 'block';
+        } else {
+            previewContainer.style.display = 'none';
+        }
+
         document.getElementById('bannerPosition').value = banner.position;
         document.getElementById('bannerOrder').value = banner.order;
         document.getElementById('bannerLink').value = banner.link || '';
@@ -727,71 +731,126 @@
         document.getElementById('bannerModal').classList.add('active');
     }
 
-    function deleteBanner(id) {
-        if (confirm('Delete this banner permanently?')) {
-            banners = banners.filter(b => b.id !== id);
-            saveBanners();
-            renderBanners();
-            showToast('Banner deleted');
+    async function deleteBanner(id) {
+        if (!confirm('Delete this banner permanently?')) return;
+
+        try {
+            const response = await fetch(`/admin/banners/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showToast(result.message || "Banner removed successfully.");
+                loadBanners();
+            } else {
+                showToast(result.message || "Could not delete banner.", true);
+            }
+        } catch (error) {
+            console.error(error);
+            showToast("Server error during banner removal.", true);
         }
     }
 
-    // Handle form submit (add / edit)
-    document.getElementById('bannerForm').addEventListener('submit', (e) => {
+    // Handles live file input image preview changes
+    document.getElementById('bannerImage').addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('bannerImagePreview').src = e.target.result;
+                document.getElementById('bannerImagePreviewContainer').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Handle form submit (add / edit with Multipart Formdata)
+    document.getElementById('bannerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('bannerId').value;
         const title = document.getElementById('bannerTitle').value.trim();
-        const image = document.getElementById('bannerImage').value.trim();
         const position = document.getElementById('bannerPosition').value;
         let order = parseInt(document.getElementById('bannerOrder').value);
         const link = document.getElementById('bannerLink').value.trim();
         const description = document.getElementById('bannerDesc').value.trim();
         const status = document.getElementById('bannerStatus').value;
+        const fileInput = document.getElementById('bannerImage');
 
-        if (!title || !image) {
-            showToast('Title and Image URL are required', true);
+        if (!title) {
+            showToast('Title is required', true);
+            return;
+        }
+        if (!id && fileInput.files.length === 0) {
+            showToast('An image file is required to create a banner', true);
             return;
         }
         if (isNaN(order)) order = 0;
 
-        const bannerData = {
-            title,
-            image,
-            position,
-            order,
-            link,
-            description,
-            status
-        };
+        // Build FormData payload to allow file uploads over AJAX
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('position', position);
+        formData.append('order', order);
+        formData.append('link', link);
+        formData.append('description', description);
+        formData.append('status', status);
 
-        if (id) {
-            // update existing
-            const idx = banners.findIndex(b => b.id == id);
-            if (idx !== -1) {
-                banners[idx] = {
-                    ...banners[idx],
-                    ...bannerData
-                };
-                saveBanners();
-                showToast('Banner updated');
-            }
-        } else {
-            // add new
-            const newId = Date.now();
-            banners.push({
-                id: newId,
-                ...bannerData
-            });
-            saveBanners();
-            showToast('Banner added');
+        if (fileInput.files.length > 0) {
+            formData.append('image', fileInput.files[0]);
         }
-        renderBanners();
-        closeModal();
+
+        let url = '/admin/banners';
+        
+        // Method Spoofing: Force PUT values over standard multipart POST request
+        if (id) {
+            url = `/admin/banners/${id}`;
+            formData.append('_method', 'PUT');
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST', // Keep as POST. Method spoofing handles PUT logic.
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                    // IMPORTANT: Do not set Content-Type. Browser sets boundary automatically.
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showToast(result.message || "Banner saved.");
+                closeModal();
+                loadBanners();
+            } else {
+                let errorMsg = result.message || "Validation failed.";
+                if (result.errors) {
+                    errorMsg = Object.values(result.errors).flat().join(" ");
+                }
+                showToast(errorMsg, true);
+            }
+        } catch (error) {
+            console.error(error);
+            showToast("Could not contact server to save banner.", true);
+        }
     });
 
     function openAddModal() {
         document.getElementById('bannerForm').reset();
         document.getElementById('bannerId').value = '';
+        
+        // Ensure image selection is required on creation
+        document.getElementById('bannerImage').setAttribute('required', 'required');
+        document.getElementById('bannerImagePreviewContainer').style.display = 'none';
+        
         document.getElementById('bannerOrder').value = banners.length + 1;
         document.getElementById('modalTitle').innerText = 'Add New Banner';
         document.getElementById('bannerModal').classList.add('active');
@@ -821,9 +880,8 @@
         });
     }
 
-    // Bootstrap
+    // Initialize application data
     loadBanners();
-    renderBanners();
     </script>
 </body>
 

@@ -14,6 +14,7 @@ class ProductController extends Controller
 {
     public function index()
     {
+        // dd('ProductController index method called');
         $products = Product::with(['category', 'brand', 'sizes', 'colors'])->orderBy('created_at', 'desc')->get();
         $categories = Category::all();
         $brands = Brand::all();
@@ -32,7 +33,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5000',
         ]);
 
         $product = null;

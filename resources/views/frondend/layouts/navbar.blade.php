@@ -1,5 +1,6 @@
 <head>
     <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShopEase - Premium Shopping Experience</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
@@ -7,7 +8,10 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: "#4f46e5", secondary: "#f97316" },
+                    colors: {
+                        primary: "#4f46e5",
+                        secondary: "#f97316"
+                    },
                     borderRadius: {
                         none: "0px",
                         sm: "4px",
@@ -37,16 +41,16 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
     <style>
-        :where([class^="ri-"])::before {
-            content: "\f3c2";
-        }
+        /* Problematic generic content override has been removed from this block */
 
         body {
             font-family: 'Inter', sans-serif;
         }
 
         .hero-section {
-            background-image: url('{{ asset('build/images/herobg.jpg') }}');
+            height: 90vh;
+            display: flex;
+            background-image: url("{{ asset('build/images/herobg.jpg') }}");
             background-size: cover;
             background-position: center right;
         }

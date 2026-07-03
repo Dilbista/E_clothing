@@ -438,9 +438,9 @@
                                 </td>
                                 <td><span class="badge">{{ $product->category ? $product->category->category_name : 'Uncategorized' }}</span></td>
                                 <td>
-                                    ${{ number_format($product->price, 2) }}
+                                    {{ number_format($product->price, 2) }}
                                     @if($product->discount_price)
-                                    <br><small style="color:var(--gold);">Discount: ${{ number_format($product->discount_price, 2) }}</small>
+                                    <br><small style="color:var(--gold);">Discount: {{ number_format($product->discount_price, 2) }}</small>
                                     @endif
                                 </td>
                                 <td>{{ $product->stock }}</td>
@@ -512,11 +512,11 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Price ($) *</label>
+                        <label>Price *</label>
                         <input type="number" step="0.01" name="price" id="prodPrice" placeholder="249.00" required>
                     </div>
                     <div class="form-group">
-                        <label>Discount Price ($)</label>
+                        <label>Discount Price</label>
                         <input type="number" step="0.01" name="discount_price" id="prodDiscount" placeholder="199.00">
                     </div>
                     <div class="form-group">

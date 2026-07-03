@@ -4,33 +4,34 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ShopEase - Women's Collection</title>
 
 
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: "#4f46e5",
-                    secondary: "#f97316"
-                },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#4f46e5",
+                        secondary: "#f97316"
+                    },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
                 },
             },
-        },
-    };
+        };
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,161 +39,347 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
 
-    body {
-        font-family: 'Inter', sans-serif;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
 
-    /* Updated Hero Section with a high-quality Unsplash image and dark readable overlay gradient */
-    .hero-section {
-        background-image: linear-gradient(to right, rgba(24, 24, 27, 0.85) 30%, rgba(24, 24, 27, 0.4) 100%),
-            url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1920&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-    }
+        /* Updated Hero Section with a high-quality Unsplash image and dark readable overlay gradient */
+        .hero-section {
+            background-image: linear-gradient(to right, rgba(24, 24, 27, 0.85) 30%, rgba(24, 24, 27, 0.4) 100%),
+                url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
 
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-    .custom-checkbox {
-        position: relative;
-        cursor: pointer;
-    }
+        /* For Firefox */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
 
-    .custom-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
 
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 18px;
-        width: 18px;
-        background-color: #fff;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-    }
+        .custom-checkbox {
+            position: relative;
+            cursor: pointer;
+        }
 
-    .custom-checkbox:hover input~.checkmark {
-        background-color: #f3f4f6;
-    }
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
 
-    .custom-checkbox input:checked~.checkmark {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-    }
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 18px;
+            width: 18px;
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+        }
 
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-    }
+        .custom-checkbox:hover input~.checkmark {
+            background-color: #f3f4f6;
+        }
 
-    .custom-checkbox input:checked~.checkmark:after {
-        display: block;
-    }
+        .custom-checkbox input:checked~.checkmark {
+            background-color: #4f46e5;
+            border-color: #4f46e5;
+        }
 
-    .custom-checkbox .checkmark:after {
-        left: 6px;
-        top: 2px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-    }
+        .custom-checkbox input:checked~.checkmark:after {
+            display: block;
+        }
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+        .custom-checkbox .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
 
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #e5e7eb;
-        transition: .4s;
-        border-radius: 34px;
-    }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-    input:checked+.slider {
-        background-color: #4f46e5;
-    }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            transition: .4s;
+            border-radius: 34px;
+        }
 
-    input:checked+.slider:before {
-        transform: translateX(20px);
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
 
-    .custom-range {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 5px;
-        background: #e5e7eb;
-        outline: none;
-    }
+        input:checked+.slider {
+            background-color: #4f46e5;
+        }
 
-    .custom-range::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-    }
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
 
-    .custom-range::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-        border: none;
-    }
+        .custom-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #e5e7eb;
+            outline: none;
+        }
 
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 160px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        z-index: 50;
-        border-radius: 8px;
-    }
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+        }
+
+        .custom-range::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            border: none;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            border-radius: 8px;
+        }
+
+        /* ========== NEW ANIMATIONS & EFFECTS ========== */
+        /* Heart red highlight on click */
+        @keyframes heartHighlight {
+            0% {
+                transform: scale(1);
+                color: currentColor;
+                text-shadow: 0 0 0px rgba(239, 68, 68, 0);
+            }
+
+            30% {
+                transform: scale(1.4);
+                color: #ef4444;
+                text-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+            }
+
+            100% {
+                transform: scale(1);
+                color: currentColor;
+                text-shadow: 0 0 0px rgba(239, 68, 68, 0);
+            }
+        }
+
+        .animate-heart-highlight {
+            animation: heartHighlight 0.45s ease-out;
+        }
+
+        /* Scroll reveal keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+        }
+
+        .reveal-fade-up {
+            transform: translateY(30px);
+        }
+
+        .reveal-fade-up.visible {
+            transform: translateY(0);
+        }
+
+        .reveal-fade-left {
+            transform: translateX(-30px);
+        }
+
+        .reveal-fade-left.visible {
+            transform: translateX(0);
+        }
+
+        .reveal-fade-right {
+            transform: translateX(30px);
+        }
+
+        .reveal-fade-right.visible {
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            transform: scale(0.9);
+        }
+
+        .reveal-scale.visible {
+            transform: scale(1);
+        }
+
+        /* Ripple effect */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Product card hover lift */
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Countdown box pulse (if you reuse countdown somewhere) */
+        .countdown-box {
+            animation: countdownPulse 2s infinite;
+        }
+
+        @keyframes countdownPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            50% {
+                transform: scale(1.05);
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+        }
     </style>
 </head>
 
@@ -226,374 +413,236 @@
     <!-- Main Shop Layout -->
     <section class="py-12">
         <div class="container mx-auto px-4">
-            <!-- Mobile Filter & Sort Bar -->
-            <div class="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-gray-100 md:hidden">
-                <button id="filterToggleBtn"
-                    class="flex items-center space-x-2 py-2 px-4 border border-gray-200 rounded-button text-gray-700 text-sm font-medium">
-                    <i class="ri-filter-line"></i>
-                    <span>Filters</span>
-                </button>
-                <div class="flex items-center space-x-2">
-                    <label for="mobile-sort" class="text-sm text-gray-500">Sort By:</label>
-                    <select id="mobile-sort"
-                        class="border-none py-2 bg-transparent text-sm font-medium text-gray-800 focus:outline-none">
-                        <option>Default</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Newest Arrivals</option>
-                    </select>
-                </div>
-            </div>
+            <!-- Form wrapping all filters, search and sort inputs -->
+            <form id="filterForm" method="GET" action="{{ url()->current() }}">
 
-            <div class="flex flex-col md:flex-row gap-8">
-                <!-- Left Sidebar Filters (Desktop and Mobile drawer) -->
-                <aside id="sidebarFilter" class="hidden md:block w-full md:w-64 flex-shrink-0 space-y-8">
-                    <!-- Categories -->
-                    <div>
-                        <h3 class="font-semibold text-gray-900 mb-4">Categories</h3>
-                        <div class="space-y-3">
-                            <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" checked />
-                                <span class="checkmark"></span>
-                                Dresses
-                            </label>
-                            <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" />
-                                <span class="checkmark"></span>
-                                Tops & Blouses
-                            </label>
-                            <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" />
-                                <span class="checkmark"></span>
-                                Knitwear & Sweaters
-                            </label>
-                            <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" />
-                                <span class="checkmark"></span>
-                                Pants & Skirts
-                            </label>
-                            <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" />
-                                <span class="checkmark"></span>
-                                Handbags & Scarves
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Price Filter -->
-                    <div>
-                        <h3 class="font-semibold text-gray-900 mb-4">Price Range</h3>
-                        <div class="space-y-4">
-                            <input type="range" min="10" max="300" value="150" class="custom-range" id="priceRange" />
-                            <div class="flex items-center justify-between text-sm text-gray-600">
-                                <span>Min: Rs.10</span>
-                                <span class="font-semibold text-primary" id="priceVal">Max: Rs.150</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sizes -->
-                    <div>
-                        <h3 class="font-semibold text-gray-900 mb-4">Sizes</h3>
-                        <div class="grid grid-cols-4 gap-2">
-                            <button
-                                class="py-2 border border-gray-200 text-sm rounded font-medium hover:border-primary hover:text-primary transition">XS</button>
-                            <button
-                                class="py-2 border border-primary text-sm rounded font-medium text-primary bg-primary/5 transition">S</button>
-                            <button
-                                class="py-2 border border-gray-200 text-sm rounded font-medium hover:border-primary hover:text-primary transition">M</button>
-                            <button
-                                class="py-2 border border-gray-200 text-sm rounded font-medium hover:border-primary hover:text-primary transition">L</button>
-                            <button
-                                class="py-2 border border-gray-200 text-sm rounded font-medium hover:border-primary hover:text-primary transition">XL</button>
-                        </div>
-                    </div>
-
-                    <!-- In Stock Switch -->
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span class="text-sm font-medium text-gray-700">In Stock Only</span>
-                        <label class="switch">
-                            <input type="checkbox" checked />
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </aside>
-
-                <!-- Right Side: Products Grid -->
-                <div class="flex-1">
-                    <!-- Desktop Filter & Sort Header -->
-                    <div class="hidden md:flex justify-between items-center mb-8">
-                        <p class="text-gray-500 text-sm">Showing <span class="font-medium text-gray-900">1 - 6</span> of
-                            <span class="font-medium text-gray-900">48</span> products
-                        </p>
-                        <div class="flex items-center space-x-4">
-                            <span class="text-sm text-gray-500">Sort By:</span>
-                            <select
-                                class="border border-gray-200 rounded px-3 py-1.5 text-sm font-medium text-gray-700 focus:outline-none focus:ring-1 focus:ring-primary">
-                                <option>Popularity</option>
-                                <option>Price: Low to High</option>
-                                <option>Price: High to Low</option>
-                                <option>New Arrivals</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Product Grid (Tailored for Women with stable Unsplash image paths) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Product 1: Floral Summer Dress -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-rose-500 text-white text-xs px-2 py-1 rounded">Sale</span>
-                                <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=500&auto=format&fit=crop"
-                                    alt="Floral Summer Dress" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="font-medium text-gray-900 mb-1">Floral Summer Dress</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-half-fill"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(54)</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <p class="text-gray-900 font-medium">Rs.59.99</p>
-                                    <p class="text-gray-500 line-through text-sm ml-2">Rs.79.99</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Product 2: Elegant White Blouse -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1541101584959-ac2241b1fc8f?q=80&w=500&auto=format&fit=crop"
-                                    alt="White Blouse" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="font-medium text-gray-900 mb-1">Elegant White Blouse</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-half-fill"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(42)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.49.99</p>
-                            </div>
-                        </div>
-
-                        <!-- Product 3: Leather Handbag -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-amber-500 text-white text-xs px-2 py-1 rounded">Best
-                                    Seller</span>
-                                <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=500&auto=format&fit=crop"
-                                    alt="Leather Handbag" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="font-medium text-gray-900 mb-1">Designer Leather Handbag</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-half-fill"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(88)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.149.99</p>
-                            </div>
-                        </div>
-
-                        <!-- Product 4: Silk Scarf -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <img src="https://images.unsplash.com/photo-1584030373081-f37b7bb4fa8e?q=80&w=500&auto=format&fit=crop"
-                                    alt="Silk Scarf" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="font-medium text-gray-900 mb-1">Luxury Silk Scarf</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(12)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.39.99</p>
-                            </div>
-                        </div>
-
-                        <!-- Product 5: Sunglasses -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=500&auto=format&fit=crop"
-                                    alt="Sunglasses" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="font-medium text-gray-900 mb-1">Premium Sunglasses</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(6)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.89.99</p>
-                            </div>
-                        </div>
-
-                        <!-- Product 6: Knitted Cardigan -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=500&auto=format&fit=crop"
-                                    alt="Knitted Cardigan" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <h3 class="font-medium text-gray-900 mb-1">Knitted Wool Cardigan</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(24)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.119.99</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="flex justify-center items-center space-x-2 mt-12">
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">
-                            <i class="ri-arrow-left-s-line"></i>
-                        </button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button bg-primary text-white font-medium">1</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">2</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">3</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">
-                            <i class="ri-arrow-right-s-line"></i>
-                        </button>
+                <!-- Mobile Filter & Sort Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-gray-100 md:hidden">
+                    <button type="button" id="filterToggleBtn"
+                        class="flex items-center space-x-2 py-2 px-4 border border-gray-200 rounded-button text-gray-700 text-sm font-medium">
+                        <i class="ri-filter-line"></i>
+                        <span>Filters</span>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <label for="mobile-sort" class="text-sm text-gray-500">Sort By:</label>
+                        <select id="mobile-sort" name="sort"
+                            class="border-none py-2 bg-transparent text-sm font-medium text-gray-800 focus:outline-none">
+                            <option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Default</option>
+                            <option value="price_low_high" {{ request('sort') == 'price_low_high' ? 'selected' : '' }}>Price: Low to High</option>
+                            <option value="price_high_low" {{ request('sort') == 'price_high_low' ? 'selected' : '' }}>Price: High to Low</option>
+                            <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest Arrivals</option>
+                        </select>
                     </div>
                 </div>
-            </div>
+
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- Left Sidebar Filters (Desktop and Mobile drawer) -->
+                    <aside id="sidebarFilter" class="hidden md:block w-full md:w-64 flex-shrink-0 space-y-8 bg-white z-20">
+
+                        <!-- Keyword Search -->
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-4">Search</h3>
+                            <div class="relative">
+                                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products..."
+                                    class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-button text-sm focus:outline-none focus:ring-1 focus:ring-primary" />
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="ri-search-line text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Categories -->
+                        <!-- <div>
+                            <h3 class="font-semibold text-gray-900 mb-4">Categories</h3>
+                            <div class="space-y-3">
+                                <label class="custom-checkbox block pl-7 text-sm text-gray-700">
+                                    <input type="checkbox" name="categories[]" value="dresses" {{ in_array('dresses', request('categories', [])) ? 'checked' : '' }} />
+                                    <span class="checkmark"></span>
+                                    Dresses
+                                </label>
+                                <label class="custom-checkbox block pl-7 text-sm text-gray-700">
+                                    <input type="checkbox" name="categories[]" value="tops-blouses" {{ in_array('tops-blouses', request('categories', [])) ? 'checked' : '' }} />
+                                    <span class="checkmark"></span>
+                                    Tops & Blouses
+                                </label>
+                                <label class="custom-checkbox block pl-7 text-sm text-gray-700">
+                                    <input type="checkbox" name="categories[]" value="knitwear-sweaters" {{ in_array('knitwear-sweaters', request('categories', [])) ? 'checked' : '' }} />
+                                    <span class="checkmark"></span>
+                                    Knitwear & Sweaters
+                                </label>
+                                <label class="custom-checkbox block pl-7 text-sm text-gray-700">
+                                    <input type="checkbox" name="categories[]" value="pants-skirts" {{ in_array('pants-skirts', request('categories', [])) ? 'checked' : '' }} />
+                                    <span class="checkmark"></span>
+                                    Pants & Skirts
+                                </label>
+                                <label class="custom-checkbox block pl-7 text-sm text-gray-700">
+                                    <input type="checkbox" name="categories[]" value="handbags-scarves" {{ in_array('handbags-scarves', request('categories', [])) ? 'checked' : '' }} />
+                                    <span class="checkmark"></span>
+                                    Handbags & Scarves
+                                </label>
+                            </div>
+                        </div> -->
+
+                        <!-- Price Filter -->
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-4">Price Range</h3>
+                            <div class="space-y-4">
+                                <input type="range" name="max_price" min="10" max="300000" value="{{ request('max_price', 300000) }}" class="custom-range" id="priceRange" />
+                                <div class="flex items-center justify-between text-sm text-gray-600">
+                                    <span>Min: Rs.10</span>
+                                    <span class="font-semibold text-primary" id="priceVal">Max: Rs.{{ request('max_price', 300000) }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sizes -->
+                        <div>
+                            <h3 class="font-semibold text-gray-900 mb-4">Sizes</h3>
+                            <div class="grid grid-cols-4 gap-2">
+                                @foreach(['XS', 'S', 'M', 'L', 'XL'] as $size)
+                                <label class="cursor-pointer text-center">
+                                    <input type="checkbox" name="sizes[]" value="{{ $size }}" class="sr-only peer" {{ in_array($size, request('sizes', [])) ? 'checked' : '' }}>
+                                    <div class="py-2 border border-gray-200 text-sm rounded font-medium transition hover:border-primary hover:text-primary peer-checked:border-primary peer-checked:text-primary peer-checked:bg-primary/5">
+                                        {{ $size }}
+                                    </div>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- In Stock Switch -->
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <span class="text-sm font-medium text-gray-700">In Stock Only</span>
+                            <label class="switch">
+                                <input type="checkbox" name="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }} />
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </aside>
+
+                    <!-- Right Side: Products Grid -->
+                    <div class="flex-1">
+                        <!-- Desktop Filter & Sort Header -->
+                        <div class="hidden md:flex justify-between items-center mb-8">
+                            <p class="text-gray-500 text-sm">
+                                Showing <span class="font-medium text-gray-900">{{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }}</span> of
+                                <span class="font-medium text-gray-900">{{ $products->total() }}</span> products
+                            </p>
+                            <div class="flex items-center space-x-4">
+                                <span class="text-sm text-gray-500">Sort By:</span>
+                                <select name="sort" id="desktop-sort"
+                                    class="border border-gray-200 rounded px-3 py-1.5 text-sm font-medium text-gray-700 focus:outline-none focus:ring-1 focus:ring-primary">
+                                    <option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Popularity</option>
+                                    <option value="price_low_high" {{ request('sort') == 'price_low_high' ? 'selected' : '' }}>Price: Low to High</option>
+                                    <option value="price_high_low" {{ request('sort') == 'price_high_low' ? 'selected' : '' }}>Price: High to Low</option>
+                                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>New Arrivals</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Product Grid (Tailored for Women with stable Unsplash image paths) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                            @forelse($products as $product)
+
+                            <div class="group">
+                                <div class="relative overflow-hidden rounded-lg mb-4">
+                                    <div class="absolute top-3 left-3 z-10">
+
+                                        {{-- Highest Priority: Out of Stock --}}
+                                        @if($product->stock <= 0)
+
+                                            <span class="bg-red-800 text-white text-xs px-2 py-1 rounded">
+                                            Out of Stock
+                                            </span>
+
+                                            {{-- Second Priority: Sale --}}
+                                            @elseif($product->discount_price)
+
+                                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">
+                                                Sale
+                                            </span>
+
+                                            {{-- Third Priority: New (within 7 days) --}}
+                                            @elseif($product->created_at->gt(now()->subDays(7)))
+
+                                            <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                                                New
+                                            </span>
+
+                                            @endif
+
+                                    </div>
+                                    <img
+                                        src="{{ asset($product->image) }}"
+                                        alt="{{ $product->name }}"
+                                        class="w-full h-80 object-cover object-top">
+                                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <a href="{{ route('frontend.viewDetails', ['id' => $product->getKey()]) }}"
+                                            data-auth-action="view"
+                                            class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
+                                            <i class="ri-eye-line"></i>
+                                        </a>
+                                        <button type="button"
+                                            class="add-to-wishlist-btn bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 transition-all duration-200
+        {{ in_array($product->id, $wishlistIds) ? 'text-rose-500' : 'text-gray-900 hover:text-rose-500' }}"
+                                            data-product-id="{{ $product->id }}">
+
+                                            <i class="{{ in_array($product->id, $wishlistIds) ? 'ri-heart-fill' : 'ri-heart-line' }}"></i>
+                                        </button>
+                                        @php
+                                        $isInCart = $cartItems->contains(fn($item) => (int) $item->product_id === (int) $product->id);
+                                        @endphp
+                                        <button type="button"
+                                            onclick="addToCartGlobal('{{ $product->id }}')"
+                                            data-auth-action="cart"
+                                            class="w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 transition {{ $isInCart ? 'bg-primary text-white' : 'bg-white text-gray-900 hover:bg-gray-100' }}">
+                                            <i class="ri-shopping-bag-line"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div>
+                                    <h3 class="font-medium text-gray-900 mb-1">
+                                        {{ $product->name }}
+                                    </h3>
+                                    <p class="text-sm text-gray-500">
+                                        {{ $product->brand->name ?? '' }}
+                                    </p>
+                                    @if($product->discount_price)
+                                    <div class="flex items-center mt-2">
+                                        <span class="text-lg font-bold text-rose-600">
+                                            Rs. {{ number_format($product->price - $product->discount_price, 2) }}
+                                        </span>
+
+                                        <span class="ml-2 text-sm text-gray-400 line-through">
+                                            Rs. {{ number_format($product->price, 2) }}
+                                        </span>
+                                    </div>
+                                    @else
+                                    <span class="font-bold">
+                                        Rs. {{ number_format($product->price,2) }}
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            @empty
+                            <div class="col-span-3 text-center py-10 text-gray-500">
+                                No products found matching your active criteria.
+                            </div>
+                            @endforelse
+
+                        </div>
+
+                        <!-- Dynamic Laravel Pagination -->
+                        <div class="mt-12 flex justify-center">
+                            {{ $products->appends(request()->query())->links() }}
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </section>
 
@@ -666,224 +715,181 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Column 1: About -->
-                <div class="lg:col-span-2">
-                    <a href="#" class="font-['Pacifico'] text-2xl text-primary inline-block mb-4">logo</a>
-                    <p class="text-gray-600 mb-6 max-w-md">
-                        We offer premium quality clothing and accessories for men and
-                        women. Our mission is to provide sustainable fashion that lasts.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Column 2: Shop -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Shop</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="{{ route('frontend.women') }}"
-                                class="text-primary font-medium transition-colors">Women</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Men</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Accessories</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Footwear</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sale</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 3: Help -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Help</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Customer Service</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">My Account</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Find a Store</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping &
-                                Returns</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">FAQs</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 4: About -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">About</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                        &copy; 2025 ShopEase. All rights reserved.
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Terms of Service</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Cookies Settings</a>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-4 md:mt-0">
-                        <i class="ri-visa-fill text-2xl text-gray-600"></i>
-                        <i class="ri-mastercard-fill text-2xl text-gray-600"></i>
-                        <i class="ri-paypal-fill text-2xl text-gray-600"></i>
-                        <i class="ri-apple-fill text-2xl text-gray-600"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @include('frondend.layouts.footer')
 
     <!-- Scripts -->
-    <script id="headerInteractions">
-    document.addEventListener("DOMContentLoaded", function() {
-        // Search Toggle
-        const searchToggle = document.getElementById("searchToggle");
-        const searchDropdown = document.getElementById("searchDropdown");
 
-        if (searchToggle && searchDropdown) {
-            searchToggle.addEventListener("click", function() {
-                searchDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !searchToggle.contains(event.target) &&
-                    !searchDropdown.contains(event.target)
-                ) {
-                    searchDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Cart Toggle
-        const cartToggle = document.getElementById("cartToggle");
-        const cartDropdown = document.getElementById("cartDropdown");
-
-        if (cartToggle && cartDropdown) {
-            cartToggle.addEventListener("click", function() {
-                cartDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !cartToggle.contains(event.target) &&
-                    !cartDropdown.contains(event.target)
-                ) {
-                    cartDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
-
-        if (mobileMenuToggle && mobileMenu) {
-            mobileMenuToggle.addEventListener("click", function() {
-                mobileMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Shop Menu Toggle
-        const mobileShopToggle = document.getElementById("mobileShopToggle");
-        const mobileShopMenu = document.getElementById("mobileShopMenu");
-
-        if (mobileShopToggle && mobileShopMenu) {
-            mobileShopToggle.addEventListener("click", function() {
-                mobileShopMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Filters Toggle Panel
-        const filterToggleBtn = document.getElementById("filterToggleBtn");
-        const sidebarFilter = document.getElementById("sidebarFilter");
-
-        if (filterToggleBtn && sidebarFilter) {
-            filterToggleBtn.addEventListener("click", function() {
-                sidebarFilter.classList.toggle("hidden");
-            });
-        }
-
-        // Price range visual update
-        const priceRange = document.getElementById("priceRange");
-        const priceVal = document.getElementById("priceVal");
-        if (priceRange && priceVal) {
-            priceRange.addEventListener("input", function() {
-                priceVal.textContent = "Max: Rs." + this.value;
-            });
-        }
-    });
-    </script>
     <script>
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
+        const btn = document.getElementById("userBtn");
+        const dropdown = document.getElementById("dropdown");
 
-    btn.addEventListener("click", () => {
-        dropdown.classList.toggle("hidden");
-    });
+        if (btn && dropdown) {
+            btn.addEventListener("click", () => {
+                dropdown.classList.toggle("hidden");
+            });
 
-    // close when clicking outside
-    document.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add("hidden");
+            // close when clicking outside
+            document.addEventListener("click", (e) => {
+                if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add("hidden");
+                }
+            });
         }
-    });
+
+        // -----------------------------------------------------------------
+        // SEARCH, SORT, AND FILTER EVENT TRIGGER
+        // -----------------------------------------------------------------
+        const filterForm = document.getElementById('filterForm');
+
+        if (filterForm) {
+            // Trigger submit when checkboxes, ranges, or sorting options are altered
+            filterForm.querySelectorAll('input[type="checkbox"], select').forEach(element => {
+                element.addEventListener('change', () => {
+                    filterForm.submit();
+                });
+            });
+
+            // Submit on sliding completion (mouseup/change) for the price slider
+            const priceRange = document.getElementById('priceRange');
+            if (priceRange) {
+                priceRange.addEventListener('change', () => {
+                    filterForm.submit();
+                });
+            }
+
+            // Bind text search to submit only on pressing Enter
+            const searchInput = filterForm.querySelector('input[name="search"]');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        filterForm.submit();
+                    }
+                });
+            }
+        }
+
+        // Mobile Filter Toggle Button Logic
+        const filterToggleBtn = document.getElementById('filterToggleBtn');
+        const sidebarFilter = document.getElementById('sidebarFilter');
+        if (filterToggleBtn && sidebarFilter) {
+            filterToggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                sidebarFilter.classList.toggle('hidden');
+            });
+        }
+
+        // -----------------------------------------------------------------
+        // WISHLIST HANDLER WITH **RED** HEART CLICK HIGHLIGHT
+        // -----------------------------------------------------------------
+        document.querySelectorAll('.add-to-wishlist-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const btn = this;
+                const icon = btn.querySelector('i');
+
+                // Red heart highlight animation immediately on click
+                icon.classList.add('animate-heart-highlight');
+                icon.addEventListener('animationend', function handler() {
+                    icon.classList.remove('animate-heart-highlight');
+                    icon.removeEventListener('animationend', handler);
+                });
+
+                fetch("{{ route('wishlist.add') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            product_id: btn.dataset.productId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const icon = btn.querySelector("i");
+
+                        if (data.status === "added") {
+                            btn.classList.remove("text-gray-900");
+                            btn.classList.add("text-rose-500");
+                            icon.classList.remove("ri-heart-line");
+                            icon.classList.add("ri-heart-fill");
+                        } else if (data.status === "removed") {
+                            btn.classList.remove("text-rose-500");
+                            btn.classList.add("text-gray-900");
+                            icon.classList.remove("ri-heart-fill");
+                            icon.classList.add("ri-heart-line");
+                        }
+                    });
+            });
+        });
+    </script>
+
+    <!-- ========== SCROLL REVEAL & RIPPLE EFFECTS ========== -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Scroll reveal
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            // Add reveal classes to sections and cards
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('reveal', 'reveal-fade-up');
+                observer.observe(section);
+            });
+
+            // Product cards
+            document.querySelectorAll('.grid .group').forEach(card => {
+                if (!card.classList.contains('reveal')) {
+                    card.classList.add('reveal', 'reveal-fade-up', 'product-card');
+                    observer.observe(card);
+                }
+            });
+
+            // Instagram images
+            document.querySelectorAll('.grid.grid-cols-2.md\\:grid-cols-4.lg\\:grid-cols-6.gap-4 > a').forEach(img => {
+                img.classList.add('reveal', 'reveal-scale');
+                observer.observe(img);
+            });
+
+            // Ripple effect on buttons (exclude wishlist buttons to avoid conflict)
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const circle = document.createElement('span');
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+                circle.classList.add('ripple-effect');
+
+                const existing = button.querySelector('.ripple-effect');
+                if (existing) existing.remove();
+                button.appendChild(circle);
+            }
+
+            document.querySelectorAll('button:not(.add-to-wishlist-btn)').forEach(btn => {
+                btn.classList.add('btn-ripple');
+                btn.addEventListener('click', createRipple);
+            });
+
+            // Also for link-buttons like "Subscribe" etc.
+            document.querySelectorAll('a.inline-block').forEach(link => {
+                if (link.matches('.rounded-button, [class*="py-3"]')) {
+                    link.classList.add('btn-ripple');
+                    link.addEventListener('click', createRipple);
+                }
+            });
+        });
     </script>
 </body>
 

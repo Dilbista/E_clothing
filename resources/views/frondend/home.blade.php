@@ -1,74 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-    @include('frondend.layouts.navbar')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@include('frondend.layouts.navbar')
 
 <body class="bg-white">
     @include('frondend.layouts.header')
-
-  <!-- Hero Section -->
-
+    <!-- Hero Section -->
     @include('frondend.layouts.heroSection')
     <!-- Categories Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-12">Shop by Category</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                @foreach($categories as $category)
                 <a href="#" class="group">
                     <div class="relative overflow-hidden rounded-lg aspect-[3/4]">
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20womens%20clothing%20collection%2C%20minimal%20background%2C%20professional%20fashion%20photography%2C%20soft%20lighting%2C%20high-end%20apparel%20displayed%20neatly&width=400&height=500&seq=cat1&orientation=portrait"
-                            alt="Women's Collection"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div class="absolute inset-0 bg-black/20 flex items-end p-6">
+
+                        @if($category->category_image)
+                        <img
+                            src="{{ asset($category->category_image) }}"
+                            alt="{{ $category->category_name }}"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        @else
+                        <img
+                            src="https://via.placeholder.com/400x500?text=No+Image"
+                            alt="No Image"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        @endif
+                        <div class="absolute inset-0 bg-black/30 flex items-end p-6">
                             <div>
-                                <h3 class="text-xl font-semibold text-white mb-1">Women</h3>
-                                <p class="text-white/80 text-sm">View Collection</p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <a href="#" class="group">
-                    <div class="relative overflow-hidden rounded-lg aspect-[3/4]">
-                        <img src="https://readdy.ai/api/search-image?query=stylish%20mens%20clothing%20collection%2C%20minimal%20background%2C%20professional%20fashion%20photography%2C%20soft%20lighting%2C%20high-end%20apparel%20displayed%20neatly&width=400&height=500&seq=cat2&orientation=portrait"
-                            alt="Men's Collection"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div class="absolute inset-0 bg-black/20 flex items-end p-6">
-                            <div>
-                                <h3 class="text-xl font-semibold text-white mb-1">Men</h3>
-                                <p class="text-white/80 text-sm">View Collection</p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-                <a href="#" class="group">
-                    <div class="relative overflow-hidden rounded-lg aspect-[3/4]">
-                        <img src="https://readdy.ai/api/search-image?query=premium%20accessories%20collection%20including%20bags%2C%20jewelry%2C%20watches%2C%20minimal%20background%2C%20professional%20product%20photography%2C%20soft%20lighting%2C%20high-end%20items%20displayed%20neatly&width=400&height=500&seq=cat3&orientation=portrait"
-                            alt="Accessories Collection"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div class="absolute inset-0 bg-black/20 flex items-end p-6">
-                            <div>
-                                <h3 class="text-xl font-semibold text-white mb-1">
-                                    Accessories
+                                <h3 class="text-xl font-semibold text-white">
+                                    {{ $category->category_name }}
                                 </h3>
-                                <p class="text-white/80 text-sm">View Collection</p>
+                                <p class="text-white/80 text-sm">
+                                    View Collection
+                                </p>
                             </div>
                         </div>
                     </div>
                 </a>
-                <a href="#" class="group">
-                    <div class="relative overflow-hidden rounded-lg aspect-[3/4]">
-                        <img src="https://readdy.ai/api/search-image?query=luxury%20footwear%20collection%20including%20shoes%2C%20boots%2C%20sneakers%2C%20minimal%20background%2C%20professional%20product%20photography%2C%20soft%20lighting%2C%20high-end%20items%20displayed%20neatly&width=400&height=500&seq=cat4&orientation=portrait"
-                            alt="Footwear Collection"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div class="absolute inset-0 bg-black/20 flex items-end p-6">
-                            <div>
-                                <h3 class="text-xl font-semibold text-white mb-1">
-                                    Footwear
-                                </h3>
-                                <p class="text-white/80 text-sm">View Collection</p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                @endforeach
             </div>
         </div>
     </section>
@@ -78,556 +49,107 @@
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center mb-12">
                 <h2 class="text-3xl font-bold">Featured Products</h2>
-
-
-                <div class="flex space-x-1 px-1 py-1 bg-gray-100 rounded-full" id="filterTabs">
-
+                <div class="flex space-x-1 px-1 py-1 bg-gray-100 rounded-full">
                     <button
-                        class="tab px-4 py-1.5 bg-white text-gray-800 rounded-full shadow-sm text-sm font-medium whitespace-nowrap active">
+                        class="px-4 py-1.5 bg-white text-gray-800 rounded-full shadow-sm text-sm font-medium whitespace-nowrap">
                         All
                     </button>
-
                     <button
-                        class="tab px-4 py-1.5 text-gray-600 rounded-full text-sm font-medium hover:bg-white hover:shadow-sm transition whitespace-nowrap">
+                        class="px-4 py-1.5 text-gray-600 rounded-full text-sm font-medium hover:bg-white hover:shadow-sm transition whitespace-nowrap">
                         New Arrivals
                     </button>
-
                     <button
-                        class="tab px-4 py-1.5 text-gray-600 rounded-full text-sm font-medium hover:bg-white hover:shadow-sm transition whitespace-nowrap">
+                        class="px-4 py-1.5 text-gray-600 rounded-full text-sm font-medium hover:bg-white hover:shadow-sm transition whitespace-nowrap">
                         Best Sellers
                     </button>
-
                 </div>
-
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Product 1 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20white%20blouse%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod4&orientation=portrait"
-                            alt="White Blouse" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
+
+                @foreach($products as $product)
+                <div class="featured-product-card">
+                    <div class="featured-card-img-wrap">
+                        {{-- Status Badge --}}
+                        <div class="absolute top-3 left-3 z-10">
+                            @if($product->stock <= 0)
+                                <span class="bg-red-800 text-white text-xs px-2 py-1 rounded">Out of Stock</span>
+                                @elseif($product->discount_price)
+                                <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">Sale</span>
+                                @elseif($product->created_at->gt(now()->subDays(7)))
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">New</span>
+                                @endif
+                        </div>
+
+                        <img
+                            src="{{ asset($product->image) }}"
+                            alt="{{ $product->name }}"
+                            class="featured-card-img">
+
+                        {{-- Hover Overlay with Icons --}}
+                        <div class="featured-card-overlay">
+                            <div class="featured-card-actions">
+                                {{-- View --}}
+                                <a href="{{ route('frontend.viewDetails', ['id' => $product->getKey()]) }}"
+                                    class="featured-action-btn" title="View Product">
+                                    <i class="ri-eye-line"></i>
+                                </a>
+
+                                {{-- Wishlist --}}
+                                <button
+                                    class="featured-action-btn add-to-wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'wishlisted' : '' }}"
+                                    data-product-id="{{ $product->id }}"
+                                    title="Add to Wishlist">
+                                    <i class="{{ in_array($product->id, $wishlistIds) ? 'ri-heart-fill' : 'ri-heart-line' }}"></i>
+                                </button>
+
+                                {{-- Add to Cart --}}
+                                @php
+                                $isInCart = $cartItems->contains(fn($item) => (int) $item->product_id === (int) $product->id);
+                                @endphp
+                                @if($product->stock > 0)
+                                <button class="featured-action-btn {{ $isInCart ? 'featured-action-btn--in-cart' : '' }}" title="{{ $isInCart ? 'Added to Cart' : 'Add to Cart' }}" onclick="addToCartGlobal({{ $product->id }})">
+                                    <i class="ri-shopping-bag-line"></i>
+                                </button>
+                                @else
+                                <button disabled class="featured-action-btn featured-action-btn--disabled" title="Out of Stock">
+                                    <i class="ri-shopping-bag-line"></i>
+                                </button>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Elegant White Blouse
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(42)</span>
+
+                    <div class="mt-3">
+                        <h3 class="font-medium text-gray-900 mb-1">{{ $product->name }}</h3>
+                        <p class="text-sm text-gray-500">{{ $product->brand->name ?? '' }}</p>
+                        @if($product->discount_price)
+                        <div class="flex items-center mt-2">
+                            <span class="text-lg font-bold text-rose-600">Rs. {{ number_format($product->price - $product->discount_price, 2) }}</span>
+                            <span class="ml-2 text-sm text-gray-400 line-through">Rs. {{ number_format($product->price, 2) }}</span>
                         </div>
-                        <p class="text-gray-900 font-medium">$49.99</p>
+                        @else
+                        <span class="font-bold text-gray-900">Rs. {{ number_format($product->price, 2) }}</span>
+                        @endif
                     </div>
                 </div>
-                <script>
-                (function() {
-                const tabs = document.querySelectorAll(".tab");
-
-                tabs.forEach(tab => {
-                    tab.addEventListener("click", () => {
-
-                        // remove active from all
-                        tabs.forEach(t => {
-                            t.classList.remove("bg-white", "text-gray-800", "shadow-sm",
-                                "active");
-                            t.classList.add("text-gray-600");
-                        });
-
-                        // add active to clicked
-                        tab.classList.add("bg-white", "text-gray-800", "shadow-sm", "active");
-                        tab.classList.remove("text-gray-600");
-                    });
-                });
-                })();
-                </script>
-                <!-- Product 2 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-amber-500 text-white text-xs px-2 py-1 rounded">Best
-                            Seller</span>
-                        <img src="https://readdy.ai/api/search-image?query=premium%20denim%20jeans%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod5&orientation=portrait"
-                            alt="Denim Jeans" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Premium Denim Jeans
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(128)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$79.99</p>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <img src="https://readdy.ai/api/search-image?query=stylish%20leather%20jacket%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20leather%20texture&width=500&height=600&seq=prod6&orientation=portrait"
-                            alt="Leather Jacket" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Classic Leather Jacket
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-line"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(76)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$199.99</p>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-rose-500 text-white text-xs px-2 py-1 rounded">Sale</span>
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20summer%20dress%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod7&orientation=portrait"
-                            alt="Summer Dress" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Floral Summer Dress
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(54)</span>
-                        </div>
-                        <div class="flex items-center">
-                            <p class="text-gray-900 font-medium">$59.99</p>
-                            <p class="text-gray-500 line-through text-sm ml-2">$79.99</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
+            @if($products->count())
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Product 1 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20white%20blouse%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod4&orientation=portrait"
-                            alt="White Blouse" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Elegant White Blouse
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(42)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$49.99</p>
-                    </div>
-                </div>
-                <!-- Product 2 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-amber-500 text-white text-xs px-2 py-1 rounded">Best
-                            Seller</span>
-                        <img src="https://readdy.ai/api/search-image?query=premium%20denim%20jeans%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod5&orientation=portrait"
-                            alt="Denim Jeans" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Premium Denim Jeans
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(128)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$79.99</p>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <img src="https://readdy.ai/api/search-image?query=stylish%20leather%20jacket%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20leather%20texture&width=500&height=600&seq=prod6&orientation=portrait"
-                            alt="Leather Jacket" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Classic Leather Jacket
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-line"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(76)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$199.99</p>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-rose-500 text-white text-xs px-2 py-1 rounded">Sale</span>
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20summer%20dress%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod7&orientation=portrait"
-                            alt="Summer Dress" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Floral Summer Dress
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(54)</span>
-                        </div>
-                        <div class="flex items-center">
-                            <p class="text-gray-900 font-medium">$59.99</p>
-                            <p class="text-gray-500 line-through text-sm ml-2">$79.99</p>
-                        </div>
-                    </div>
-                </div>
+                @foreach($products as $product)
+                @endforeach
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Product 1 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20white%20blouse%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod4&orientation=portrait"
-                            alt="White Blouse" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Elegant White Blouse
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(42)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$49.99</p>
-                    </div>
-                </div>
-                <!-- Product 2 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-amber-500 text-white text-xs px-2 py-1 rounded">Best
-                            Seller</span>
-                        <img src="https://readdy.ai/api/search-image?query=premium%20denim%20jeans%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod5&orientation=portrait"
-                            alt="Denim Jeans" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Premium Denim Jeans
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(128)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$79.99</p>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <img src="https://readdy.ai/api/search-image?query=stylish%20leather%20jacket%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20leather%20texture&width=500&height=600&seq=prod6&orientation=portrait"
-                            alt="Leather Jacket" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Classic Leather Jacket
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-line"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(76)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$199.99</p>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-rose-500 text-white text-xs px-2 py-1 rounded">Sale</span>
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20summer%20dress%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod7&orientation=portrait"
-                            alt="Summer Dress" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Floral Summer Dress
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(54)</span>
-                        </div>
-                        <div class="flex items-center">
-                            <p class="text-gray-900 font-medium">$59.99</p>
-                            <p class="text-gray-500 line-through text-sm ml-2">$79.99</p>
-                        </div>
-                    </div>
-                </div>
+            @else
+            <div class="text-center py-10">
+                <h3 class="text-xl font-semibold">No Products Available</h3>
             </div>
-
-            <nav aria-label="Page navigation" class="mt-5">
-                <ul class="pagination justify-content-center">
-
-
-
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item"><a class="page-link" href="#">6</a></li>
-
-
-
-                </ul>
-            </nav>
+            @endif
+            <div class="text-center mt-12">
+                <a
+                    href="{{ route('frontend.new-arrivals') }}"
+                    class="inline-block py-3 px-8 border border-gray-300 text-gray-800 font-medium rounded-button hover:bg-gray-50 transition-colors whitespace-nowrap">View All Products</a>
+            </div>
         </div>
     </section>
 
@@ -658,13 +180,18 @@
                             <span class="text-sm text-gray-300">Seconds</span>
                         </div>
                     </div>
-                    <a href="#"
-                        class="inline-block py-3 px-8 bg-white text-gray-900 font-medium rounded-button hover:bg-gray-100 transition-colors whitespace-nowrap">Shop
-                        the Sale</a>
+                    <a
+                        href="{{ route('frontend.sale') }}"
+
+                        class="inline-block py-3 px-8 bg-green-600 text-white font-medium rounded-button hover:bg-green-700 transition-colors whitespace-nowrap">
+                        Shop the Sale
+                    </a>
                 </div>
                 <div class="md:w-1/2">
-                    <img src="https://readdy.ai/api/search-image?query=stylish%20summer%20clothing%20collection%20with%20discount%20tags%2C%20professional%20fashion%20photography%2C%20multiple%20items%20arranged%20elegantly%2C%20high-end%20apparel%20on%20minimal%20background&width=600&height=400&seq=sale1&orientation=landscape"
-                        alt="Summer Sale" class="rounded-lg w-full" />
+                    <img
+                        src="https://readdy.ai/api/search-image?query=stylish%20summer%20clothing%20collection%20with%20discount%20tags%2C%20professional%20fashion%20photography%2C%20multiple%20items%20arranged%20elegantly%2C%20high-end%20apparel%20on%20minimal%20background&width=600&height=400&seq=sale1&orientation=landscape"
+                        alt="Summer Sale"
+                        class="rounded-lg w-full" />
                 </div>
             </div>
         </div>
@@ -674,129 +201,83 @@
     <section class="py-16">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-12">New Arrivals</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Product 1 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                        <img src="https://readdy.ai/api/search-image?query=elegant%20silk%20scarf%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20fabric%20texture&width=500&height=600&seq=prod8&orientation=portrait"
-                            alt="Silk Scarf" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
+                @foreach($newArrivals as $product)
+
+                <div class="featured-product-card">
+                    <div class="featured-card-img-wrap">
+                        {{-- Status Badge --}}
+                        <div class="absolute top-3 left-3 z-10">
+                            @if($product->stock <= 0)
+                                <span class="bg-red-800 text-white text-xs px-2 py-1 rounded">Out of Stock</span>
+                                @elseif($product->discount_price)
+                                <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">Sale</span>
+                                @elseif($product->created_at->gt(now()->subDays(7)))
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">New</span>
+                                @endif
+                        </div>
+
+                        <img
+                            src="{{ asset($product->image) }}"
+                            alt="{{ $product->name }}"
+                            class="featured-card-img">
+
+                        {{-- Hover Overlay with Icons --}}
+                        <div class="featured-card-overlay">
+                            <div class="featured-card-actions">
+                                {{-- View --}}
+                                <a href="{{ route('frontend.viewDetails', ['id' => $product->getKey()]) }}"
+                                    class="featured-action-btn" title="View Product">
+                                    <i class="ri-eye-line"></i>
+                                </a>
+
+                                {{-- Wishlist --}}
+                                <button
+                                    class="featured-action-btn add-to-wishlist-btn {{ in_array($product->id, $wishlistIds) ? 'wishlisted' : '' }}"
+                                    data-product-id="{{ $product->id }}"
+                                    title="Add to Wishlist">
+                                    <i class="{{ in_array($product->id, $wishlistIds) ? 'ri-heart-fill' : 'ri-heart-line' }}"></i>
+                                </button>
+
+                                {{-- Add to Cart --}}
+                                @php
+                                $isInCart = $cartItems->contains(fn($item) => (int) $item->product_id === (int) $product->id);
+                                @endphp
+                                @if($product->stock > 0)
+                                <button class="featured-action-btn {{ $isInCart ? 'featured-action-btn--in-cart' : '' }}" title="{{ $isInCart ? 'Added to Cart' : 'Add to Cart' }}" onclick="addToCartGlobal({{ $product->id }})">
+                                    <i class="ri-shopping-bag-line"></i>
+                                </button>
+                                @else
+                                <button disabled class="featured-action-btn featured-action-btn--disabled" title="Out of Stock">
+                                    <i class="ri-shopping-bag-line"></i>
+                                </button>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">Luxury Silk Scarf</h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-line"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(12)</span>
+
+                    <div class="mt-3">
+                        <h3 class="font-medium text-gray-900 mb-1">{{ $product->name }}</h3>
+                        <p class="text-sm text-gray-500">{{ $product->brand->name ?? '' }}</p>
+                        @if($product->discount_price)
+                        <div class="flex items-center mt-2">
+                            <span class="text-lg font-bold text-rose-600">Rs. {{ number_format($product->price - $product->discount_price, 2) }}</span>
+                            <span class="ml-2 text-sm text-gray-400 line-through">Rs. {{ number_format($product->price, 2) }}</span>
                         </div>
-                        <p class="text-gray-900 font-medium">$39.99</p>
+                        @else
+                        <span class="font-bold text-gray-900">Rs. {{ number_format($product->price, 2) }}</span>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Product 2 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                        <img src="https://readdy.ai/api/search-image?query=premium%20leather%20handbag%20on%20minimal%20light%20background%2C%20professional%20fashion%20photography%2C%20high%20quality%20product%20image%2C%20detailed%20leather%20texture&width=500&height=600&seq=prod9&orientation=portrait"
-                            alt="Leather Handbag" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">
-                            Designer Leather Handbag
-                        </h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-half-fill"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(8)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$149.99</p>
-                    </div>
-                </div>
+                @endforeach
 
-                <!-- Product 3 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4">
-                        <span class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                        <img src="https://readdy.ai/api/search-image?query=stylish%20sunglasses%20on%20minimal%20light%20background%2C%20professional%20product%20photography%2C%20high%20quality%20image%2C%20detailed%20texture&width=500&height=600&seq=prod10&orientation=portrait"
-                            alt="Sunglasses" class="w-full h-80 object-cover object-top" />
-                        <div
-                            class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-eye-line"></i>
-                            </button>
-                            <button
-                                class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                <i class="ri-heart-line"></i>
-                            </button>
-                            <button
-                                class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                <i class="ri-shopping-bag-line"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 mb-1">Premium Sunglasses</h3>
-                        <div class="flex items-center mb-1">
-                            <div class="flex text-amber-400 text-sm">
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-fill"></i>
-                                <i class="ri-star-line"></i>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-1">(6)</span>
-                        </div>
-                        <p class="text-gray-900 font-medium">$89.99</p>
-                    </div>
-                </div>
             </div>
-
             <div class="text-center mt-12">
-                <a href="#"
-                    class="inline-block py-3 px-8 border border-gray-300 text-gray-800 font-medium rounded-button hover:bg-gray-50 transition-colors whitespace-nowrap">View
-                    All New Arrivals</a>
+                <a
+                    href="{{ route('frontend.new-arrivals') }}"
+                    class="inline-block py-3 px-8 border border-gray-300 text-gray-800 font-medium rounded-button hover:bg-gray-50 transition-colors whitespace-nowrap">View All New Arrivals</a>
             </div>
         </div>
     </section>
@@ -807,7 +288,6 @@
             <h2 class="text-3xl font-bold text-center mb-12">
                 What Our Customers Say
             </h2>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Testimonial 1 -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -834,7 +314,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Testimonial 2 -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex text-amber-400 mb-4">
@@ -860,7 +339,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Testimonial 3 -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex text-amber-400 mb-4">
@@ -889,7 +367,6 @@
             </div>
         </div>
     </section>
-
     <!-- Instagram Feed -->
     <section class="py-16">
         <div class="container mx-auto px-4">
@@ -897,42 +374,58 @@
                 Follow Us on Instagram
             </h2>
             <p class="text-gray-600 text-center mb-12">@shopease_official</p>
-
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
-                    <img src="https://readdy.ai/api/search-image?query=fashion%20lifestyle%20image%2C%20person%20wearing%20stylish%20outfit%20in%20urban%20setting%2C%20natural%20lighting%2C%20candid%20pose%2C%20high%20quality&width=300&height=300&seq=insta1&orientation=squarish"
+                <a
+                    href="#"
+                    class="block aspect-square overflow-hidden rounded-lg group">
+                    <img
+                        src="https://readdy.ai/api/search-image?query=fashion%20lifestyle%20image%2C%20person%20wearing%20stylish%20outfit%20in%20urban%20setting%2C%20natural%20lighting%2C%20candid%20pose%2C%20high%20quality&width=300&height=300&seq=insta1&orientation=squarish"
                         alt="Instagram Post"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
-                <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
-                    <img src="https://readdy.ai/api/search-image?query=close-up%20of%20fashion%20accessories%20arrangement%2C%20minimal%20aesthetic%2C%20soft%20lighting%2C%20high%20quality%20product%20photography&width=300&height=300&seq=insta2&orientation=squarish"
+                <a
+                    href="#"
+                    class="block aspect-square overflow-hidden rounded-lg group">
+                    <img
+                        src="https://readdy.ai/api/search-image?query=close-up%20of%20fashion%20accessories%20arrangement%2C%20minimal%20aesthetic%2C%20soft%20lighting%2C%20high%20quality%20product%20photography&width=300&height=300&seq=insta2&orientation=squarish"
                         alt="Instagram Post"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
-                <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
-                    <img src="https://readdy.ai/api/search-image?query=person%20wearing%20elegant%20outfit%20in%20cafe%20setting%2C%20lifestyle%20fashion%20photography%2C%20soft%20natural%20lighting%2C%20candid%20moment&width=300&height=300&seq=insta3&orientation=squarish"
+                <a
+                    href="#"
+                    class="block aspect-square overflow-hidden rounded-lg group">
+                    <img
+                        src="https://readdy.ai/api/search-image?query=person%20wearing%20elegant%20outfit%20in%20cafe%20setting%2C%20lifestyle%20fashion%20photography%2C%20soft%20natural%20lighting%2C%20candid%20moment&width=300&height=300&seq=insta3&orientation=squarish"
                         alt="Instagram Post"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
-                <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
-                    <img src="https://readdy.ai/api/search-image?query=flatlay%20of%20fashion%20items%20including%20clothing%20and%20accessories%2C%20minimal%20aesthetic%2C%20soft%20lighting%2C%20high%20quality%20product%20photography&width=300&height=300&seq=insta4&orientation=squarish"
+                <a
+                    href="#"
+                    class="block aspect-square overflow-hidden rounded-lg group">
+                    <img
+                        src="https://readdy.ai/api/search-image?query=flatlay%20of%20fashion%20items%20including%20clothing%20and%20accessories%2C%20minimal%20aesthetic%2C%20soft%20lighting%2C%20high%20quality%20product%20photography&width=300&height=300&seq=insta4&orientation=squarish"
                         alt="Instagram Post"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
-                <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
-                    <img src="https://readdy.ai/api/search-image?query=person%20wearing%20casual%20outfit%20in%20urban%20setting%2C%20lifestyle%20fashion%20photography%2C%20natural%20lighting%2C%20candid%20pose&width=300&height=300&seq=insta5&orientation=squarish"
+                <a
+                    href="#"
+                    class="block aspect-square overflow-hidden rounded-lg group">
+                    <img
+                        src="https://readdy.ai/api/search-image?query=person%20wearing%20casual%20outfit%20in%20urban%20setting%2C%20lifestyle%20fashion%20photography%2C%20natural%20lighting%2C%20candid%20pose&width=300&height=300&seq=insta5&orientation=squarish"
                         alt="Instagram Post"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
-                <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
-                    <img src="https://readdy.ai/api/search-image?query=close-up%20of%20shoes%20and%20accessories%2C%20minimal%20aesthetic%2C%20soft%20lighting%2C%20high%20quality%20product%20photography&width=300&height=300&seq=insta6&orientation=squarish"
+                <a
+                    href="#"
+                    class="block aspect-square overflow-hidden rounded-lg group">
+                    <img
+                        src="https://readdy.ai/api/search-image?query=close-up%20of%20shoes%20and%20accessories%2C%20minimal%20aesthetic%2C%20soft%20lighting%2C%20high%20quality%20product%20photography&width=300&height=300&seq=insta6&orientation=squarish"
                         alt="Instagram Post"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
             </div>
         </div>
     </section>
-
     <!-- Newsletter -->
     <section class="py-16 bg-gray-900 text-white">
         <div class="container mx-auto px-4">
@@ -943,9 +436,12 @@
                     style tips.
                 </p>
                 <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                    <input type="email" placeholder="Your email address"
+                    <input
+                        type="email"
+                        placeholder="Your email address"
                         class="flex-1 px-4 py-3 rounded-button border-none text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    <button type="submit"
+                    <button
+                        type="submit"
                         class="px-6 py-3 bg-primary text-white font-medium rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">
                         Subscribe
                     </button>
@@ -957,10 +453,382 @@
             </div>
         </div>
     </section>
+    <!-- Footer -->
+    @include('frondend.layouts.footer')
 
-  <!-- Footer -->
+    <!-- Existing Scripts (header interactions & wishlist) -->
 
 
+    <!-- ========== ANIMATION & INTERACTION ENHANCEMENTS ========== -->
+    <style>
+        /* Keyframes for scroll-reveal animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* Heart highlight animation on click */
+        @keyframes heartHighlight {
+            0% {
+                transform: scale(1);
+                color: currentColor;
+                text-shadow: 0 0 0px rgba(244, 63, 94, 0);
+            }
+
+            30% {
+                transform: scale(1.4);
+                color: #ef4444;
+                /* bright red */
+                text-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+            }
+
+            100% {
+                transform: scale(1);
+                color: currentColor;
+                text-shadow: 0 0 0px rgba(244, 63, 94, 0);
+            }
+        }
+
+        .animate-heart-highlight {
+            animation: heartHighlight 0.45s ease-out;
+        }
+
+        /* Classes applied by JS for scroll animation */
+        .reveal {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+        }
+
+        .reveal-fade-up {
+            transform: translateY(30px);
+        }
+
+        .reveal-fade-up.visible {
+            transform: translateY(0);
+        }
+
+        .reveal-fade-left {
+            transform: translateX(-30px);
+        }
+
+        .reveal-fade-left.visible {
+            transform: translateX(0);
+        }
+
+        .reveal-fade-right {
+            transform: translateX(30px);
+        }
+
+        .reveal-fade-right.visible {
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            transform: scale(0.9);
+        }
+
+        .reveal-scale.visible {
+            transform: scale(1);
+        }
+
+        /* Ripple effect on buttons */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+
+
+        /* Countdown box pulse */
+        .countdown-box {
+            animation: countdownPulse 2s infinite;
+        }
+
+        @keyframes countdownPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            50% {
+                transform: scale(1.05);
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        /* ========== FEATURED PRODUCT CARD HOVER ICONS ========== */
+        .featured-product-card {
+            cursor: pointer;
+        }
+
+        .featured-card-img-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .featured-card-img {
+            width: 100%;
+            height: 20rem;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .featured-product-card:hover .featured-card-img {
+            transform: scale(1.05);
+        }
+
+        /* Dark overlay — hidden by default */
+        .featured-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+        }
+
+        /* Show overlay on card hover */
+        .featured-product-card:hover .featured-card-overlay {
+            opacity: 1;
+        }
+
+        /* Icons row — slide up on hover */
+        .featured-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transform: translateY(16px);
+            transition: transform 0.3s ease;
+        }
+
+        .featured-product-card:hover .featured-card-actions {
+            transform: translateY(0);
+        }
+
+        /* Individual icon button */
+        .featured-action-btn {
+            background: #ffffff;
+            color: #111827;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+
+        .featured-action-btn:hover {
+            background: #f3f4f6;
+            transform: scale(1.12);
+        }
+
+        /* Wishlisted state */
+        .featured-action-btn.wishlisted {
+            color: #f43f5e;
+        }
+
+        /* Highlighted (cart) button */
+        .featured-action-btn--in-cart {
+            background: var(--color-primary, #4f46e5);
+            color: #ffffff;
+        }
+
+        .featured-action-btn--in-cart:hover {
+            background: var(--color-primary-dark, #4338ca);
+            color: #ffffff;
+        }
+
+        /* Disabled (out of stock) button */
+        .featured-action-btn--disabled {
+            background: #9ca3af;
+            color: #ffffff;
+            cursor: not-allowed;
+        }
+
+        .featured-action-btn--disabled:hover {
+            background: #9ca3af;
+            transform: none;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // ========== SCROLL REVEAL ==========
+            const revealElements = document.querySelectorAll('section, .group, .grid > *');
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, {
+                    threshold: 0.1
+                }
+            );
+
+            // Mark sections and major cards with reveal classes
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('reveal', 'reveal-fade-up');
+                observer.observe(section);
+            });
+
+            // Category cards
+            document.querySelectorAll('.grid a.group').forEach(card => {
+                card.classList.add('reveal', 'reveal-scale');
+                observer.observe(card);
+            });
+
+            // Product cards (both featured and new arrivals)
+            document.querySelectorAll('.grid .group, .grid .featured-product-card').forEach(card => {
+                if (!card.classList.contains('reveal')) {
+                    card.classList.add('reveal', 'reveal-fade-up', 'product-card');
+                    observer.observe(card);
+                }
+            });
+
+            // Countdown timer boxes
+            document.querySelectorAll('.flex.gap-4.mb-8 > .text-center').forEach(box => {
+                box.classList.add('countdown-box');
+            });
+
+            // Testimonials
+            document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-3.gap-6 > div').forEach(testimonial => {
+                testimonial.classList.add('reveal', 'reveal-fade-left');
+                observer.observe(testimonial);
+            });
+
+            // Instagram images
+            document.querySelectorAll('.grid.grid-cols-2.md\\:grid-cols-4.lg\\:grid-cols-6.gap-4 > a').forEach(img => {
+                img.classList.add('reveal', 'reveal-scale');
+                observer.observe(img);
+            });
+
+            // ========== RIPPLE EFFECT ON BUTTONS ==========
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const circle = document.createElement('span');
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+                circle.classList.add('ripple-effect');
+
+                const ripple = button.querySelector('.ripple-effect');
+                if (ripple) {
+                    ripple.remove();
+                }
+                button.appendChild(circle);
+            }
+
+            // Attach ripple to all buttons (except disabled and wishlist toggles if you prefer)
+            document.querySelectorAll('button:not(.add-to-wishlist-btn), a.btn, .rounded-button').forEach(btn => {
+                btn.classList.add('btn-ripple');
+                btn.addEventListener('click', createRipple);
+            });
+
+            // Also attach to the "View All" links
+            document.querySelectorAll('a.inline-block').forEach(link => {
+                if (link.matches('.rounded-button, [class*="py-3"]')) {
+                    link.classList.add('btn-ripple');
+                    link.addEventListener('click', createRipple);
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
