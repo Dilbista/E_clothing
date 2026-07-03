@@ -382,7 +382,7 @@
                                 <td>{{ \Carbon\Carbon::parse($category->created_at)->format('M d, Y') }}</td>
                                 <td style="white-space: nowrap;">
                                     <button class="btn-outline btn-sm edit-category" data-id="{{ $category->category_id }}" data-name="{{ $category->category_name }}"><i class="fas fa-edit"></i> Edit</button>
-                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('categories.destroy', $category->category_id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn-danger-sm" onclick="return confirm('Delete category {{ $category->category_name }} permanently?')"><i class="fas fa-trash"></i> Del</button>
@@ -429,7 +429,7 @@
                 </div>
                 <div class="form-group">
                     <label>Category Image</label>
-                    <input type="file" id="catImage" name="category_image"/>
+                    <input type="file" id="catImage" name="category_image" accept="image/*">
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-outline btn-sm" id="closeModalBtn">Cancel</button>

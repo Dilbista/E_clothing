@@ -4,625 +4,108 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@yield('title','E_Cloting||About US')</title>
+    <title>@yield('title','E_Clothing || Our Story')</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
     tailwind.config = {
         theme: {
             extend: {
-                colors: {
-                    primary: "#4f46e5",
-                    secondary: "#f97316"
-                },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
-                },
+                colors: { primary: "#4f46e5", secondary: "#f97316" },
+                borderRadius: { button: "8px" },
             },
         },
     };
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
-
-    body {
-        font-family: 'Inter', sans-serif;
-    }
-
-    /* Hero section with stable Unsplash image and soft warm-toned overlay */
-    .about-hero-section {
-        background-image: linear-gradient(to right, rgba(24, 24, 27, 0.85) 30%, rgba(24, 24, 27, 0.4) 100%),
-            url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1920&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-    }
-
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .custom-checkbox {
-        position: relative;
-        cursor: pointer;
-    }
-
-    .custom-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 18px;
-        width: 18px;
-        background-color: #fff;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-    }
-
-    .custom-checkbox:hover input~.checkmark {
-        background-color: #f3f4f6;
-    }
-
-    .custom-checkbox input:checked~.checkmark {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-    }
-
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-    }
-
-    .custom-checkbox input:checked~.checkmark:after {
-        display: block;
-    }
-
-    .custom-checkbox .checkmark:after {
-        left: 6px;
-        top: 2px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #e5e7eb;
-        transition: .4s;
-        border-radius: 34px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-    input:checked+.slider {
-        background-color: #4f46e5;
-    }
-
-    input:checked+.slider:before {
-        transform: translateX(20px);
-    }
-
-    .custom-range {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 5px;
-        background: #e5e7eb;
-        outline: none;
-    }
-
-    .custom-range::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-    }
-
-    .custom-range::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-        border: none;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 160px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        z-index: 50;
-        border-radius: 8px;
-    }
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1600&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+        }
     </style>
 </head>
 
-<body class="bg-white">
+<body class="bg-white text-gray-800">
     <!-- Header -->
     @include('frondend.layouts.header')
 
-    <!-- About Hero Section -->
-    <section class="about-hero-section relative">
-        <div class="container mx-auto px-4 py-24 md:py-32 w-full relative z-10 text-white">
-            <div class="max-w-2xl">
-                <span class="text-secondary font-semibold uppercase tracking-wider text-sm">Our Journey</span>
-                <h1 class="text-4xl md:text-5xl font-bold mb-4 mt-2">
-                    Crafting Sustainable & Premium Fashion
-                </h1>
-                <p class="text-lg text-gray-200 mb-8 max-w-lg">
-                    We believe in clothing that not only looks exceptional but is built ethically and made to last.
-                    Discover the philosophy behind ShopEase.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="#"
-                        class="py-3 px-6 bg-primary text-white font-medium rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">View
-                        Collections</a>
-                    <a href="#our-story"
-                        class="py-3 px-6 bg-white/10 backdrop-blur-sm text-white font-medium rounded-button border border-white/20 hover:bg-white/20 transition-colors whitespace-nowrap">Our
-                        Story</a>
-                </div>
-            </div>
+    <!-- Simple Hero -->
+    <section class="hero-gradient py-20 md:py-32 text-center text-white">
+        <div class="container mx-auto px-4">
+            <span class="text-secondary font-bold tracking-widest uppercase text-xs">Namaste & Welcome</span>
+            <h1 class="text-4xl md:text-5xl font-bold mt-4 mb-6">Modern Style, <br class="md:hidden"> Himalayan Soul.</h1>
+            <p class="max-w-xl mx-auto text-gray-300 text-lg font-light">
+                E_Clothing is a Kathmandu-based label dedicated to crafting premium, sustainable apparel for the modern Nepali lifestyle.
+            </p>
         </div>
     </section>
 
-    <!-- Our Story Section -->
-    <section id="our-story" class="py-20 bg-white">
+    <!-- Short Story & Stats -->
+    <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Image Grid Column -->
-                <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop"
-                        alt="Designing clothes" class="rounded-lg shadow-md w-full object-cover h-[500px]" />
-                    <div
-                        class="absolute -bottom-6 -right-6 bg-primary text-white p-6 rounded-lg hidden md:block max-w-xs shadow-lg">
-                        <p class="text-2xl font-bold mb-1">Since 2020</p>
-                        <p class="text-sm text-white/90">Pioneering minimalist and sustainable design principles in
-                            everyday wear.</p>
-                    </div>
-                </div>
-
-                <!-- Text Column -->
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
                 <div>
-                    <span class="text-primary font-semibold uppercase tracking-wider text-sm">Who We Are</span>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-6">Designed for Comfort, Built for
-                        the Future</h2>
+                    <h2 class="text-3xl font-bold mb-4">Our Essence</h2>
                     <p class="text-gray-600 mb-6 leading-relaxed">
-                        ShopEase started with a simple observation: modern fashion often forces a choice between elegant
-                        styling, affordability, and ecological responsibility. We believed we could bridge this gap.
+                        Founded in 2021, we set out to prove that high-quality fashion can be made right here in Nepal. From using organic Himalayan hemp to premium combed cotton, every piece is tailored for durability and comfort.
                     </p>
-                    <p class="text-gray-600 mb-8 leading-relaxed">
-                        By sourcing globally certified organic materials, maintaining strict fair-labor certifications
-                        at all our workshops, and choosing minimalist aesthetic principles, we offer clothing that
-                        transitions seamlessly through seasons and trends.
-                    </p>
-
-                    <!-- Stats Grid block -->
-                    <div class="grid grid-cols-2 gap-6 pt-6 border-t border-gray-100">
+                    <div class="flex gap-8">
                         <div>
-                            <span class="block text-3xl font-bold text-primary">100%</span>
-                            <span class="text-sm text-gray-500">Organic Cotton & Recycled Linen</span>
+                            <span class="block text-2xl font-bold text-primary">50k+</span>
+                            <span class="text-xs uppercase text-gray-400">Happy Customers</span>
                         </div>
                         <div>
-                            <span class="block text-3xl font-bold text-primary">45k+</span>
-                            <span class="text-sm text-gray-500">Happy Worldwide Customers</span>
+                            <span class="block text-2xl font-bold text-primary">7</span>
+                            <span class="text-xs uppercase text-gray-400">Provinces Reached</span>
                         </div>
                     </div>
                 </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=800&auto=format&fit=crop" 
+                         alt="Nepali Design" class="rounded-2xl shadow-2xl">
+                    <div class="absolute -bottom-4 -left-4 bg-secondary text-white p-4 rounded-lg font-bold">
+                        100% Nepali
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Core Values Section -->
-    <section class="py-20 bg-gray-50">
+    <!-- Three Sweet Values -->
+    <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
-            <div class="max-w-2xl mx-auto text-center mb-16">
-                <span class="text-primary font-semibold uppercase tracking-wider text-sm">Our Commitments</span>
-                <h2 class="text-3xl font-bold text-gray-900 mt-2">Values We Live By Daily</h2>
-                <p class="text-gray-600 mt-4">Every thread, cut, packaging block, and shipping route is evaluated
-                    against our core organizational pillars.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Value 1 -->
-                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition">
-                    <div
-                        class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6">
-                        <i class="ri-leaf-line text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Eco-Friendly Sourcing</h3>
-                    <p class="text-gray-600 leading-relaxed text-sm">
-                        All physical fibers are selected from fully regeneratively grown crops or recycled sources,
-                        minimizing chemical processing and water utilization.
-                    </p>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <i class="ri-leaf-line text-4xl text-primary mb-4 block"></i>
+                    <h3 class="font-bold text-lg mb-2">Ethically Made</h3>
+                    <p class="text-sm text-gray-500">Fair wages for our local tailors and artisans in Kathmandu.</p>
                 </div>
-
-                <!-- Value 2 -->
-                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition">
-                    <div
-                        class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6">
-                        <i class="ri-shake-hands-line text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Ethical Workspaces</h3>
-                    <p class="text-gray-600 leading-relaxed text-sm">
-                        We guarantee transparent pay, safe manufacturing standards, and medical services for all
-                        weavers, tailors, and distribution partners.
-                    </p>
+                <div class="p-6">
+                    <i class="ri-truck-line text-4xl text-primary mb-4 block"></i>
+                    <h3 class="font-bold text-lg mb-2">Nationwide Love</h3>
+                    <p class="text-sm text-gray-500">Fast delivery from the streets of Thamel to every corner of Nepal.</p>
                 </div>
-
-                <!-- Value 3 -->
-                <div class="bg-white p-8 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition">
-                    <div
-                        class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6">
-                        <i class="ri-instance-line text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Radical Simplicity</h3>
-                    <p class="text-gray-600 leading-relaxed text-sm">
-                        We bypass temporary microtrends. Our design template centers on timeless aesthetics, meaning
-                        your wardrobe stays elegant for years.
-                    </p>
+                <div class="p-6">
+                    <i class="ri-shield-check-line text-4xl text-primary mb-4 block"></i>
+                    <h3 class="font-bold text-lg mb-2">Genuine Quality</h3>
+                    <p class="text-sm text-gray-500">Premium fabrics that withstand the diverse Nepali climate.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Meet the Founders/Team -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-2xl mx-auto text-center mb-16">
-                <span class="text-primary font-semibold uppercase tracking-wider text-sm">The Creative Minds</span>
-                <h2 class="text-3xl font-bold text-gray-900 mt-2">Meet Our Leadership Team</h2>
-                <p class="text-gray-600 mt-4">Bringing together industry-defining experience in design, logistics, and
-                    ecology.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Team Member 1 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5]">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop"
-                            alt="Clara Jenkins"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-900 text-lg">Clara Jenkins</h3>
-                        <p class="text-sm text-primary font-medium mb-2">CEO & Co-founder</p>
-                        <p class="text-gray-600 text-sm leading-relaxed">
-                            A classic design enthusiast, Clara leads our corporate scaling plans while maintaining focus
-                            on brand values.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Team Member 2 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5]">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop"
-                            alt="Marcus Vance"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-900 text-lg">Marcus Vance</h3>
-                        <p class="text-sm text-primary font-medium mb-2">Creative Director</p>
-                        <p class="text-gray-600 text-sm leading-relaxed">
-                            Marcus oversees item geometry, styling selections, and aesthetic alignments, preserving our
-                            timeless profiles.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Team Member 3 -->
-                <div class="group">
-                    <div class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5]">
-                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop"
-                            alt="Elena Rostova"
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-900 text-lg">Elena Rostova</h3>
-                        <p class="text-sm text-primary font-medium mb-2">Head of Sustainability</p>
-                        <p class="text-gray-600 text-sm leading-relaxed">
-                            Elena monitors supply-chain integrity, ensures circular reuse options, and vets our factory
-                            operations regularly.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Simple CTA -->
+    <section class="py-16 text-center">
+        <h2 class="text-2xl font-bold mb-6">Ready to upgrade your wardrobe?</h2>
+        <a href="{{ route('frontend.sale') }}" class="bg-primary text-white px-10 py-3 rounded-button font-medium hover:bg-opacity-90 transition">
+            Shop the Collection
+        </a>
     </section>
 
-    <!-- Elegant Call-to-Action Section -->
-    <section class="py-16 bg-gray-50 border-t border-gray-100">
-        <div class="container mx-auto px-4 text-center max-w-xl">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Want to See Our Creations in Action?</h2>
-            <p class="text-gray-600 mb-6">Discover how we bring minimalist lines and sustainable fibers together in our
-                latest collections.</p>
-            <a href="#"
-                class="inline-block py-3 px-8 bg-primary text-white font-medium rounded-button hover:bg-primary/90 transition-colors">Explore
-                Summer Collection</a>
-        </div>
-    </section>
-
-    <!-- Newsletter (Identical Pattern to Home Page) -->
-    <section class="py-16 bg-gray-900 text-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-                <p class="text-gray-300 mb-8">
-                    Stay updated with our latest collections, exclusive offers, and
-                    style tips.
-                </p>
-                <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                    <input type="email" placeholder="Your email address"
-                        class="flex-1 px-4 py-3 rounded-button border-none text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                    <button type="submit"
-                        class="px-6 py-3 bg-primary text-white font-medium rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap">
-                        Subscribe
-                    </button>
-                </form>
-                <p class="text-sm text-gray-400 mt-4">
-                    By subscribing, you agree to our Privacy Policy and consent to
-                    receive updates from our company.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer (Identical Pattern to Home Page) -->
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Column 1: About -->
-                <div class="lg:col-span-2">
-                    <a href="#" class="font-['Pacifico'] text-2xl text-primary inline-block mb-4">logo</a>
-                    <p class="text-gray-600 mb-6 max-w-md">
-                        We offer premium quality clothing and accessories for men and
-                        women. Our mission is to provide sustainable fashion that lasts.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Column 2: Shop -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Shop</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Women</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Men</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Accessories</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Footwear</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sale</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 3: Help -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Help</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Customer Service</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">My Account</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Find a Store</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping &
-                                Returns</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">FAQs</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 4: About -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">About</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                        &copy; 2025 ShopEase. All rights reserved.
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Terms of Service</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Cookies Settings</a>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-4 md:mt-0">
-                        <i class="ri-visa-fill text-2xl text-gray-600"></i>
-                        <i class="ri-mastercard-fill text-2xl text-gray-600"></i>
-                        <i class="ri-paypal-fill text-2xl text-gray-600"></i>
-                        <i class="ri-apple-fill text-2xl text-gray-600"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts (Matches Home page toggle systems) -->
-    <script id="headerInteractions">
-    document.addEventListener("DOMContentLoaded", function() {
-        // Search Toggle
-        const searchToggle = document.getElementById("searchToggle");
-        const searchDropdown = document.getElementById("searchDropdown");
-
-        if (searchToggle && searchDropdown) {
-            searchToggle.addEventListener("click", function() {
-                searchDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !searchToggle.contains(event.target) &&
-                    !searchDropdown.contains(event.target)
-                ) {
-                    searchDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Cart Toggle
-        const cartToggle = document.getElementById("cartToggle");
-        const cartDropdown = document.getElementById("cartDropdown");
-
-        if (cartToggle && cartDropdown) {
-            cartToggle.addEventListener("click", function() {
-                cartDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !cartToggle.contains(event.target) &&
-                    !cartDropdown.contains(event.target)
-                ) {
-                    cartDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
-
-        if (mobileMenuToggle && mobileMenu) {
-            mobileMenuToggle.addEventListener("click", function() {
-                mobileMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Shop Menu Toggle
-        const mobileShopToggle = document.getElementById("mobileShopToggle");
-        const mobileShopMenu = document.getElementById("mobileShopMenu");
-
-        if (mobileShopToggle && mobileShopMenu) {
-            mobileShopToggle.addEventListener("click", function() {
-                mobileShopMenu.classList.toggle("hidden");
-            });
-        }
-    });
-    </script>
-    <script>
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
-
-    btn.addEventListener("click", () => {
-        dropdown.classList.toggle("hidden");
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add("hidden");
-        }
-    });
-    </script>
+    <!-- Footer -->
+    @include('frondend.layouts.footer')
 </body>
-
 </html>

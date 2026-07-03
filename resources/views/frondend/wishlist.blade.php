@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Ensure CSRF Token is present for AJAX calls -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>My Wishlist - ShopEase</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
@@ -72,420 +74,128 @@
             </div>
             <!-- Dynamic Item Count Badge -->
             <p class="text-sm font-semibold text-gray-500">
-                You have <span id="wishlist-count" class="text-primary font-bold">4</span> items saved
+                You have <span id="wishlist-count" class="text-primary font-bold">{{ $wishlistItems->count() }}</span> items saved
             </p>
         </div>
 
         <!-- Wishlist Grid System -->
-        <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-
-            <!-- Wishlist Card 1 -->
-            <div
-                class="group relative bg-white border border-gray-100 rounded-lg overflow-hidden p-3 shadow-sm hover:shadow transition duration-300">
+        <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 {{ $wishlistItems->isEmpty() ? 'hidden' : '' }}">
+            
+            @foreach($wishlistItems as $item)
+            <!-- Wishlist Card -->
+            <div class="group relative bg-white border border-gray-100 rounded-lg overflow-hidden p-3 shadow-sm hover:shadow transition duration-300">
                 <!-- Delete Button overlay -->
-                <button onclick="removeWishlistItem(this)"
+                <button onclick="removeWishlistItem(this, {{ $item->id }})"
                     class="absolute top-6 right-6 z-10 w-8 h-8 rounded-full bg-white text-gray-400 hover:text-rose-600 border border-gray-100 flex items-center justify-center shadow-sm transition">
                     <i class="ri-close-line text-lg"></i>
                 </button>
 
                 <div class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5]">
-                    <!-- Stock badge -->
-                    <span
-                        class="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded">In
-                        Stock</span>
-                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=400&auto=format&fit=crop"
-                        alt="Elegant White Blouse"
+                    @if($item->product->stock > 0)
+                        <span class="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded">In Stock</span>
+                    @else
+                        <span class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded">Out of Stock</span>
+                    @endif
+                    
+                    <img src="{{ asset($item->product->image) }}" alt="{{ $item->product->name }}"
                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <div class="px-1 space-y-2">
-                    <h3 class="font-bold text-gray-900 text-sm truncate">Elegant White Blouse</h3>
-                    <div class="flex items-center mb-1">
-                        <div class="flex text-amber-400 text-xs">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-half-fill"></i>
-                        </div>
-                        <span class="text-[10px] text-gray-500 ml-1">(42)</span>
-                    </div>
-                    <p class="text-gray-900 font-bold text-sm">Rs.49.99</p>
+                    <h3 class="font-bold text-gray-900 text-sm truncate">{{ $item->product->name }}</h3>
+                    <p class="text-gray-900 font-bold text-sm">Rs.{{ number_format($item->product->price, 2) }}</p>
 
                     <!-- Quick transfer to cart button -->
-                    <button
-                        class="w-full py-2.5 mt-2 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition flex justify-center items-center gap-2">
+                    <button type="button" onclick="addWishlistToCart({{ $item->product->id }})" class="w-full py-2.5 mt-2 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition flex justify-center items-center gap-2">
                         <i class="ri-shopping-bag-line"></i> Add to Cart
                     </button>
                 </div>
             </div>
-
-            <!-- Wishlist Card 2 -->
-            <div
-                class="group relative bg-white border border-gray-100 rounded-lg overflow-hidden p-3 shadow-sm hover:shadow transition duration-300">
-                <!-- Delete Button overlay -->
-                <button onclick="removeWishlistItem(this)"
-                    class="absolute top-6 right-6 z-10 w-8 h-8 rounded-full bg-white text-gray-400 hover:text-rose-600 border border-gray-100 flex items-center justify-center shadow-sm transition">
-                    <i class="ri-close-line text-lg"></i>
-                </button>
-
-                <div class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5]">
-                    <!-- Stock badge -->
-                    <span
-                        class="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded">In
-                        Stock</span>
-                    <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400&auto=format&fit=crop"
-                        alt="Classic Leather Jacket"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-                <div class="px-1 space-y-2">
-                    <h3 class="font-bold text-gray-900 text-sm truncate">Classic Leather Jacket</h3>
-                    <div class="flex items-center mb-1">
-                        <div class="flex text-amber-400 text-xs">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-line"></i>
-                        </div>
-                        <span class="text-[10px] text-gray-500 ml-1">(76)</span>
-                    </div>
-                    <p class="text-gray-900 font-bold text-sm">Rs.199.99</p>
-
-                    <!-- Quick transfer to cart button -->
-                    <button
-                        class="w-full py-2.5 mt-2 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition flex justify-center items-center gap-2">
-                        <i class="ri-shopping-bag-line"></i> Add to Cart
-                    </button>
-                </div>
-            </div>
-
-            <!-- Wishlist Card 3 -->
-            <div
-                class="group relative bg-white border border-gray-100 rounded-lg overflow-hidden p-3 shadow-sm hover:shadow transition duration-300">
-                <!-- Delete Button overlay -->
-                <button onclick="removeWishlistItem(this)"
-                    class="absolute top-6 right-6 z-10 w-8 h-8 rounded-full bg-white text-gray-400 hover:text-rose-600 border border-gray-100 flex items-center justify-center shadow-sm transition">
-                    <i class="ri-close-line text-lg"></i>
-                </button>
-
-                <div class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5]">
-                    <!-- Stock badge -->
-                    <span
-                        class="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded">In
-                        Stock</span>
-                    <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=400&auto=format&fit=crop"
-                        alt="Premium Denim Jeans"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-                <div class="px-1 space-y-2">
-                    <h3 class="font-bold text-gray-900 text-sm truncate">Premium Denim Jeans</h3>
-                    <div class="flex items-center mb-1">
-                        <div class="flex text-amber-400 text-xs">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                        </div>
-                        <span class="text-[10px] text-gray-500 ml-1">(128)</span>
-                    </div>
-                    <p class="text-gray-900 font-bold text-sm">Rs.79.99</p>
-
-                    <!-- Quick transfer to cart button -->
-                    <button
-                        class="w-full py-2.5 mt-2 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition flex justify-center items-center gap-2">
-                        <i class="ri-shopping-bag-line"></i> Add to Cart
-                    </button>
-                </div>
-            </div>
-
-            <!-- Wishlist Card 4 -->
-            <div
-                class="group relative bg-white border border-gray-100 rounded-lg overflow-hidden p-3 shadow-sm hover:shadow transition duration-300">
-                <!-- Delete Button overlay -->
-                <button onclick="removeWishlistItem(this)"
-                    class="absolute top-6 right-6 z-10 w-8 h-8 rounded-full bg-white text-gray-400 hover:text-rose-600 border border-gray-100 flex items-center justify-center shadow-sm transition">
-                    <i class="ri-close-line text-lg"></i>
-                </button>
-
-                <div class="relative overflow-hidden rounded-lg mb-4 aspect-[4/5]">
-                    <!-- Stock badge -->
-                    <span
-                        class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded">Only
-                        2 Left!</span>
-                    <img src="https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=400&auto=format&fit=crop"
-                        alt="Premium Sunglasses"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-                <div class="px-1 space-y-2">
-                    <h3 class="font-bold text-gray-900 text-sm truncate">Premium Sunglasses</h3>
-                    <div class="flex items-center mb-1">
-                        <div class="flex text-amber-400 text-xs">
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-fill"></i>
-                            <i class="ri-star-line"></i>
-                        </div>
-                        <span class="text-[10px] text-gray-500 ml-1">(8)</span>
-                    </div>
-                    <p class="text-gray-900 font-bold text-sm">Rs.89.99</p>
-
-                    <!-- Quick transfer to cart button -->
-                    <button
-                        class="w-full py-2.5 mt-2 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition flex justify-center items-center gap-2">
-                        <i class="ri-shopping-bag-line"></i> Add to Cart
-                    </button>
-                </div>
-            </div>
+            @endforeach
 
         </div>
 
-        <!-- Empty Wishlist Placeholder Screen (Hidden by default) -->
-        <div id="empty-wishlist" class="hidden text-center py-24 max-w-sm mx-auto">
+        <!-- Empty Wishlist Placeholder Screen -->
+        <div id="empty-wishlist" class="{{ $wishlistItems->isEmpty() ? '' : 'hidden' }} text-center py-24 max-w-sm mx-auto">
             <div class="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="ri-heart-line text-2xl"></i>
             </div>
             <h3 class="text-lg font-bold text-gray-900 mb-2">Your Wishlist is Empty</h3>
-            <p class="text-sm text-gray-500 mb-8">Save items that you like to your personal wishlist so you can buy them
-                later easily.</p>
-            <a href="#"
-                class="py-3 px-6 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition-colors">Start
-                Shopping</a>
+            <p class="text-sm text-gray-500 mb-8">Save items that you like to your personal wishlist so you can buy them later easily.</p>
+            <a href="/" class="py-3 px-6 bg-primary text-white text-xs font-semibold rounded-button hover:bg-primary/90 transition-colors">Start Shopping</a>
         </div>
     </main>
 
-    <!-- Footer (Identical Pattern to existing Pages) -->
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Column 1: About -->
-                <div class="lg:col-span-2">
-                    <a href="#" class="font-['Pacifico'] text-2xl text-primary inline-block mb-4">logo</a>
-                    <p class="text-gray-600 mb-6 max-w-md">
-                        We offer premium quality clothing and accessories for men and
-                        women. Our mission is to provide sustainable fashion that lasts.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
-                </div>
+    <!-- Footer -->
+    @include('frondend.layouts.footer')
 
-                <!-- Column 2: Shop -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Shop</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Women</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Men</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Accessories</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Footwear</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">New Arrivals</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sale</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 3: Help -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Help</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Customer Service</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">My Account</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Find a Store</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping &
-                                Returns</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">FAQs</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 4: About -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">About</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                        &copy; 2025 ShopEase. All rights reserved.
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Terms of Service</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Cookies Settings</a>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-4 md:mt-0">
-                        <i class="ri-visa-fill text-2xl text-gray-600"></i>
-                        <i class="ri-mastercard-fill text-2xl text-gray-600"></i>
-                        <i class="ri-paypal-fill text-2xl text-gray-600"></i>
-                        <i class="ri-apple-fill text-2xl text-gray-600"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts (Toggles, dropdowns, and items deletion handler) -->
-    <script id="headerInteractions">
-    document.addEventListener("DOMContentLoaded", function() {
-        // Search Toggle
-        const searchToggle = document.getElementById("searchToggle");
-        const searchDropdown = document.getElementById("searchDropdown");
-
-        if (searchToggle && searchDropdown) {
-            searchToggle.addEventListener("click", function() {
-                searchDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !searchToggle.contains(event.target) &&
-                    !searchDropdown.contains(event.target)
-                ) {
-                    searchDropdown.classList.add("hidden");
+    <!-- Scripts -->
+    <script>
+        function addWishlistToCart(productId) {
+            fetch("{{ route('cart.add') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: 1,
+                    size: null,
+                    color: null
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                // Update navbar cart badge (best-effort)
+                const badge = document.getElementById('cart-badge-count');
+                if (badge && typeof data.cart_count === 'number') {
+                    badge.textContent = data.cart_count;
+                    badge.classList.toggle('hidden', data.cart_count === 0);
                 }
-            });
+                // Do not navigate; just update cart badge (prevents navbar dropdown flicker)
+                // location.href = "{{ route('cart') }}";
+            })
+            .catch(() => alert('Unable to add to cart.'));
         }
 
-        // Cart Toggle
-        const cartToggle = document.getElementById("cartToggle");
-        const cartDropdown = document.getElementById("cartDropdown");
-
-        if (cartToggle && cartDropdown) {
-            cartToggle.addEventListener("click", function() {
-                cartDropdown.classList.toggle("hidden");
-            });
-
-            document.addEventListener("click", function(event) {
-                if (
-                    !cartToggle.contains(event.target) &&
-                    !cartDropdown.contains(event.target)
-                ) {
-                    cartDropdown.classList.add("hidden");
+        function removeWishlistItem(btn, wishlistItemId) {
+            fetch("{{ route('wishlist.destroy', ['id' => '__ID__']) }}".replace('__ID__', wishlistItemId), {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                    "Accept": "application/json"
                 }
-            });
-        }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Remove card from UI
+                    const card = btn.closest('.group');
+                    if (card) card.remove();
 
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
+                    // Update navbar wishlist badge (best-effort)
+                    const badge = document.getElementById('wishlist-badge');
+                    if (badge) {
+                        const grid = document.getElementById('wishlist-grid');
+                        const remaining = grid ? grid.querySelectorAll('.group').length : 0;
+                        badge.textContent = remaining;
+                        badge.classList.toggle('hidden', remaining === 0);
+                    }
 
-        if (mobileMenuToggle && mobileMenu) {
-            mobileMenuToggle.addEventListener("click", function() {
-                mobileMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Shop Menu Toggle
-        const mobileShopToggle = document.getElementById("mobileShopToggle");
-        const mobileShopMenu = document.getElementById("mobileShopMenu");
-
-        if (mobileShopToggle && mobileShopMenu) {
-            mobileShopToggle.addEventListener("click", function() {
-                mobileShopMenu.classList.toggle("hidden");
-            });
-        }
-    });
-
-    // User Profile Dropdown Menu
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
-
-    if (btn && dropdown) {
-        btn.addEventListener("click", () => {
-            dropdown.classList.toggle("hidden");
-        });
-
-        document.addEventListener("click", (e) => {
-            if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.add("hidden");
-            }
-        });
-    }
-
-    // Interactive Wishlist Deletion Logic
-    function removeWishlistItem(deleteBtn) {
-        const card = deleteBtn.closest('.group');
-        if (card) {
-            // Apply visual disappear fade transition
-            card.classList.add('transition-all', 'duration-300', 'scale-90', 'opacity-0');
-
-            setTimeout(() => {
-                card.remove();
-
-                // Read remaining cards
-                const remainingCards = document.querySelectorAll('#wishlist-grid > .group');
-                const countBadge = document.getElementById('wishlist-count');
-
-                if (countBadge) {
-                    countBadge.textContent = remainingCards.length;
-                }
-
-                // If no cards remain, show the empty placeholder screen
-                if (remainingCards.length === 0) {
+                    // If none left, show empty state
                     const grid = document.getElementById('wishlist-grid');
-                    const emptyPlaceholder = document.getElementById('empty-wishlist');
-                    if (grid && emptyPlaceholder) {
-                        grid.classList.add('hidden');
-                        emptyPlaceholder.classList.remove('hidden');
+                    const empty = document.getElementById('empty-wishlist');
+                    const remaining = grid ? grid.querySelectorAll('.group').length : 0;
+                    if (remaining === 0) {
+                        if (grid) grid.classList.add('hidden');
+                        if (empty) empty.classList.remove('hidden');
                     }
                 }
-            }, 300);
+            })
+            .catch(() => alert('Unable to remove from wishlist.'));
         }
-    }
     </script>
 </body>
 

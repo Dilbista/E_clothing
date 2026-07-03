@@ -285,8 +285,15 @@
     }
 
     @media (max-width: 768px) {
-        .main-content { margin-left: 0; padding: 30px 20px; }
-        .header-bar { flex-direction: column; align-items: stretch; }
+        .main-content {
+            margin-left: 0;
+            padding: 30px 20px;
+        }
+
+        .header-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
     }
     </style>
 </head>
@@ -304,7 +311,8 @@
                 <div class="header-bar">
                     <h1 class="page-title"><i class="fas fa-gem" style="margin-right: 12px; color: var(--gold);"></i>
                         Brand Portfolio</h1>
-                    <button class="btn btn-primary" id="openAddBrandBtn"><i class="fas fa-plus"></i> Add New Brand</button>
+                    <button class="btn btn-primary" id="openAddBrandBtn"><i class="fas fa-plus"></i> Add New
+                        Brand</button>
                 </div>
 
                 <div class="table-wrapper">
@@ -323,36 +331,43 @@
                             <tr>
                                 <td>
                                     @if($brand->logo)
-                                        <img src="{{ asset($brand->logo) }}" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-subtle);">
+                                    <img src="{{ asset($brand->logo) }}" alt="Logo"
+                                        style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-subtle);">
                                     @else
-                                        <div class="brand-logo-preview">{{ substr($brand->name, 0, 1) }}</div>
+                                    <div class="brand-logo-preview">{{ substr($brand->name, 0, 1) }}</div>
                                     @endif
                                 </td>
                                 <td>
                                     <strong>{{ $brand->name }}</strong><br>
-                                    <small style="color:var(--text-secondary); display: block; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <small
+                                        style="color:var(--text-secondary); display: block; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                         {{ $brand->description ?: 'No description provided' }}
                                     </small>
                                 </td>
-                                <td><i class="fas fa-map-marker-alt" style="font-size:0.7rem; color:var(--gold); margin-right:5px;"></i> {{ $brand->origin ?: 'International' }}</td>
+                                <td><i class="fas fa-map-marker-alt"
+                                        style="font-size:0.7rem; color:var(--gold); margin-right:5px;"></i>
+                                    {{ $brand->origin ?: 'International' }}</td>
                                 <td><span class="badge">{{ $brand->product_count }} Products</span></td>
                                 <td style="white-space: nowrap;">
-                                    <button class="btn-outline btn-sm edit-brand" 
-                                        data-id="{{ $brand->id }}"
-                                        data-name="{{ $brand->name }}"
-                                        data-origin="{{ $brand->origin }}"
+                                    <button class="btn-outline btn-sm edit-brand" data-id="{{ $brand->id }}"
+                                        data-name="{{ $brand->name }}" data-origin="{{ $brand->origin }}"
                                         data-description="{{ $brand->description }}">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" style="display:inline-block;">
+                                    <form action="{{ route('brands.destroy', $brand->id) }}" method="POST"
+                                        style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn-danger-sm delete-brand" onclick="return confirm('Are you sure you want to remove this brand?');"><i class="fas fa-trash"></i></button>
+                                        <button type="submit" class="btn-danger-sm delete-brand"
+                                            onclick="return confirm('Are you sure you want to remove this brand?');"><i
+                                                class="fas fa-trash"></i></button>
                                     </form>
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="5" style="text-align:center;">No brands registered yet.</td></tr>
+                            <tr>
+                                <td colspan="5" style="text-align:center;">No brands registered yet.</td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -382,7 +397,8 @@
                 </div>
                 <div class="form-group">
                     <label>Brand Story / Description</label>
-                    <textarea name="description" id="brandDesc" rows="3" placeholder="Tell the brand's heritage story..."></textarea>
+                    <textarea name="description" id="brandDesc" rows="3"
+                        placeholder="Tell the brand's heritage story..."></textarea>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn-outline btn-sm" id="closeModalBtn">Cancel</button>
@@ -407,13 +423,13 @@
     }
 
     @if(session('success'))
-        showToast("{{ session('success') }}");
+    showToast("{{ session('success') }}");
     @endif
     @if(session('error'))
-        showToast("{{ session('error') }}", true);
+    showToast("{{ session('error') }}", true);
     @endif
     @if($errors->any())
-        showToast("{{ $errors->first() }}", true);
+    showToast("{{ $errors->first() }}", true);
     @endif
 
     // Attach event listeners for editing
@@ -443,4 +459,5 @@
     document.getElementById('closeModalBtn').addEventListener('click', closeModal);
     </script>
 </body>
+
 </html>

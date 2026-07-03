@@ -7,7 +7,7 @@
     <!-- 1. FIXED HEADER (Doesn't scroll) -->
     <div class="sidebar-header-wrapper">
         <div class="sidebar-header">
-            ÉLYS<span>IAN</span>
+           Dhangadi<span> E_clothing </span>
         </div>
 
         <div class="admin-badge">

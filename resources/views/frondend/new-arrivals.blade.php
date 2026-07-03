@@ -1,34 +1,35 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ShopEase - New Arrivals Drops</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    primary: "#4f46e5",
-                    secondary: "#f97316"
-                },
-                borderRadius: {
-                    none: "0px",
-                    sm: "4px",
-                    DEFAULT: "8px",
-                    md: "12px",
-                    lg: "16px",
-                    xl: "20px",
-                    "2xl": "24px",
-                    "3xl": "32px",
-                    full: "9999px",
-                    button: "8px",
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#4f46e5",
+                        secondary: "#f97316"
+                    },
+                    borderRadius: {
+                        none: "0px",
+                        sm: "4px",
+                        DEFAULT: "8px",
+                        md: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        "2xl": "24px",
+                        "3xl": "32px",
+                        full: "9999px",
+                        button: "8px",
+                    },
                 },
             },
-        },
-    };
+        };
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,161 +37,95 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
     <style>
-    :where([class^="ri-"])::before {
-        content: "\f3c2";
-    }
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body { font-family: 'Inter', sans-serif; }
 
-    body {
-        font-family: 'Inter', sans-serif;
-    }
+        .hero-section {
+            background-image: linear-gradient(to right, rgba(24, 24, 27, 0.85) 30%, rgba(24, 24, 27, 0.4) 100%),
+                url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
 
-    /* Standardized Hero Height, New Image, and Readability Gradient */
-    .hero-section {
-        background-image: linear-gradient(to right, rgba(24, 24, 27, 0.85) 30%, rgba(24, 24, 27, 0.4) 100%),
-            url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1920&auto=format&fit=crop');
-        background-size: cover;
-        background-position: center;
-    }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        .custom-checkbox { position: relative; cursor: pointer; }
+        .custom-checkbox input { position: absolute; opacity: 0; cursor: pointer; }
+        .checkmark {
+            position: absolute; top: 0; left: 0; height: 18px; width: 18px;
+            background-color: #fff; border: 1px solid #d1d5db; border-radius: 4px;
+        }
+        .custom-checkbox:hover input~.checkmark { background-color: #f3f4f6; }
+        .custom-checkbox input:checked~.checkmark { background-color: #4f46e5; border-color: #4f46e5; }
+        .checkmark:after { content: ""; position: absolute; display: none; }
+        .custom-checkbox input:checked~.checkmark:after { display: block; }
+        .custom-checkbox .checkmark:after {
+            left: 6px; top: 2px; width: 5px; height: 10px;
+            border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
 
-    .custom-checkbox {
-        position: relative;
-        cursor: pointer;
-    }
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e5e7eb; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked+.slider { background-color: #4f46e5; }
+        input:checked+.slider:before { transform: translateX(20px); }
 
-    .custom-checkbox input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
+        .custom-range {
+            -webkit-appearance: none; appearance: none; width: 100%; height: 6px;
+            border-radius: 5px; background: #e5e7eb; outline: none;
+        }
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 18px; height: 18px;
+            border-radius: 50%; background: #4f46e5; cursor: pointer;
+        }
+        .custom-range::-moz-range-thumb {
+            width: 18px; height: 18px; border-radius: 50%; background: #4f46e5; cursor: pointer; border: none;
+        }
 
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 18px;
-        width: 18px;
-        background-color: #fff;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
-    }
+        .dropdown-content { display: none; position: absolute; background-color: white; min-width: 160px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); z-index: 50; border-radius: 8px; }
 
-    .custom-checkbox:hover input~.checkmark {
-        background-color: #f3f4f6;
-    }
+        /* ========== ANIMATIONS & EFFECTS ========== */
+        /* Heart red highlight on click */
+        @keyframes heartHighlight {
+            0% { transform: scale(1); color: currentColor; text-shadow: 0 0 0px rgba(239,68,68,0); }
+            30% { transform: scale(1.4); color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.7); }
+            100% { transform: scale(1); color: currentColor; text-shadow: 0 0 0px rgba(239,68,68,0); }
+        }
+        .animate-heart-highlight { animation: heartHighlight 0.45s ease-out; }
 
-    .custom-checkbox input:checked~.checkmark {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-    }
+        /* Scroll reveal keyframes */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-    .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-    }
+        .reveal { opacity: 0; transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .reveal.visible { opacity: 1; }
+        .reveal-fade-up { transform: translateY(30px); }
+        .reveal-fade-up.visible { transform: translateY(0); }
+        .reveal-fade-left { transform: translateX(-30px); }
+        .reveal-fade-left.visible { transform: translateX(0); }
+        .reveal-fade-right { transform: translateX(30px); }
+        .reveal-fade-right.visible { transform: translateX(0); }
+        .reveal-scale { transform: scale(0.9); }
+        .reveal-scale.visible { transform: scale(1); }
 
-    .custom-checkbox input:checked~.checkmark:after {
-        display: block;
-    }
+        /* Ripple effect */
+        .btn-ripple { position: relative; overflow: hidden; }
+        .ripple-effect {
+            position: absolute; border-radius: 50%; background: rgba(255,255,255,0.3);
+            transform: scale(0); animation: ripple 0.6s linear; pointer-events: none;
+        }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
-    .custom-checkbox .checkmark:after {
-        left: 6px;
-        top: 2px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 44px;
-        height: 24px;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #e5e7eb;
-        transition: .4s;
-        border-radius: 34px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-    input:checked+.slider {
-        background-color: #4f46e5;
-    }
-
-    input:checked+.slider:before {
-        transform: translateX(20px);
-    }
-
-    .custom-range {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        border-radius: 5px;
-        background: #e5e7eb;
-        outline: none;
-    }
-
-    .custom-range::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-    }
-
-    .custom-range::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: #4f46e5;
-        cursor: pointer;
-        border: none;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 160px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        z-index: 50;
-        border-radius: 8px;
-    }
+        /* Product card hover lift */
+        .product-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); }
     </style>
 </head>
 
@@ -198,23 +133,18 @@
     <!-- Header -->
     @include('frondend.layouts.header')
 
-
-    <!-- Standardized Category Hero Height (350px) with Centered Alignment -->
+    <!-- Category Hero -->
     <section class="hero-section relative h-[350px] flex items-center">
         <div class="container mx-auto px-4 relative z-10">
             <div class="max-w-lg text-white">
-                <!-- Breadcrumbs -->
                 <div class="flex items-center space-x-2 text-sm text-gray-200 mb-4 font-semibold">
                     <a href="{{ url('/') }}" class="hover:underline">Home</a>
                     <span>/</span>
                     <span class="text-white font-semibold">New Arrivals</span>
                 </div>
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                    New Drops
-                </h1>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">New Drops</h1>
                 <p class="text-lg text-gray-200 mb-8 font-medium">
-                    The latest trends have arrived. Explore fresh seasonal garments, contemporary footwear, and refined
-                    accessory drops designed for an immediate style upgrade.
+                    The latest trends have arrived. Explore fresh seasonal garments, contemporary footwear, and refined accessory drops designed for an immediate style upgrade.
                 </p>
             </div>
         </div>
@@ -230,16 +160,16 @@
                     <i class="ri-filter-line"></i>
                     <span>Filters</span>
                 </button>
-                <div class="flex items-center space-x-2">
-                    <label for="mobile-sort" class="text-sm text-gray-500">Sort By:</label>
-                    <select id="mobile-sort"
-                        class="border-none py-2 bg-transparent text-sm font-medium text-gray-800 focus:outline-none">
-                        <option>Default</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Newest Arrivals</option>
-                    </select>
-                </div>
+                    <div class="flex items-center space-x-2">
+                        <label for="mobile-sort" class="text-sm text-gray-500">Sort By:</label>
+                        <select id="mobile-sort"
+                            class="border-none py-2 bg-transparent text-sm font-medium text-gray-800 focus:outline-none">
+                            <option value="">Default</option>
+                            <option value="price_low_high">Price: Low to High</option>
+                            <option value="price_high_low">Price: High to Low</option>
+                            <option value="newest">Newest Arrivals</option>
+                        </select>
+                    </div>
             </div>
 
             <div class="flex flex-col md:flex-row gap-8">
@@ -250,12 +180,12 @@
                         <h3 class="font-semibold text-gray-900 mb-4">New Categories</h3>
                         <div class="space-y-3">
                             <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" checked />
+                                <input type="checkbox" class="filter-category" data-category-slug="womens-apparel" checked />
                                 <span class="checkmark"></span>
                                 Women's Apparel
                             </label>
                             <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" checked />
+                                <input type="checkbox" class="filter-category" data-category-slug="mens-apparel" checked />
                                 <span class="checkmark"></span>
                                 Men's Apparel
                             </label>
@@ -289,17 +219,17 @@
                         <h3 class="font-semibold text-gray-900 mb-4">Drop Window</h3>
                         <div class="space-y-3">
                             <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" checked />
+                                <input type="checkbox" class="filter-drop" data-drop-window="this_week" checked />
                                 <span class="checkmark"></span>
                                 This Week
                             </label>
                             <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" />
+                                <input type="checkbox" class="filter-drop" data-drop-window="last_14_days" />
                                 <span class="checkmark"></span>
                                 Last 14 Days
                             </label>
                             <label class="custom-checkbox block pl-7 text-sm text-gray-700">
-                                <input type="checkbox" />
+                                <input type="checkbox" class="filter-drop" data-drop-window="last_30_days" />
                                 <span class="checkmark"></span>
                                 Last 30 Days
                             </label>
@@ -325,8 +255,7 @@
                         </p>
                         <div class="flex items-center space-x-4">
                             <span class="text-sm text-gray-500">Sort By:</span>
-                            <select
-                                class="border border-gray-200 rounded px-3 py-1.5 text-sm font-medium text-gray-700 focus:outline-none focus:ring-1 focus:ring-primary">
+                            <select class="border border-gray-200 rounded px-3 py-1.5 text-sm font-medium text-gray-700 focus:outline-none focus:ring-1 focus:ring-primary">
                                 <option>Newest Drop</option>
                                 <option>Popularity</option>
                                 <option>Price: Low to High</option>
@@ -335,264 +264,89 @@
                         </div>
                     </div>
 
-                    <!-- New Arrivals Products Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Product 1: Elegant White Blouse (Women's) -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1541101584959-ac2241b1fc8f?q=80&w=600&auto=format&fit=crop"
-                                    alt="White Blouse" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="text-xs font-semibold text-primary uppercase tracking-wider">Women</span>
-                                <h3 class="font-medium text-gray-900 mb-1 mt-0.5">Elegant White Blouse</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-half-fill"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(42)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.49.99</p>
-                            </div>
-                        </div>
+                    <!-- New Arrivals Products Grid (AJAX target) -->
+                    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                        <!-- Product 2: Suede Chelsea Boots (Footwear) -->
-                        <div class="group">
+                        @forelse($products as $product)
+                        <div class="group product-card" data-product-id="{{ $product->id }}">
                             <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1638247025967-b4e38f68931a?q=80&w=600&auto=format&fit=crop"
-                                    alt="Suede Chelsea Boots" class="w-full h-80 object-cover object-center" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
+                                <div class="absolute top-3 left-3">
+                                    @if($product->stock <= 0)
+                                        <span class="bg-red-800 text-white text-xs px-2 py-1 rounded">Out of Stock</span>
+                                    @elseif($product->discount_price)
+                                        <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">Sale</span>
+                                    @elseif($product->created_at->gt(now()->subDays(7)))
+                                        <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">New</span>
+                                    @endif
                                 </div>
-                            </div>
-                            <div>
-                                <span
-                                    class="text-xs font-semibold text-primary uppercase tracking-wider">Footwear</span>
-                                <h3 class="font-medium text-gray-900 mb-1 mt-0.5">Suede Chelsea Boots</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(4)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.159.99</p>
-                            </div>
-                        </div>
 
-                        <!-- Product 3: Linen Cotton Casual Shirt (Men's) -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=600&auto=format&fit=crop"
-                                    alt="Linen Casual Shirt" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="text-xs font-semibold text-primary uppercase tracking-wider">Men</span>
-                                <h3 class="font-medium text-gray-900 mb-1 mt-0.5">Linen Cotton Casual Shirt</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-half-fill"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(34)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.44.99</p>
-                            </div>
-                        </div>
+                                <img src="{{ asset($product->image) }}" alt="{{ $product->name ?? $product->product_name }}"
+                                    class="w-full h-80 object-cover object-top">
 
-                        <!-- Product 4: Premium Sunglasses (Accessories) -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=600&auto=format&fit=crop"
-                                    alt="Premium Sunglasses" class="w-full h-80 object-cover object-center" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button
+                                <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <a href="{{ route('frontend.viewDetails', ['id' => $product->getKey()]) }}"
+                                        data-auth-action="view"
                                         class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
                                         <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <span
-                                    class="text-xs font-semibold text-primary uppercase tracking-wider">Accessories</span>
-                                <h3 class="font-medium text-gray-900 mb-1 mt-0.5">Premium Sunglasses</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(6)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.89.99</p>
-                            </div>
-                        </div>
+                                    </a>
 
-                        <!-- Product 5: Knitted Cardigan (Women's) -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=600&auto=format&fit=crop"
-                                    alt="Knitted Cardigan" class="w-full h-80 object-cover object-top" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <!-- Dynamic Wishlist Button -->
                                     <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
+                                        class="add-to-wishlist-btn bg-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 transition-all duration-200
+    {{ in_array($product->id, $wishlistIds ?? []) ? 'text-rose-500' : 'text-gray-900 hover:text-rose-500' }}"
+                                        data-product-id="{{ $product->id }}">
+                                        <i class="{{ in_array($product->id, $wishlistIds ?? []) ? 'ri-heart-fill' : 'ri-heart-line' }}"></i>
                                     </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
-                                        <i class="ri-shopping-bag-line"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="text-xs font-semibold text-primary uppercase tracking-wider">Women</span>
-                                <h3 class="font-medium text-gray-900 mb-1 mt-0.5">Knitted Wool Cardigan</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(24)</span>
-                                </div>
-                                <p class="text-gray-900 font-medium">Rs.119.99</p>
-                            </div>
-                        </div>
 
-                        <!-- Product 6: Minimalist Sneakers (Footwear) -->
-                        <div class="group">
-                            <div class="relative overflow-hidden rounded-lg mb-4">
-                                <span
-                                    class="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">New</span>
-                                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=600&auto=format&fit=crop"
-                                    alt="White Sneakers" class="w-full h-80 object-cover object-center" />
-                                <div
-                                    class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-eye-line"></i>
-                                    </button>
-                                    <button
-                                        class="bg-white text-gray-900 w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-gray-100 transition">
-                                        <i class="ri-heart-line"></i>
-                                    </button>
-                                    <button
+                                        data-auth-action="cart"
                                         class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md mx-1 hover:bg-primary/90 transition">
                                         <i class="ri-shopping-bag-line"></i>
                                     </button>
                                 </div>
                             </div>
+
                             <div>
-                                <span
-                                    class="text-xs font-semibold text-primary uppercase tracking-wider">Footwear</span>
-                                <h3 class="font-medium text-gray-900 mb-1 mt-0.5">Minimalist White Sneakers</h3>
-                                <div class="flex items-center mb-1">
-                                    <div class="flex text-amber-400 text-sm">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-half-fill"></i>
-                                    </div>
-                                    <span class="text-xs text-gray-500 ml-1">(18)</span>
+                                <span class="text-xs font-semibold text-primary uppercase tracking-wider">
+                                    {{ $product->category->category_name ?? 'Category' }}
+                                </span>
+                                <h3 class="font-medium text-gray-900 mt-1">
+                                    {{ $product->name ?? $product->product_name }}
+                                </h3>
+                                <div class="flex items-center mb-2">
+                                    <div class="flex text-yellow-400">★★★★★</div>
                                 </div>
-                                <p class="text-gray-900 font-medium">Rs.89.99</p>
+                                @if($product->discount_price)
+                                <div class="flex items-center mt-2">
+                                    <span class="text-lg font-bold text-rose-600">
+                                        Rs. {{ number_format($product->price - $product->discount_price, 2) }}
+                                    </span>
+                                    <span class="ml-2 text-sm text-gray-400 line-through">
+                                        Rs. {{ number_format($product->price, 2) }}
+                                    </span>
+                                </div>
+                                @else
+                                <span class="text-gray-900 font-semibold">
+                                    Rs. {{ number_format($product->price,2) }}
+                                </span>
+                                @endif
                             </div>
                         </div>
+                        @empty
+                        <div class="col-span-3 text-center py-10">
+                            <h3 class="text-xl font-semibold text-gray-600">No New Products Found</h3>
+                        </div>
+                        @endforelse
                     </div>
 
                     <!-- Pagination -->
                     <div class="flex justify-center items-center space-x-2 mt-12">
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">
+                        <button class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">
                             <i class="ri-arrow-left-s-line"></i>
                         </button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button bg-primary text-white font-medium">1</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">2</button>
-                        <button
-                            class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">
+                        <button class="w-10 h-10 flex items-center justify-center rounded-button bg-primary text-white font-medium">1</button>
+                        <button class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">2</button>
+                        <button class="w-10 h-10 flex items-center justify-center rounded-button border border-gray-200 text-gray-600 hover:bg-gray-50">
                             <i class="ri-arrow-right-s-line"></i>
                         </button>
                     </div>
@@ -602,57 +356,46 @@
     </section>
 
     <!-- Instagram Feed -->
-    <section class="py-16 bg-gray-50">
+    {{-- <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-4">
-                Shop the Look on Instagram
-            </h2>
+            <h2 class="text-3xl font-bold text-center mb-4">Shop the Look on Instagram</h2>
             <p class="text-gray-600 text-center mb-12">@shopease_official</p>
-
             <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Instagram images unchanged -->
                 <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
                     <img src="https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=300&h=300&q=80"
-                        alt="Instagram Post"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        alt="Instagram Post" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
                 <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
                     <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&h=300&q=80"
-                        alt="Instagram Post"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        alt="Instagram Post" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
                 <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
                     <img src="https://images.unsplash.com/photo-1512310604669-443f26c35f52?auto=format&fit=crop&w=300&h=300&q=80"
-                        alt="Instagram Post"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        alt="Instagram Post" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
                 <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
                     <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=300&h=300&q=80"
-                        alt="Instagram Post"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        alt="Instagram Post" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
                 <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
                     <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=300&h=300&q=80"
-                        alt="Instagram Post"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        alt="Instagram Post" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
                 <a href="#" class="block aspect-square overflow-hidden rounded-lg group">
                     <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=300&h=300&q=80"
-                        alt="Instagram Post"
-                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        alt="Instagram Post" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </a>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     <!-- Newsletter -->
     <section class="py-16 bg-gray-900 text-white">
         <div class="container mx-auto px-4">
             <div class="max-w-2xl mx-auto text-center">
                 <h2 class="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-                <p class="text-gray-300 mb-8">
-                    Stay updated with our latest collections, exclusive offers, and
-                    style tips.
-                </p>
+                <p class="text-gray-300 mb-8">Stay updated with our latest collections, exclusive offers, and style tips.</p>
                 <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                     <input type="email" placeholder="Your email address"
                         class="flex-1 px-4 py-3 rounded-button border-none text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20" />
@@ -661,234 +404,184 @@
                         Subscribe
                     </button>
                 </form>
-                <p class="text-sm text-gray-400 mt-4">
-                    By subscribing, you agree to our Privacy Policy and consent to
-                    receive updates from our company.
-                </p>
+                <p class="text-sm text-gray-400 mt-4">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                <!-- Column 1: About -->
-                <div class="lg:col-span-2">
-                    <a href="#" class="font-['Pacifico'] text-2xl text-primary inline-block mb-4">logo</a>
-                    <p class="text-gray-600 mb-6 max-w-md">
-                        We offer premium quality clothing and accessories for men and
-                        women. Our mission is to provide sustainable fashion that lasts.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-facebook-fill"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-instagram-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-twitter-x-line"></i>
-                        </a>
-                        <a href="#"
-                            class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
-                            <i class="ri-pinterest-line"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Column 2: Shop -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Shop</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="{{ route('frontend.women') }}"
-                                class="text-gray-600 hover:text-primary transition-colors">Women</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Men</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Accessories</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Footwear</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-primary font-medium transition-colors">New Arrivals</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sale</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 3: Help -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">Help</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Customer Service</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">My Account</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Find a Store</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Shipping &
-                                Returns</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">FAQs</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Column 4: About -->
-                <div>
-                    <h3 class="text-gray-900 font-semibold mb-4">About</h3>
-                    <ul class="space-y-3">
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">About Us</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Sustainability</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Careers</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Press</a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-gray-600 hover:text-primary transition-colors">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mt-12 pt-8 border-t border-gray-100">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
-                        &copy; 2025 ShopEase. All rights reserved.
-                    </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Privacy Policy</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Terms of Service</a>
-                        <a href="#" class="text-gray-500 text-sm hover:text-gray-700">Cookies Settings</a>
-                    </div>
-                    <div class="flex items-center space-x-3 mt-4 md:mt-0">
-                        <i class="ri-visa-fill text-2xl text-gray-600"></i>
-                        <i class="ri-mastercard-fill text-2xl text-gray-600"></i>
-                        <i class="ri-paypal-fill text-2xl text-gray-600"></i>
-                        <i class="ri-apple-fill text-2xl text-gray-600"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @include('frondend.layouts.footer')
 
     <!-- Scripts -->
     <script id="headerInteractions">
-    document.addEventListener("DOMContentLoaded", function() {
-        // Search Toggle
-        const searchToggle = document.getElementById("searchToggle");
-        const searchDropdown = document.getElementById("searchDropdown");
+        document.addEventListener("DOMContentLoaded", function() {
+            // Search Toggle
+            const searchToggle = document.getElementById("searchToggle");
+            const searchDropdown = document.getElementById("searchDropdown");
+            if (searchToggle && searchDropdown) {
+                searchToggle.addEventListener("click", () => searchDropdown.classList.toggle("hidden"));
+                document.addEventListener("click", (e) => {
+                    if (!searchToggle.contains(e.target) && !searchDropdown.contains(e.target))
+                        searchDropdown.classList.add("hidden");
+                });
+            }
 
-        if (searchToggle && searchDropdown) {
-            searchToggle.addEventListener("click", function() {
-                searchDropdown.classList.toggle("hidden");
-            });
+            // Cart Toggle
+            const cartToggle = document.getElementById("cartToggle");
+            const cartDropdown = document.getElementById("cartDropdown");
+            if (cartToggle && cartDropdown) {
+                cartToggle.addEventListener("click", () => cartDropdown.classList.toggle("hidden"));
+                document.addEventListener("click", (e) => {
+                    if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target))
+                        cartDropdown.classList.add("hidden");
+                });
+            }
 
-            document.addEventListener("click", function(event) {
-                if (
-                    !searchToggle.contains(event.target) &&
-                    !searchDropdown.contains(event.target)
-                ) {
-                    searchDropdown.classList.add("hidden");
-                }
-            });
-        }
+            // Mobile Menu Toggle
+            const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+            const mobileMenu = document.getElementById("mobileMenu");
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener("click", () => mobileMenu.classList.toggle("hidden"));
+            }
 
-        // Cart Toggle
-        const cartToggle = document.getElementById("cartToggle");
-        const cartDropdown = document.getElementById("cartDropdown");
+            // Mobile Shop Menu Toggle
+            const mobileShopToggle = document.getElementById("mobileShopToggle");
+            const mobileShopMenu = document.getElementById("mobileShopMenu");
+            if (mobileShopToggle && mobileShopMenu) {
+                mobileShopToggle.addEventListener("click", () => mobileShopMenu.classList.toggle("hidden"));
+            }
 
-        if (cartToggle && cartDropdown) {
-            cartToggle.addEventListener("click", function() {
-                cartDropdown.classList.toggle("hidden");
-            });
+            // Mobile Filters Toggle
+            const filterToggleBtn = document.getElementById("filterToggleBtn");
+            const sidebarFilter = document.getElementById("sidebarFilter");
+            if (filterToggleBtn && sidebarFilter) {
+                filterToggleBtn.addEventListener("click", () => sidebarFilter.classList.toggle("hidden"));
+            }
 
-            document.addEventListener("click", function(event) {
-                if (
-                    !cartToggle.contains(event.target) &&
-                    !cartDropdown.contains(event.target)
-                ) {
-                    cartDropdown.classList.add("hidden");
-                }
-            });
-        }
-
-        // Mobile Menu Toggle
-        const mobileMenuToggle = document.getElementById("mobileMenuToggle");
-        const mobileMenu = document.getElementById("mobileMenu");
-
-        if (mobileMenuToggle && mobileMenu) {
-            mobileMenuToggle.addEventListener("click", function() {
-                mobileMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Shop Menu Toggle
-        const mobileShopToggle = document.getElementById("mobileShopToggle");
-        const mobileShopMenu = document.getElementById("mobileShopMenu");
-
-        if (mobileShopToggle && mobileShopMenu) {
-            mobileShopToggle.addEventListener("click", function() {
-                mobileShopMenu.classList.toggle("hidden");
-            });
-        }
-
-        // Mobile Filters Toggle Panel
-        const filterToggleBtn = document.getElementById("filterToggleBtn");
-        const sidebarFilter = document.getElementById("sidebarFilter");
-
-        if (filterToggleBtn && sidebarFilter) {
-            filterToggleBtn.addEventListener("click", function() {
-                sidebarFilter.classList.toggle("hidden");
-            });
-        }
-
-        // Price range visual update
-        const priceRange = document.getElementById("priceRange");
-        const priceVal = document.getElementById("priceVal");
-        if (priceRange && priceVal) {
-            priceRange.addEventListener("input", function() {
-                priceVal.textContent = "Max: Rs." + this.value;
-            });
-        }
-    });
+            // Price range update
+            const priceRange = document.getElementById("priceRange");
+            const priceVal = document.getElementById("priceVal");
+            if (priceRange && priceVal) {
+                priceRange.addEventListener("input", () => {
+                    priceVal.textContent = "Max: Rs." + priceRange.value;
+                });
+            }
+        });
     </script>
+
+    <!-- Wishlist Handler with Red Heart Highlight -->
     <script>
-    const btn = document.getElementById("userBtn");
-    const dropdown = document.getElementById("dropdown");
+        document.querySelectorAll('.add-to-wishlist-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const btn = this;
+                const icon = btn.querySelector('i');
 
-    btn.addEventListener("click", () => {
-        dropdown.classList.toggle("hidden");
-    });
+                // Red highlight animation
+                icon.classList.add('animate-heart-highlight');
+                icon.addEventListener('animationend', function handler() {
+                    icon.classList.remove('animate-heart-highlight');
+                    icon.removeEventListener('animationend', handler);
+                });
 
-    // close when clicking outside
-    document.addEventListener("click", (e) => {
-        if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add("hidden");
+                fetch("{{ route('wishlist.add') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({ product_id: btn.dataset.productId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const icon = btn.querySelector("i");
+                    if (data.status === "added") {
+                        btn.classList.remove("text-gray-900");
+                        btn.classList.add("text-rose-500");
+                        icon.classList.remove("ri-heart-line");
+                        icon.classList.add("ri-heart-fill");
+                    } else if (data.status === "removed") {
+                        btn.classList.remove("text-rose-500");
+                        btn.classList.add("text-gray-900");
+                        icon.classList.remove("ri-heart-fill");
+                        icon.classList.add("ri-heart-line");
+                    }
+                });
+            });
+        });
+
+        // User dropdown toggle
+        const userBtn = document.getElementById("userBtn");
+        const dropdown = document.getElementById("dropdown");
+        if (userBtn && dropdown) {
+            userBtn.addEventListener("click", () => dropdown.classList.toggle("hidden"));
+            document.addEventListener("click", (e) => {
+                if (!userBtn.contains(e.target) && !dropdown.contains(e.target))
+                    dropdown.classList.add("hidden");
+            });
         }
-    });
+    </script>
+
+    <!-- Scroll Reveal & Ripple Effects -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Scroll reveal observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // Sections
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('reveal', 'reveal-fade-up');
+                observer.observe(section);
+            });
+
+            // Product cards
+            document.querySelectorAll('.grid .group').forEach(card => {
+                if (!card.classList.contains('reveal')) {
+                    card.classList.add('reveal', 'reveal-fade-up', 'product-card');
+                    observer.observe(card);
+                }
+            });
+
+            // Instagram images
+            document.querySelectorAll('.grid.grid-cols-2.md\\:grid-cols-4.lg\\:grid-cols-6.gap-4 > a').forEach(img => {
+                img.classList.add('reveal', 'reveal-scale');
+                observer.observe(img);
+            });
+
+            // Ripple effect on buttons (exclude wishlist)
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const circle = document.createElement('span');
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+                circle.classList.add('ripple-effect');
+                const existing = button.querySelector('.ripple-effect');
+                if (existing) existing.remove();
+                button.appendChild(circle);
+            }
+
+            document.querySelectorAll('button:not(.add-to-wishlist-btn)').forEach(btn => {
+                btn.classList.add('btn-ripple');
+                btn.addEventListener('click', createRipple);
+            });
+
+            document.querySelectorAll('a.inline-block').forEach(link => {
+                if (link.matches('.rounded-button, [class*="py-3"]')) {
+                    link.classList.add('btn-ripple');
+                    link.addEventListener('click', createRipple);
+                }
+            });
+        });
     </script>
 </body>
-
 </html>

@@ -12,7 +12,8 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
+  
+  <style>
         /* CSS remains consistent with your luxury theme */
         * {
             margin: 0;
@@ -316,72 +317,123 @@
                     </table>
                 </div>
             </div>
+            <div class="pagination-custom-wrapper">
+    {{ $users->links() }}
+</div>
         </main>
     </div>
 
-    <div class="pagination-wrapper">
-        {{ $users->links() }}
-    </div>
+ 
+<style>
 
-   <style>
-/* Custom Pagination Styling for ÉLYSIAN Theme */
-.pagination-wrapper {
-    margin-top: 3px;
-    padding: 10px;
+    /* --- PAGINATION CONTAINER --- */
+.pagination-custom-wrapper {
+    background-color: #F8312F; 
+    padding: 15px 25px;
+    border-radius: 15px;
+    margin-top: 30px;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
     width: 100%;
-
+    min-height: 70px;
 }
 
-/* Container for the numbers/links - ONLY CENTERED */
-.pagination-wrapper nav {
-    display: flex;
-    justify-content: center; /* Pulls everything to the exact center */
-    align-items: center;
-    gap: 8px;  
+/* Force everything into a single horizontal row */
+.pagination-custom-wrapper nav,
+.pagination-custom-wrapper nav div:last-child,
+.pagination-custom-wrapper nav div:last-child span {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px;
 }
 
-/* Individual Links (Numbers and Arrows) */
-.pagination-wrapper a, 
-.pagination-wrapper span {
-    background-color: var(--card-bg) !important;
-    border: 1px solid var(--border-subtle) !important;
-    color: var(--text-primary) !important;
-    padding: 10px 18px !important;
-    border-radius: 12px !important;
+/* Hide the "Showing 1 to 10..." text */
+.pagination-custom-wrapper nav div:first-child {
+    display: none !important;
+}
+
+/* --- ARROWS (White Circles) --- */
+.pagination-custom-wrapper a[rel="prev"], 
+.pagination-custom-wrapper a[rel="next"],
+.pagination-custom-wrapper span[aria-disabled="true"] {
+    background-color: #ffffff !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #F8312F !important;
+    border: none !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.pagination-custom-wrapper a:hover {
+    transform: scale(1.1);
+}
+
+/* --- THE NUMBERS PILL --- */
+.pagination-custom-wrapper nav div:last-child .inline-flex {
+    background-color: #FFF1F1 !important; /* Light white/pink pill */
+    padding: 4px 12px !important;
+    border-radius: 30px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    border: none !important;
+    gap: 5px;
+}
+
+/* Individual Number Styling */
+.pagination-custom-wrapper a:not([rel="prev"]):not([rel="next"]) {
+    color: #F8312F !important;
+    font-weight: 800 !important;
+    padding: 6px 12px !important;
     text-decoration: none !important;
-    transition: 0.3s all ease;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
-/* Hover Effect */
-.pagination-wrapper a:hover {
-    border-color: var(--gold) !important;
-    color: var(--gold) !important;
-    transform: translateY(-2px);
-}
-
-/* Active Page Style */
-.pagination-wrapper .active span, 
-.pagination-wrapper [aria-current="page"] span {
-    background-color: var(--gold) !important;
-    color: #000 !important;
-    border-color: var(--gold) !important;
+/* --- ACTIVE PAGE (Red Circle) --- */
+.pagination-custom-wrapper span[aria-current="page"] span {
+    background-color: #F8312F !important;
+    color: #ffffff !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    margin: 0 2px !important;
     font-weight: bold;
+    border: none !important;
 }
 
-/* Arrow SVG Colors */
-.pagination-wrapper svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-}
-
-/* Hide the "Showing 1 to 10..." text on mobile to save space */
-.pagination-wrapper .hidden.sm\:flex-1.sm\:flex.sm\:items-center.sm\:justify-between > div:first-child {
-    display: none;
+/* SVG Icon Sizing */
+.pagination-custom-wrapper svg {
+    width: 18px;
+    height: 18px;
 }
 </style>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const paginationLinks = document.querySelectorAll('.pagination-custom-wrapper a');
+    
+    paginationLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Optional: Add a fade effect to the table when switching pages
+            const table = document.querySelector('table');
+            if(table) {
+                table.style.opacity = '0.5';
+                table.style.transition = '0.5s';
+            }
+        });
+    });
+});
+</script>
 
     <!-- Modal: Add / Edit User -->
     <div class="modal-overlay" id="userModal">
